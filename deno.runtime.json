@@ -1,0 +1,19 @@
+{
+  "nodeModulesDir": "auto",
+  "lock": "deno.lock",
+  "imports": {
+    "dockerode": "npm:dockerode@4.0.7",
+    "@types/dockerode": "npm:@types/dockerode@3.3.38",
+    "ethers": "npm:ethers@6.15.0"
+  },
+  "fmt": {
+    "lineWidth": 100
+  },
+  "exclude": [
+    ".cache",
+    ".tools",
+    ".zap",
+    "node_modules",
+    "reports"
+  ]
+}

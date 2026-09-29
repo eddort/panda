@@ -1,0 +1,21 @@
+{
+  "lock": false,
+  "tasks": {
+    "up": "./scripts/deno run -A src/cli.ts up",
+    "down": "./scripts/deno run -A src/cli.ts down",
+    "reset": "./scripts/deno run -A src/cli.ts reset",
+    "test": "./scripts/deno test -A tests",
+    "check": "./scripts/deno fmt --check && ./scripts/deno lint && ./scripts/deno check src/*.ts scripts/*.ts tests/*.ts examples/*.ts",
+    "smoke:docker": "./scripts/deno run -A scripts/smoke_docker.ts",
+    "baseline": "./scripts/deno run -A scripts/baseline.ts",
+    "profile": "./scripts/deno run -A scripts/profile.ts",
+    "diagnose": "./scripts/deno run -A src/cli.ts diagnose",
+    "build:clients": "./scripts/deno run -A scripts/build.ts",
+    "e2e": "./scripts/deno run -A examples/e2e.ts",
+    "e2e:withdrawal": "./scripts/deno run -A examples/withdrawal.ts",
+    "e2e:protocol": "./scripts/deno run -A examples/protocol.ts",
+    "test:clock": "./scripts/deno run -A scripts/test_clock.ts",
+    "test:lifecycle": "./scripts/deno run -A scripts/lifecycle_test.ts",
+    "measure": "./scripts/deno run -A scripts/measure.ts"
+  }
+}

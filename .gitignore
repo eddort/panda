@@ -1,0 +1,5 @@
+.cache/
+.tools/
+.zap/
+node_modules/
+reports/*.jsonl

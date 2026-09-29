@@ -1,0 +1,104 @@
+{
+  "recordedAt": "2026-09-29T11:20:39.158Z",
+  "readyMs": 13391.240958,
+  "firstBlockMs": 41814.474166,
+  "resources": {
+    "id": "baseline",
+    "elapsedMs": 26069.79625,
+    "components": [
+      {
+        "role": "vc",
+        "cpuPercent": 14.359654572404459,
+        "memoryBytes": 121917440,
+        "rawMemoryBytes": 125612032,
+        "memoryLimit": 8322592768,
+        "writableLayerBytes": 58751
+      },
+      {
+        "role": "bn",
+        "cpuPercent": 4.158776088636949,
+        "memoryBytes": 261894144,
+        "rawMemoryBytes": 262352896,
+        "memoryLimit": 8322592768
+      },
+      {
+        "role": "el",
+        "cpuPercent": 0.45594607284190763,
+        "memoryBytes": 62287872,
+        "rawMemoryBytes": 63467520,
+        "memoryLimit": 8322592768
+      }
+    ]
+  },
+  "disk": [
+    {
+      "role": "vc",
+      "path": "/shared/validator-keys",
+      "allocatedBytes": 1720320
+    },
+    {
+      "role": "bn",
+      "path": "/bn",
+      "allocatedBytes": 516096
+    },
+    {
+      "role": "el",
+      "path": "/el",
+      "allocatedBytes": 37359616
+    }
+  ],
+  "event": "baseline-head",
+  "el": {
+    "baseFeePerGas": "0x27ee3253",
+    "blobGasUsed": "0x0",
+    "difficulty": "0x0",
+    "excessBlobGas": "0x0",
+    "extraData": "0xd883010f0b846765746888676f312e32342e32856c696e7578",
+    "gasLimit": "0x17e969d",
+    "gasUsed": "0x0",
+    "hash": "0xf8bd270214983ae921cef605ec77c3b63367d9beb8897a57df5d6ccc1000251a",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "miner": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+    "mixHash": "0xad29d86375d55281808a0685077ed9640a0a66e4d5f7d4e02ae84e8ea21cac3e",
+    "nonce": "0x0000000000000000",
+    "number": "0x3",
+    "parentBeaconBlockRoot": "0xc98c9ea5565c6cae650ce29386c2f891266868178df7a793c471867a1a324aff",
+    "parentHash": "0x1131c9f1b576c23c9b44ccafb3aaf65d58875d7a22d6a9f2008174721e5c870a",
+    "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+    "size": "0x29d",
+    "stateRoot": "0x21135aa569e9ac29b9ac5ee94bc78ba2af4d57bd30fb1b361ad092384201c2bd",
+    "timestamp": "0x6abb9f03",
+    "transactions": [],
+    "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+    "uncles": [],
+    "withdrawals": [
+      {
+        "index": "0x0",
+        "validatorIndex": "0x34",
+        "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "amount": "0x5739e"
+      }
+    ],
+    "withdrawalsRoot": "0x276a0c894896b111979f740f36d9872b1d8dd321db4d2a59ed9579030d366775"
+  },
+  "cl": {
+    "execution_optimistic": false,
+    "finalized": false,
+    "data": {
+      "root": "0x56a4c9976f46742cdb91c3aabf57ca90e8c895b7b6b7cc2922f19054656ac1e2",
+      "canonical": true,
+      "header": {
+        "message": {
+          "slot": "3",
+          "proposer_index": "29",
+          "parent_root": "0xc98c9ea5565c6cae650ce29386c2f891266868178df7a793c471867a1a324aff",
+          "state_root": "0xc72968376a3aa16f5c2c4ca8ffe7dca76dd287b19ee5254f51dd0d47530ccc32",
+          "body_root": "0xb6664f67a2dfd41ffae87a543583b34577082e1b89c9d9e0ef841e3f18dee118"
+        },
+        "signature": "0xa633e245644cac9ea2dacba432c07f5bc4a41de1ba013b8cbd3c45e5a5c88626e6070e8ee9ab612b0580c68e6409c6b20be334ce5558714b957f6c9847c0132b135ddfe152735d28d02244886a619884b5db02a40646a8c3b2d81628c4eb2259"
+      }
+    }
+  }
+}

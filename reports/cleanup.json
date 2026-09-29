@@ -1,0 +1,15 @@
+{
+  "recordedAt": "2026-09-29T11:28:17.084Z",
+  "containers": [],
+  "networks": [],
+  "volumes": [
+    {
+      "name": "zap-build-target",
+      "id": "build"
+    },
+    {
+      "name": "zap-build-cargo",
+      "id": "build"
+    }
+  ]
+}
