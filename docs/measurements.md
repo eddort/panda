@@ -1,12 +1,59 @@
 # Measurements and validation
 
-Recorded on 2026-09-29. All results below are actual executions; raw JSON is tracked in
-[reports](../reports). macOS arm64 host, native Linux arm64 containers, Docker Desktop 4.59.1 /
-Engine 29.2.0, VM with 6 CPUs and 8,322,592,768 bytes RAM. There were 3 unrelated running containers
-during measurement. No other zap-net tests ran concurrently with `deno task measure` or the
-baseline.
+Recorded on 2026-09-29. The initial measurements below describe the original Pectra implementation;
+current bake validation is recorded separately below and in `reports/profiles/`. All results are
+actual executions; raw JSON is tracked in [reports](../reports). macOS arm64 host, native Linux
+arm64 containers, Docker Desktop 4.59.1 / Engine 29.2.0, VM with 6 CPUs and 8,322,592,768 bytes RAM.
+There were 3 unrelated running containers during measurement. No other zap-net tests ran
+concurrently with `deno task measure` or the baseline.
 
-## Startup and throughput
+## Stabilized Gloas bake
+
+`gloas/stable` reuses the exact v3 artifact
+`8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9`. The current patch and all native
+source hashes match its manifest. Later batch-write and uniform-balance experiments were reverted;
+further optimization is stopped at the user's request. Intermediate states use ordinary
+`store.put_state`, with the standard `9,13,16,18,21` storage hierarchy.
+
+`deno task test:profile gloas --bake stable` passed **8/8 scenarios** in 553.4 seconds. This
+includes ordinary-client baseline, lifecycle, time/automine/indexer, large jumps,
+deposit/activation/ consolidation, voluntary exit/full withdrawal, 20 dependent deployments, and
+Gloas envelopes/PTC. The [verification report](../reports/profiles/gloas/stable/verification.json)
+binds the immutable bake, suite fingerprint and all eight reports to one run. `deno task bakes`
+reports `verified: true`.
+
+| Large jump (64 validators) | `advanceTime` / `advanceTo` return | Including next successful transaction |
+| -------------------------- | ---------------------------------- | ------------------------------------- |
+| First 8192 slots           | 10.277 s                           | 10.783 s                              |
+| Second 8192 slots          | 11.093 s                           | 11.616 s                              |
+
+Each jump advances 98,304 protocol seconds (27 h 18 min 24 s). The
+[warp report](../reports/profiles/gloas/stable/warp.json) records real destination blocks, matching
+EL/CL execution and restored finality at epochs 260 and 518. All 64 validators remained active and
+unslashed, resumed attesting, and passed checks for double proposals, double votes and surround
+votes across exported signing histories. Inactivity penalties remain real: absence of slashing does
+not imply unchanged balances. The 20-second regression budget includes the next transaction;
+subsequent production of real votes to restore finality is checked separately. These are measured
+8192-slot cases, not a constant-time promise for arbitrary ranges or validator counts.
+
+The [deploy report](../reports/profiles/gloas/stable/deploy.json) records 10 raw RPC deployments in
+4.392 seconds and 10 through ethers in 3.884 seconds, without manual time advancement or sleeps
+between deployments. Receipt latency: median 353 ms, p95 627 ms, maximum 1,198 ms. Every deployment
+used the next block and checked runtime code, constructor state and protocol timestamp.
+
+No client build or other zap-net test ran concurrently. Docker had 6 CPUs, 8,322,592,768 bytes RAM,
+a 2-CPU BN limit and two unrelated running containers. Format/lint/types and all **19 unit tests**
+passed; **3 Docker baker tests** passed separately. The native v3 build passed its clock test and
+two differential selection tests.
+
+The shared controller was separately checked with the existing `pectra/default` binary:
+`ZAP_PROFILE=pectra ZAP_BAKE=default deno task e2e:warp` passed in 146.6 seconds. Its two 8192-slot
+jumps including the following transaction took **17.594 / 18.302 seconds**. All 64 validators
+remained active/unslashed and resumed signing; both finality recoveries and signing-history checks
+passed. See the [Pectra warp report](../reports/profiles/pectra/default/warp.json). Pectra was not
+rebuilt and its full suite was not rerun; its historical verification fingerprint remains stale.
+
+## Initial Pectra startup and throughput
 
 | Measurement                                                     | Observed result                                              |
 | --------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -79,8 +126,10 @@ Finality was checked by equality of the Beacon finalized block's execution hash 
 `finalized` hash, not by slot count. The withdrawal fixture reached slot 24576 (294,912 protocol
 seconds), using **explicit skipped slots** for long waits and retaining real inactivity penalties.
 Its first large payout was 31.711599587 ETH; final validator balance is zero. It did not fabricate
-votes/finality during skipped periods. Normal `advanceTime`/`advanceTo` process all intervening
-slots.
+votes/finality during skipped periods. That original implementation processed all intervening slots
+in `advanceTime`/`advanceTo`. The current API skips intermediate slots for jumps larger than an
+epoch and produces a real destination block; `advanceSlots`/`advanceEpochs` preserve continuous
+block production.
 
 Consolidation is explicitly tested with `churnLimitQuotient: 4`: the default mainnet quotient 65536
 leaves no consolidation capacity at 64 validators. The default exit/withdrawal test keeps 65536 and

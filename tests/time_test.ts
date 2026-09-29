@@ -90,3 +90,48 @@ Deno.test("shutdown interrupts a long advance at the next phase boundary", async
   await assert.rejects(advancing, /stopping/);
   assert.equal(moves, 1);
 });
+
+Deno.test("large advanceTime/advanceTo finish current duties, skip and produce the destination slot", async () => {
+  const moves: [number, number | undefined][] = [];
+  const skips: number[] = [];
+  const time = new Timeline(0, 4_000, {
+    move: (at, phase) => {
+      moves.push([at, phase]);
+      return Promise.resolve();
+    },
+    skip: (at) => {
+      skips.push(at);
+      return Promise.resolve();
+    },
+  });
+  await time.advanceTime(8192 * 12);
+  assert.equal(time.nowMs, 8192 * 12000 + 4000);
+  assert.deepEqual(skips, [8191 * 12000 + 11500]);
+  assert.deepEqual(moves, [[6000, 6000], [8000, 8000], [9000, 9000], [11500, 11500], [
+    8192 * 12000,
+    0,
+  ], [8192 * 12000 + 4000, 4000]]);
+  await time.advanceTo(16384 * 12 + 0.25);
+  assert.equal(time.nowMs, 16384 * 12000 + 250);
+  assert.equal(skips.length, 2);
+  assert.deepEqual(moves.at(-1), [16384 * 12000 + 250, undefined]);
+  await assert.rejects(time.advanceTo(1), /forward/);
+  await time.advanceTo(16384 * 12 + 11.999);
+  await time.advanceTime(8192 * 12);
+  assert.equal(time.nowMs, 24576 * 12000 + 11999);
+});
+
+Deno.test("failed fast skip faults the timeline and continuous advancement never skips", async () => {
+  let skips = 0;
+  const time = new Timeline(0, 11500, {
+    move: () => Promise.resolve(),
+    skip: () => {
+      skips++;
+      throw new Error("skip interrupted");
+    },
+  });
+  await time.advanceEpochs(2);
+  assert.equal(skips, 0);
+  await assert.rejects(time.advanceTime(100000), /skip interrupted/);
+  await assert.rejects(time.stepSlot(), /reset required/);
+});

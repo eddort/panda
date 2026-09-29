@@ -1,3 +1,4 @@
+import { bakeTag, type ProfileName, profileName, profiles } from "./profiles.ts";
 export const images = {
   geth:
     "ethereum/client-go@sha256:798b7eb1bcef6d4be7576232beea63bf291450f48b025dc8fb5c6e37840e4364",
@@ -17,20 +18,28 @@ export const account = "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266";
 export const privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 export interface Config {
   id: string;
+  profile: ProfileName;
+  bake: string;
   mode: "controlled" | "baseline";
   genesisTime: number;
   validators: number;
   chainId: number;
   churnLimitQuotient: number;
+  /** Gloas separates consolidation capacity from activation/exit churn. */
+  consolidationChurnLimitQuotient: number;
 }
 export function configuration(input: Partial<Config> = {}): Config {
+  const profile = profileName(input.profile ?? Deno.env.get("ZAP_PROFILE") ?? "pectra");
   const result: Config = {
+    profile,
+    bake: bakeTag(input.bake ?? Deno.env.get("ZAP_BAKE") ?? "default"),
     id: "local",
     mode: "controlled",
     genesisTime: 2_000_000_000,
     validators: 64,
     chainId: 1337,
-    churnLimitQuotient: 65536,
+    churnLimitQuotient: profiles[profile].churnLimitQuotient,
+    consolidationChurnLimitQuotient: 65536,
     ...input,
   };
   if (!/^[a-z0-9][a-z0-9-]{0,39}$/.test(result.id)) throw new Error("Invalid devnet id");
@@ -47,5 +56,9 @@ export function configuration(input: Partial<Config> = {}): Config {
   if (!Number.isSafeInteger(result.churnLimitQuotient) || result.churnLimitQuotient < 1) {
     throw new Error("Invalid churn quotient");
   }
+  if (
+    !Number.isSafeInteger(result.consolidationChurnLimitQuotient) ||
+    result.consolidationChurnLimitQuotient < 1
+  ) throw new Error("Invalid consolidation churn quotient");
   return result;
 }

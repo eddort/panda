@@ -1,11 +1,12 @@
 import { Interface, Wallet } from "ethers";
 import { type Devnet } from "../src/api.ts";
-import { account, images, mnemonic, privateKey } from "../src/config.ts";
+import { account, mnemonic, privateKey } from "../src/config.ts";
 import { Infrastructure } from "../src/docker.ts";
 import { deadline, json } from "../src/http.ts";
 import { Network } from "../src/network.ts";
 
 export async function send(net: Devnet, to: string, data: string, value: bigint): Promise<string> {
+  const receiptTimeout = (await net.status()).profile === "gloas" ? 900_000 : 90_000;
   const nonce = Number(
     BigInt(await net.rpc<string>("eth_getTransactionCount", [account, "latest"])),
   );
@@ -26,7 +27,7 @@ export async function send(net: Devnet, to: string, data: string, value: bigint)
     if (!receipt) return;
     if (receipt.status !== "0x1") throw new Error(`Fixture reverted: ${hash}`);
     return receipt;
-  }, 90_000);
+  }, receiptTimeout);
   return hash;
 }
 export async function depositValidator(net: Devnet, index: number): Promise<string> {
@@ -35,7 +36,7 @@ export async function depositValidator(net: Devnet, index: number): Promise<stri
   const infra = new Infrastructure(m.config.id);
   const relative = `added-${index}`;
   const c = await infra.container("deposit-fixture", {
-    Image: images.genesis,
+    Image: m.bake.images.genesis.id,
     Entrypoint: ["/bin/bash"],
     Env: [`MNEMONIC=${mnemonic}`, `INDEX=${index}`, `END=${index + 1}`, `OUT=/data/${relative}`],
     Cmd: [

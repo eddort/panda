@@ -1,0 +1,806 @@
+diff --git a/Cargo.lock b/Cargo.lock
+index 65ddfb1..00594df 100644
+--- a/Cargo.lock
++++ b/Cargo.lock
+@@ -8634,6 +8634,7 @@ version = "0.2.0"
+ dependencies = [
+  "metrics",
+  "parking_lot",
++ "tokio",
+  "types",
+ ]
+ 
+diff --git a/beacon_node/beacon_chain/src/beacon_chain.rs b/beacon_node/beacon_chain/src/beacon_chain.rs
+index f51278d..3ff57db 100644
+--- a/beacon_node/beacon_chain/src/beacon_chain.rs
++++ b/beacon_node/beacon_chain/src/beacon_chain.rs
+@@ -1520,7 +1520,13 @@ impl<T: BeaconChainTypes> BeaconChain<T> {
+         slot: Slot,
+         config: StateSkipConfig,
+     ) -> Result<BeaconState<T::EthSpec>, Error> {
+-        let head_state = self.head_beacon_state_cloned();
++        let head_state = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++            let head = self.head_snapshot();
++            self.store.get_advanced_hot_state_from_cache(head.beacon_block_root, slot)
++                .map(|(_, state)| state).unwrap_or_else(|| head.beacon_state.clone())
++        } else {
++            self.head_beacon_state_cloned()
++        };
+ 
+         match slot.cmp(&head_state.slot()) {
+             Ordering::Equal => Ok(head_state),
+@@ -5331,11 +5337,12 @@ impl<T: BeaconChainTypes> BeaconChain<T> {
+ 
+         let (unadvanced_state, unadvanced_state_root, parent_bid_block_hash) =
+             if parent_block_root == head_block_root {
+-                (
+-                    Cow::Borrowed(head_state),
+-                    cached_head.head_state_root(),
+-                    head_block.payload_bid_block_hash().ok(),
+-                )
++                let cached = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++                    self.store.get_advanced_hot_state_from_cache(head_block_root, proposal_slot)
++                } else { None };
++                let (state, root) = cached.map(|(root, state)| (Cow::Owned(state), root))
++                    .unwrap_or_else(|| (Cow::Borrowed(head_state), cached_head.head_state_root()));
++                (state, root, head_block.payload_bid_block_hash().ok())
+             } else {
+                 let block = self
+                     .get_blinded_block(&parent_block_root)?
+@@ -7237,7 +7244,7 @@ impl<T: BeaconChainTypes> BeaconChain<T> {
+             self.inclusion_list_store.write().prune(slot);
+ 
+             // Don't run heavy-weight tasks during sync.
+-            if self.best_slot() + MAX_PER_SLOT_FORK_CHOICE_DISTANCE < slot {
++            if self.best_slot() + MAX_PER_SLOT_FORK_CHOICE_DISTANCE < slot && std::env::var_os("ZAP_CLOCK_START_MS").is_none() {
+                 return;
+             }
+ 
+diff --git a/beacon_node/beacon_chain/src/beacon_proposer_cache.rs b/beacon_node/beacon_chain/src/beacon_proposer_cache.rs
+index 85e9442..148c070 100644
+--- a/beacon_node/beacon_chain/src/beacon_proposer_cache.rs
++++ b/beacon_node/beacon_chain/src/beacon_proposer_cache.rs
+@@ -260,8 +260,12 @@ pub fn compute_proposer_duties_from_head<T: BeaconChainTypes>(
+     let (mut state, head_state_root, head_block_root, head_node) = {
+         let head = chain.canonical_head.cached_head();
+         // Take a copy of the head state.
+-        let head_state = head.snapshot.beacon_state.clone();
+-        let head_state_root = head.head_state_root();
++        let cached = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++            chain.store.get_advanced_hot_state_from_cache(
++                head.head_block_root(), request_epoch.end_slot(T::EthSpec::slots_per_epoch()))
++        } else { None };
++        let (head_state_root, head_state) = cached.unwrap_or_else(||
++            (head.head_state_root(), head.snapshot.beacon_state.clone()));
+         let head_block_root = head.head_block_root();
+         let head_node = head.head_node();
+         (head_state, head_state_root, head_block_root, head_node)
+diff --git a/beacon_node/beacon_chain/src/lib.rs b/beacon_node/beacon_chain/src/lib.rs
+index 04ea7b8..19510b7 100644
+--- a/beacon_node/beacon_chain/src/lib.rs
++++ b/beacon_node/beacon_chain/src/lib.rs
+@@ -4,6 +4,7 @@ pub mod attestation_verification;
+ pub mod beacon_block_reward;
+ mod beacon_block_streamer;
+ mod beacon_chain;
++mod zap_controlled_skip;
+ mod beacon_fork_choice_store;
+ pub mod beacon_proposer_cache;
+ mod beacon_snapshot;
+diff --git a/beacon_node/beacon_chain/src/proposer_prep_service.rs b/beacon_node/beacon_chain/src/proposer_prep_service.rs
+index 14f7414..188635e 100644
+--- a/beacon_node/beacon_chain/src/proposer_prep_service.rs
++++ b/beacon_node/beacon_chain/src/proposer_prep_service.rs
+@@ -2,7 +2,7 @@ use crate::{BeaconChain, BeaconChainTypes};
+ use slot_clock::SlotClock;
+ use std::sync::Arc;
+ use task_executor::TaskExecutor;
+-use tokio::time::sleep;
++use slot_clock::controlled::sleep;
+ use tracing::{debug, error};
+ 
+ /// Spawns a routine which ensures the EL is provided advance notice of any block producers.
+diff --git a/beacon_node/beacon_chain/src/shuffling_cache.rs b/beacon_node/beacon_chain/src/shuffling_cache.rs
+index c57af26..fb25ae8 100644
+--- a/beacon_node/beacon_chain/src/shuffling_cache.rs
++++ b/beacon_node/beacon_chain/src/shuffling_cache.rs
+@@ -398,7 +398,9 @@ where
+             metrics::start_timer(&metrics::ATTESTATION_PROCESSING_STATE_READ_TIMES);
+ 
+         let cached_head = canonical_head.cached_head();
+-        let head_state_opt = if cached_head.head_block_root() == head_block_root {
++        let head_state_opt = if cached_head.head_block_root() == head_block_root
++            && (std::env::var_os("ZAP_CLOCK_START_MS").is_none()
++                || cached_head.snapshot.beacon_state.current_epoch() + 1 >= shuffling_epoch) {
+             Some((
+                 cached_head.snapshot.beacon_state.clone(),
+                 cached_head.head_state_root(),
+diff --git a/beacon_node/beacon_chain/src/state_advance_timer.rs b/beacon_node/beacon_chain/src/state_advance_timer.rs
+index 185f16c..bea1a64 100644
+--- a/beacon_node/beacon_chain/src/state_advance_timer.rs
++++ b/beacon_node/beacon_chain/src/state_advance_timer.rs
+@@ -26,7 +26,7 @@ use std::sync::{
+     atomic::{AtomicBool, Ordering},
+ };
+ use task_executor::TaskExecutor;
+-use tokio::time::{Instant, sleep, sleep_until};
++use slot_clock::controlled::{sleep, sleep_until, instant_now};
+ use tracing::{Instrument, debug, debug_span, error, instrument, warn};
+ use types::{AttestationShufflingId, BeaconStateError, EthSpec, Hash256, RelativeEpoch, Slot};
+ 
+@@ -125,19 +125,19 @@ async fn state_advance_timer<T: BeaconChainTypes>(
+         // Run the state advance 3/4 of the way through the slot (9s on mainnet).
+         let state_advance_offset = slot_duration / 4;
+         let state_advance_instant = if duration_to_next_slot > state_advance_offset {
+-            Instant::now() + duration_to_next_slot - state_advance_offset
++            instant_now() + duration_to_next_slot - state_advance_offset
+         } else {
+             // Skip the state advance for the current slot and wait until the next one.
+-            Instant::now() + duration_to_next_slot + slot_duration - state_advance_offset
++            instant_now() + duration_to_next_slot + slot_duration - state_advance_offset
+         };
+ 
+         // Run fork choice 23/24s of the way through the slot (11.5s on mainnet).
+         // We need to run after the state advance, so use the same condition as above.
+         let fork_choice_offset = slot_duration / FORK_CHOICE_LOOKAHEAD_FACTOR;
+         let fork_choice_instant = if duration_to_next_slot > state_advance_offset {
+-            Instant::now() + duration_to_next_slot - fork_choice_offset
++            instant_now() + duration_to_next_slot - fork_choice_offset
+         } else {
+-            Instant::now() + duration_to_next_slot + slot_duration - fork_choice_offset
++            instant_now() + duration_to_next_slot + slot_duration - fork_choice_offset
+         };
+ 
+         // Wait for the state advance.
+@@ -184,6 +184,7 @@ async fn state_advance_timer<T: BeaconChainTypes>(
+ 
+                     // Permit this blocking task to spawn again, next time the timer fires.
+                     is_running.unlock();
++                    slot_clock::controlled::mark("state_advance", current_slot.as_u64());
+                 },
+                 "state_advance_blocking",
+             );
+@@ -229,6 +230,7 @@ async fn state_advance_timer<T: BeaconChainTypes>(
+                 // in `ForkChoiceSignalTx`.
+                 beacon_chain.task_executor.clone().spawn_blocking(
+                     move || {
++                        slot_clock::controlled::mark("fork_choice", next_slot.as_u64() - 1);
+                         // Signal block proposal for the next slot (if it happens to be waiting).
+                         if let Some(tx) = &beacon_chain.fork_choice_signal_tx
+                             && let Err(e) = tx.notify_fork_choice_complete(next_slot)
+diff --git a/beacon_node/http_api/src/attester_duties.rs b/beacon_node/http_api/src/attester_duties.rs
+index 2106539..f267319 100644
+--- a/beacon_node/http_api/src/attester_duties.rs
++++ b/beacon_node/http_api/src/attester_duties.rs
+@@ -96,11 +96,13 @@ fn compute_historic_attester_duties<T: BeaconChainTypes>(
+         let head = &cached_head.snapshot;
+ 
+         if head.beacon_state.current_epoch() <= request_epoch {
+-            Some((
+-                head.beacon_state_root(),
+-                head.beacon_state.clone(),
+-                execution_status.is_optimistic_or_invalid(),
+-            ))
++            let cached = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++                chain.store.get_advanced_hot_state_from_cache(
++                    head.beacon_block_root, request_epoch.end_slot(T::EthSpec::slots_per_epoch()))
++            } else { None };
++            let (root, state) = cached.unwrap_or_else(||
++                (head.beacon_state_root(), head.beacon_state.clone()));
++            Some((root, state, execution_status.is_optimistic_or_invalid()))
+         } else {
+             None
+         }
+diff --git a/beacon_node/http_api/src/ptc_duties.rs b/beacon_node/http_api/src/ptc_duties.rs
+index 6d27fa5..45fc022 100644
+--- a/beacon_node/http_api/src/ptc_duties.rs
++++ b/beacon_node/http_api/src/ptc_duties.rs
+@@ -99,11 +99,13 @@ fn compute_ptc_duties_from_state<T: BeaconChainTypes>(
+         let head = &cached_head.snapshot;
+ 
+         if head.beacon_state.current_epoch() <= request_epoch {
+-            Some((
+-                head.beacon_state_root(),
+-                head.beacon_state.clone(),
+-                execution_status.is_optimistic_or_invalid(),
+-            ))
++            let cached = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++                chain.store.get_advanced_hot_state_from_cache(
++                    head.beacon_block_root, request_epoch.end_slot(T::EthSpec::slots_per_epoch()))
++            } else { None };
++            let (root, state) = cached.unwrap_or_else(||
++                (head.beacon_state_root(), head.beacon_state.clone()));
++            Some((root, state, execution_status.is_optimistic_or_invalid()))
+         } else {
+             None
+         }
+diff --git a/beacon_node/timer/src/lib.rs b/beacon_node/timer/src/lib.rs
+index 1bd1c1e..4fb3bd3 100644
+--- a/beacon_node/timer/src/lib.rs
++++ b/beacon_node/timer/src/lib.rs
+@@ -5,7 +5,7 @@
+ use beacon_chain::{BeaconChain, BeaconChainTypes};
+ use slot_clock::SlotClock;
+ use std::sync::Arc;
+-use tokio::time::sleep;
++use slot_clock::controlled::sleep;
+ use tracing::{info, warn};
+ 
+ /// Spawns a timer service which periodically executes tasks for the beacon chain
+@@ -22,7 +22,13 @@ pub fn spawn_timer<T: BeaconChainTypes>(
+             };
+ 
+             sleep(duration_to_next_slot).await;
++            if let Err(error) = beacon_chain.prepare_controlled_skip().await {
++                warn!(%error, "Controlled skip preparation failed");
++                continue;
++            }
+             beacon_chain.per_slot_task().await;
++            if let Ok(slot) = beacon_chain.slot() { slot_clock::controlled::mark("skip_ready", slot.as_u64()); }
++            if let Ok(slot) = beacon_chain.slot() { slot_clock::controlled::mark("slot", slot.as_u64()); }
+         }
+     };
+ 
+diff --git a/common/slot_clock/Cargo.toml b/common/slot_clock/Cargo.toml
+index 2e1982e..0fa5cfd 100644
+--- a/common/slot_clock/Cargo.toml
++++ b/common/slot_clock/Cargo.toml
+@@ -5,6 +5,7 @@ authors = ["Paul Hauner <paul@paulhauner.com>"]
+ edition = { workspace = true }
+ 
+ [dependencies]
++tokio = { workspace = true, features = ["time"] }
+ metrics = { workspace = true }
+ parking_lot = { workspace = true }
+ types = { workspace = true }
+diff --git a/common/slot_clock/src/lib.rs b/common/slot_clock/src/lib.rs
+index 757d016..8b14b62 100644
+--- a/common/slot_clock/src/lib.rs
++++ b/common/slot_clock/src/lib.rs
+@@ -7,6 +7,7 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
+ pub use crate::manual_slot_clock::ManualSlotClock as TestingSlotClock;
+ pub use crate::manual_slot_clock::ManualSlotClock;
+ pub use crate::system_time_slot_clock::SystemTimeSlotClock;
++pub mod controlled;
+ pub use metrics::scrape_for_metrics;
+ pub use types::Slot;
+ 
+diff --git a/common/slot_clock/src/system_time_slot_clock.rs b/common/slot_clock/src/system_time_slot_clock.rs
+index 7701320..3ddf94b 100644
+--- a/common/slot_clock/src/system_time_slot_clock.rs
++++ b/common/slot_clock/src/system_time_slot_clock.rs
+@@ -1,5 +1,7 @@
+ use super::{ManualSlotClock, SlotClock};
+-use std::time::{Duration, SystemTime, UNIX_EPOCH};
++use std::time::Duration;
++#[cfg(test)]
++use std::time::{SystemTime, UNIX_EPOCH};
+ use types::Slot;
+ 
+ /// Determines the present slot based upon the present system time.
+@@ -16,17 +18,17 @@ impl SlotClock for SystemTimeSlotClock {
+     }
+ 
+     fn now(&self) -> Option<Slot> {
+-        let now = SystemTime::now().duration_since(UNIX_EPOCH).ok()?;
++        let now = crate::controlled::now()?;
+         self.clock.slot_of(now)
+     }
+ 
+     fn is_prior_to_genesis(&self) -> Option<bool> {
+-        let now = SystemTime::now().duration_since(UNIX_EPOCH).ok()?;
++        let now = crate::controlled::now()?;
+         Some(now < *self.clock.genesis_duration())
+     }
+ 
+     fn now_duration(&self) -> Option<Duration> {
+-        SystemTime::now().duration_since(UNIX_EPOCH).ok()
++        crate::controlled::now()
+     }
+ 
+     fn slot_of(&self, now: Duration) -> Option<Slot> {
+@@ -34,12 +36,12 @@ impl SlotClock for SystemTimeSlotClock {
+     }
+ 
+     fn duration_to_next_slot(&self) -> Option<Duration> {
+-        let now = SystemTime::now().duration_since(UNIX_EPOCH).ok()?;
++        let now = crate::controlled::now()?;
+         self.clock.duration_to_next_slot_from(now)
+     }
+ 
+     fn duration_to_next_epoch(&self, slots_per_epoch: u64) -> Option<Duration> {
+-        let now = SystemTime::now().duration_since(UNIX_EPOCH).ok()?;
++        let now = crate::controlled::now()?;
+         self.clock.duration_to_next_epoch_from(now, slots_per_epoch)
+     }
+ 
+@@ -48,7 +50,7 @@ impl SlotClock for SystemTimeSlotClock {
+     }
+ 
+     fn duration_to_slot(&self, slot: Slot) -> Option<Duration> {
+-        let now = SystemTime::now().duration_since(UNIX_EPOCH).ok()?;
++        let now = crate::controlled::now()?;
+         self.clock.duration_to_slot(slot, now)
+     }
+ 
+diff --git a/consensus/types/src/state/beacon_state.rs b/consensus/types/src/state/beacon_state.rs
+index b4644a5..532b1a0 100644
+--- a/consensus/types/src/state/beacon_state.rs
++++ b/consensus/types/src/state/beacon_state.rs
+@@ -3674,6 +3674,17 @@ impl<E: EthSpec> BeaconState<E> {
+             return Err(BeaconStateError::InvalidIndicesCount);
+         }
+ 
++        if !shuffle_indices || indices.len() <= 4096 {
++            let max = spec.max_effective_balance_for_fork(self.fork_name_unchecked());
++            let ordered = super::zap_weighted_selection::order(indices, seed, spec.shuffle_round_count, shuffle_indices)
++                .ok_or(BeaconStateError::UnableToShuffle)?;
++            let candidates = ordered.iter().map(|&index| {
++                let threshold = self.get_effective_balance(index)?.safe_mul(MAX_RANDOM_VALUE)?.safe_div(max)?;
++                Ok((index, threshold))
++            }).collect::<Result<Vec<_>, BeaconStateError>>()?;
++            return super::zap_weighted_selection::select(&candidates, seed, size)
++                .ok_or(BeaconStateError::InvalidIndicesCount);
++        }
+         let mut selected = Vec::with_capacity(size);
+         let mut i = 0usize;
+ 
+diff --git a/consensus/types/src/state/mod.rs b/consensus/types/src/state/mod.rs
+index 715db4b..afc7c40 100644
+--- a/consensus/types/src/state/mod.rs
++++ b/consensus/types/src/state/mod.rs
+@@ -1,6 +1,7 @@
+ mod activation_queue;
+ mod balance;
+ mod beacon_state;
++mod zap_weighted_selection;
+ #[macro_use]
+ mod committee_cache;
+ mod epoch_cache;
+diff --git a/validator_client/beacon_node_fallback/src/beacon_head_monitor.rs b/validator_client/beacon_node_fallback/src/beacon_head_monitor.rs
+index d093813..a63893c 100644
+--- a/validator_client/beacon_node_fallback/src/beacon_head_monitor.rs
++++ b/validator_client/beacon_node_fallback/src/beacon_head_monitor.rs
+@@ -6,7 +6,7 @@ use std::collections::HashMap;
+ use std::sync::Arc;
+ use std::time::Duration;
+ use tokio::sync::{RwLock, broadcast};
+-use tokio::time::sleep;
++use slot_clock::controlled::sleep;
+ use tracing::{debug, info, warn};
+ use types::EthSpec;
+ 
+diff --git a/validator_client/beacon_node_fallback/src/lib.rs b/validator_client/beacon_node_fallback/src/lib.rs
+index f3cd524..e7230a6 100644
+--- a/validator_client/beacon_node_fallback/src/lib.rs
++++ b/validator_client/beacon_node_fallback/src/lib.rs
+@@ -94,7 +94,7 @@ pub fn start_fallback_updater_service<T: SlotClock + 'static, E: EthSpec>(
+                         .as_ref()
+                         .and_then(|slot_clock| slot_clock.duration_to_next_slot())
+                         .unwrap_or_else(|| beacon_nodes_ref.spec.get_slot_duration());
+-                    sleep(sleep_time).await
++                    slot_clock::controlled::sleep(sleep_time).await
+                 }
+             }
+         };
+@@ -117,7 +117,7 @@ pub fn start_fallback_updater_service<T: SlotClock + 'static, E: EthSpec>(
+                 let sleep_time = slot_clock
+                     .duration_to_slot(gloas_fork_slot)
+                     .unwrap_or_else(|| beacon_nodes_ref.spec.get_slot_duration());
+-                sleep(sleep_time).await;
++                slot_clock::controlled::sleep(sleep_time).await;
+             }
+             loop {
+                 if let Err(error) =
+@@ -131,7 +131,7 @@ pub fn start_fallback_updater_service<T: SlotClock + 'static, E: EthSpec>(
+                     let sleep_time = slot_clock
+                         .duration_to_next_slot()
+                         .unwrap_or_else(|| beacon_nodes_ref.spec.get_slot_duration());
+-                    sleep(sleep_time).await;
++                    slot_clock::controlled::sleep(sleep_time).await;
+                 }
+             }
+         };
+@@ -154,7 +154,7 @@ pub fn start_fallback_updater_service<T: SlotClock + 'static, E: EthSpec>(
+                 })
+                 .unwrap_or_else(|| Duration::from_secs(1));
+ 
+-            sleep(sleep_time).await
++            slot_clock::controlled::sleep(sleep_time).await
+         }
+     };
+ 
+diff --git a/validator_client/src/lib.rs b/validator_client/src/lib.rs
+index 6cf519b..1e5aae8 100644
+--- a/validator_client/src/lib.rs
++++ b/validator_client/src/lib.rs
+@@ -750,6 +750,7 @@ impl<E: EthSpec> ProductionValidatorClient<E> {
+             );
+         }
+ 
++        slot_clock::controlled::mark("ready", 0);
+         Ok(())
+     }
+ }
+@@ -838,9 +839,7 @@ async fn init_from_beacon_node<E: EthSpec>(
+ }
+ 
+ async fn wait_for_genesis(genesis_time: u64) -> Result<(), String> {
+-    let now = SystemTime::now()
+-        .duration_since(UNIX_EPOCH)
+-        .map_err(|e| format!("Unable to read system time: {:?}", e))?;
++    let now = slot_clock::controlled::now().ok_or("Unable to read protocol time")?;
+     let genesis_time = Duration::from_secs(genesis_time);
+ 
+     // If the time now is less than (prior to) genesis, then delay until the
+diff --git a/validator_client/validator_services/src/attestation_service.rs b/validator_client/validator_services/src/attestation_service.rs
+index e18c940..b2a00c9 100644
+--- a/validator_client/validator_services/src/attestation_service.rs
++++ b/validator_client/validator_services/src/attestation_service.rs
+@@ -11,7 +11,8 @@ use std::ops::Deref;
+ use std::sync::Arc;
+ use task_executor::TaskExecutor;
+ use tokio::sync::{Mutex, broadcast};
+-use tokio::time::{Duration, Instant, sleep, sleep_until};
++use tokio::time::{Duration, Instant};
++use slot_clock::controlled::{sleep, sleep_until, instant_now};
+ use tracing::{Instrument, debug, error, info, info_span, instrument, warn};
+ use tree_hash::TreeHash;
+ use types::{AttestationData, ChainSpec, CommitteeIndex, EthSpec, Hash256, Slot};
+@@ -319,7 +320,7 @@ impl<S: ValidatorStore + 'static, T: SlotClock + 'static> AttestationService<S,
+                     next_slot_deadline.saturating_sub(self.chain_spec.get_slot_duration())
+                 })
+                 .unwrap_or(Duration::from_secs(0));
+-            sleep(duration_to_deadline).await;
++            sleep_until(instant_now() + duration_to_deadline).await;
+ 
+             attestation_service
+                 .beacon_nodes
+@@ -372,7 +373,7 @@ impl<S: ValidatorStore + 'static, T: SlotClock + 'static> AttestationService<S,
+             .slot_clock
+             .duration_to_slot(slot + 1)
+             .ok_or("Unable to determine duration to next slot")?;
+-        let aggregate_production_instant = Instant::now()
++        let aggregate_production_instant = instant_now()
+             + duration_to_next_slot
+                 .checked_add(self.chain_spec.get_aggregate_attestation_due::<S::E>(slot))
+                 .and_then(|offset| offset.checked_sub(self.chain_spec.get_slot_duration()))
+@@ -482,6 +483,7 @@ impl<S: ValidatorStore + 'static, T: SlotClock + 'static> AttestationService<S,
+                 );
+             })?;
+ 
++        slot_clock::controlled::mark(&format!("aggregates_{}", committee_index), slot.as_u64());
+         Ok(())
+     }
+ 
+@@ -620,6 +622,7 @@ impl<S: ValidatorStore + 'static, T: SlotClock + 'static> AttestationService<S,
+             warn!("No attestations were published");
+         }
+ 
++        slot_clock::controlled::mark("attestations", slot.as_u64());
+         Ok(())
+     }
+ 
+@@ -879,12 +882,12 @@ mod tests {
+     /// trigger.
+     #[tokio::test]
+     async fn delay_triggers_when_in_the_past() {
+-        let in_the_past = Instant::now() - Duration::from_secs(2);
++        let in_the_past = instant_now() - Duration::from_secs(2);
+         let state_1 = Arc::new(RwLock::new(in_the_past));
+         let state_2 = state_1.clone();
+ 
+         sleep_until(in_the_past)
+-            .map(move |()| *state_1.write() = Instant::now())
++            .map(move |()| *state_1.write() = instant_now())
+             .await;
+ 
+         assert!(
+diff --git a/validator_client/validator_services/src/builder_preferences_service.rs b/validator_client/validator_services/src/builder_preferences_service.rs
+index 0acae03..cc461c9 100644
+--- a/validator_client/validator_services/src/builder_preferences_service.rs
++++ b/validator_client/validator_services/src/builder_preferences_service.rs
+@@ -11,7 +11,7 @@ use slot_clock::SlotClock;
+ use std::collections::{BTreeMap, HashMap};
+ use std::sync::Arc;
+ use task_executor::TaskExecutor;
+-use tokio::time::sleep;
++use slot_clock::controlled::sleep;
+ use tracing::{debug, error, info};
+ use types::{ChainSpec, EthSpec, ForkName, Slot};
+ use validator_store::ValidatorStore;
+diff --git a/validator_client/validator_services/src/duties_service.rs b/validator_client/validator_services/src/duties_service.rs
+index 5fe413a..e2ee792 100644
+--- a/validator_client/validator_services/src/duties_service.rs
++++ b/validator_client/validator_services/src/duties_service.rs
+@@ -28,7 +28,8 @@ use std::sync::Arc;
+ use std::sync::atomic::{AtomicBool, Ordering};
+ use std::time::Duration;
+ use task_executor::TaskExecutor;
+-use tokio::{sync::mpsc::Sender, time::sleep};
++use tokio::sync::mpsc::Sender;
++use slot_clock::controlled::sleep;
+ use tracing::{debug, error, info, warn};
+ use types::{ChainSpec, Epoch, EthSpec, Hash256, SelectionProof, Slot};
+ use validator_metrics::{ATTESTATION_DUTY, get_int_gauge, set_int_gauge};
+@@ -608,6 +609,7 @@ pub fn start_update_service<S: ValidatorStore + 'static, T: SlotClock + 'static>
+                 // Run this poll before the wait, this should hopefully download all the indices
+                 // before the block/attestation tasks need them.
+                 poll_validator_indices(&duties_service).await;
++                if let Some(slot) = duties_service.slot_clock.now() { slot_clock::controlled::mark("indices", slot.as_u64()); }
+ 
+                 if let Some(duration) = duties_service.slot_clock.duration_to_next_slot() {
+                     sleep(duration).await;
+diff --git a/validator_client/validator_services/src/payload_attestation_service.rs b/validator_client/validator_services/src/payload_attestation_service.rs
+index 56adafb..ccf6b77 100644
+--- a/validator_client/validator_services/src/payload_attestation_service.rs
++++ b/validator_client/validator_services/src/payload_attestation_service.rs
+@@ -8,7 +8,7 @@ use std::ops::Deref;
+ use std::sync::Arc;
+ use task_executor::TaskExecutor;
+ use tokio::sync::{Mutex, mpsc};
+-use tokio::time::sleep;
++use slot_clock::controlled::sleep;
+ use tracing::{debug, error, info, warn};
+ use types::{ChainSpec, EthSpec, PayloadAttestationData, Slot};
+ use validator_store::ValidatorStore;
+@@ -181,7 +181,7 @@ where
+                 .and_then(|d| d.checked_add(self.chain_spec.get_payload_attestation_due()))
+                 .map(|d| d.saturating_sub(self.chain_spec.get_slot_duration()))
+                 .unwrap_or_default();
+-            sleep(deadline).await;
++            slot_clock::controlled::sleep_until(slot_clock::controlled::instant_now() + deadline).await;
+             data_result = self
+                 .produce_payload_attestation_data(PayloadAttestationTrigger::Deadline(
+                     attestation_slot,
+@@ -456,6 +456,7 @@ where
+             "Successfully published payload attestations"
+         );
+ 
++        slot_clock::controlled::mark("payload_attestations", slot.as_u64());
+         Ok(())
+     }
+ }
+diff --git a/validator_client/validator_services/src/preparation_service.rs b/validator_client/validator_services/src/preparation_service.rs
+index cacab6a..1d79826 100644
+--- a/validator_client/validator_services/src/preparation_service.rs
++++ b/validator_client/validator_services/src/preparation_service.rs
+@@ -8,7 +8,7 @@ use std::ops::Deref;
+ use std::sync::Arc;
+ use std::time::{SystemTime, UNIX_EPOCH};
+ use task_executor::TaskExecutor;
+-use tokio::time::sleep;
++use slot_clock::controlled::sleep;
+ use tracing::{debug, error, info, warn};
+ use types::{
+     Address, ChainSpec, EthSpec, ProposerPreparationData, SignedValidatorRegistrationData, Slot,
+diff --git a/validator_client/validator_services/src/proposer_preferences_service.rs b/validator_client/validator_services/src/proposer_preferences_service.rs
+index ed19fc5..0ff67ad 100644
+--- a/validator_client/validator_services/src/proposer_preferences_service.rs
++++ b/validator_client/validator_services/src/proposer_preferences_service.rs
+@@ -7,7 +7,7 @@ use std::collections::{HashMap, HashSet};
+ use std::ops::Deref;
+ use std::sync::Arc;
+ use task_executor::TaskExecutor;
+-use tokio::time::sleep;
++use slot_clock::controlled::sleep;
+ use tracing::{debug, error, info, warn};
+ use types::{ChainSpec, Epoch, EthSpec, ForkName, Hash256, ProposerPreferences, Slot};
+ use validator_store::{ProposalData, ValidatorStore};
+diff --git a/validator_client/validator_services/src/sync_committee_service.rs b/validator_client/validator_services/src/sync_committee_service.rs
+index e5d1d8f..946bf08 100644
+--- a/validator_client/validator_services/src/sync_committee_service.rs
++++ b/validator_client/validator_services/src/sync_committee_service.rs
+@@ -14,7 +14,8 @@ use std::sync::Arc;
+ use std::sync::atomic::{AtomicBool, Ordering};
+ use task_executor::TaskExecutor;
+ use tokio::sync::{Mutex, broadcast};
+-use tokio::time::{Duration, Instant, sleep, sleep_until};
++use tokio::time::{Duration, Instant};
++use slot_clock::controlled::{sleep, sleep_until, instant_now};
+ use tracing::{Instrument, debug, error, info, info_span, instrument, trace, warn};
+ use types::{
+     ChainSpec, EthSpec, Hash256, Slot, SyncCommitteeSubscription, SyncContributionData, SyncDuty,
+@@ -240,7 +241,7 @@ impl<S: ValidatorStore + 'static, T: SlotClock + 'static> SyncCommitteeService<S
+             debug!(%slot, "Skipping sync committee tasks, contribution deadline passed");
+             return;
+         }
+-        let aggregate_production_instant = Instant::now() + contribution_delay;
++        let aggregate_production_instant = instant_now() + contribution_delay;
+ 
+         debug!(
+             %slot,
+@@ -379,6 +380,7 @@ impl<S: ValidatorStore + 'static, T: SlotClock + 'static> SyncCommitteeService<S
+             }
+         }
+ 
++        slot_clock::controlled::mark("sync_messages", slot.as_u64());
+         Ok(())
+     }
+ 
+@@ -402,6 +404,9 @@ impl<S: ValidatorStore + 'static, T: SlotClock + 'static> SyncCommitteeService<S
+             return;
+         };
+ 
++        let mask = slot_duties.aggregators.keys().fold(0u64, |mask, subnet| { let index: u64 = (*subnet).into(); mask | (1 << index) });
++        slot_clock::controlled::mark("sync_expected_mask", mask);
++        slot_clock::controlled::mark("sync_expected_slot", slot.as_u64());
+         for (subnet_id, subnet_aggregators) in slot_duties.aggregators {
+             let service = self.clone();
+             self.inner.executor.spawn(
+@@ -513,6 +518,7 @@ impl<S: ValidatorStore + 'static, T: SlotClock + 'static> SyncCommitteeService<S
+             }
+         }
+ 
++        slot_clock::controlled::mark(&format!("sync_aggregate_{}", subnet_id), slot.as_u64());
+         Ok(())
+     }
+ 
+@@ -832,9 +838,9 @@ mod tests {
+     /// Resume real time so the service can complete signing and HTTP requests, then pause again.
+     async fn wait_for_count(len: impl Fn() -> usize, count: usize) {
+         tokio::time::resume();
+-        let deadline = Instant::now() + Duration::from_secs(5);
++        let deadline = instant_now() + Duration::from_secs(5);
+ 
+-        while len() < count && Instant::now() < deadline {
++        while len() < count && instant_now() < deadline {
+             tokio::time::sleep(Duration::from_millis(10)).await;
+         }
+ 
+diff --git a/consensus/types/src/state/zap_weighted_selection.rs b/consensus/types/src/state/zap_weighted_selection.rs
+new file mode 100644
+--- /dev/null
++++ b/consensus/types/src/state/zap_weighted_selection.rs
+@@ -0,0 +1,96 @@
++//! Equivalent PTC rejection sampling: cache candidate balances and consume all 16
++//! random u16 values from each SHA-256 digest before hashing the next counter.
++use ethereum_hashing::hash_fixed;
++
++pub fn order(indices: &[usize], seed: &[u8], rounds: u8, shuffle: bool) -> Option<Vec<usize>> {
++    if shuffle {
++        if seed.len() != 32 { return None; }
++        swap_or_not_shuffle::shuffle_list(indices.to_vec(), rounds, seed, false)
++    } else {
++        Some(indices.to_vec())
++    }
++}
++
++pub fn select(candidates: &[(usize, u64)], seed: &[u8], size: usize) -> Option<Vec<usize>> {
++    if candidates.is_empty() { return None; }
++    let mut preimage = seed.to_vec();
++    preimage.extend_from_slice(&[0; 8]);
++    let mut counter = 0u64;
++    let mut candidate = 0usize;
++    let mut selected = Vec::with_capacity(size);
++    while selected.len() < size {
++        preimage.get_mut(seed.len()..)?.copy_from_slice(&counter.to_le_bytes());
++        let random = hash_fixed(&preimage);
++        for bytes in random.chunks_exact(2) {
++            let (index, threshold) = *candidates.get(candidate)?;
++            let value = u16::from_le_bytes([bytes[0], bytes[1]]) as u64;
++            if value <= threshold {
++                selected.push(index);
++                if selected.len() == size { break; }
++            }
++            candidate += 1;
++            if candidate == candidates.len() { candidate = 0; }
++        }
++        counter = counter.checked_add(1)?;
++    }
++    Some(selected)
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    // Intentionally retains upstream's per-candidate hash and multiplication.
++    fn reference(indices: &[usize], balances: &[u64], seed: &[u8], size: usize, max: u64, shuffle: bool) -> Vec<usize> {
++        let mut output = Vec::new();
++        let mut i = 0usize;
++        while output.len() < size {
++            let position = if shuffle { swap_or_not_shuffle::compute_shuffled_index(i % indices.len(), indices.len(), seed, 90).unwrap() } else { i % indices.len() };
++            let index = indices[position];
++            let mut preimage = seed.to_vec();
++            preimage.extend_from_slice(&((i / 16) as u64).to_le_bytes());
++            let digest = hash_fixed(&preimage);
++            let offset = (i % 16) * 2;
++            let random = u16::from_le_bytes([digest[offset], digest[offset + 1]]) as u64;
++            if balances[index] * 65535 >= max * random { output.push(index); }
++            i += 1;
++        }
++        output
++    }
++
++    #[test]
++    fn identical_to_upstream_with_rejections_repeats_and_non_divisible_committees() {
++        let max = 2_048_000_000_000u64;
++        for seed_byte in [0, 1, 71, 255] {
++            let seed = [seed_byte; 32];
++            for balances in [vec![32_000_000_000; 7], vec![0, 1_000_000_000, 31_000_000_000, 32_000_000_000, 63_000_000_000, 2_047_000_000_000, max]] {
++                for indices in [vec![0, 1], vec![6, 4, 2], vec![3, 6, 1, 5, 0, 4, 2]] {
++                    let candidates: Vec<_> = indices.iter().map(|&i| (i, balances[i] * 65535 / max)).collect();
++                    for size in [0, 1, 17, 512] {
++                        assert_eq!(select(&candidates, &seed, size).unwrap(), reference(&indices, &balances, &seed, size, max, false));
++                    }
++                }
++            }
++        }
++    }
++
++    #[test]
++    fn batched_shuffling_and_selection_match_individual_upstream_shuffles() {
++        let max = 2_048_000_000_000u64;
++        for seed_byte in [0, 77, 255] {
++            let seed = [seed_byte; 32];
++            for length in [2, 7, 64, 256] {
++                let indices: Vec<_> = (0..length).rev().collect();
++                let balances: Vec<_> = (0..length).map(|i| if i % 3 == 0 { max } else { 32_000_000_000 }).collect();
++                let ordered = order(&indices, &seed, 90, true).unwrap();
++                for i in 0..length {
++                    assert_eq!(ordered[i], indices[swap_or_not_shuffle::compute_shuffled_index(i, length, &seed, 90).unwrap()]);
++                }
++                let candidates: Vec<_> = ordered.iter().map(|&i| (i, balances[i] * 65535 / max)).collect();
++                for size in [1, 32, 512] {
++                    assert_eq!(select(&candidates, &seed, size).unwrap(), reference(&indices, &balances, &seed, size, max, true));
++                }
++            }
++        }
++    }
++}
+diff --git a/consensus/types/tests/zap_weighted_selection.rs b/consensus/types/tests/zap_weighted_selection.rs
+new file mode 100644
+--- /dev/null
++++ b/consensus/types/tests/zap_weighted_selection.rs
+@@ -0,0 +1,2 @@
++#[path = "../src/state/zap_weighted_selection.rs"]
++mod selection;
+diff --git a/beacon_node/beacon_chain/src/zap_controlled_skip.rs b/beacon_node/beacon_chain/src/zap_controlled_skip.rs
+new file mode 100644
+--- /dev/null
++++ b/beacon_node/beacon_chain/src/zap_controlled_skip.rs
+@@ -0,0 +1,43 @@
++//! Prepare a controlled clock jump once, persisting authentic empty-slot states
++//! through the normal store for duties, proposals and verification. Never changes head.
++use crate::{BeaconChain, BeaconChainTypes, BeaconChainError};
++use state_processing::{per_slot_processing, GloasVerificationContext};
++use std::sync::Arc;
++use types::{EthSpec, Slot};
++
++impl<T: BeaconChainTypes> BeaconChain<T> {
++    pub async fn prepare_controlled_skip(self: &Arc<Self>) -> Result<(), String> {
++        if std::env::var_os("ZAP_CLOCK_START_MS").is_none() { return Ok(()); }
++        let slot = self.slot().map_err(|e| format!("{e:?}"))?;
++        if self.best_slot() + T::EthSpec::slots_per_epoch() >= slot { return Ok(()); }
++        let chain = self.clone();
++        tokio::task::spawn_blocking(move || chain.cache_controlled_skip(slot + 1))
++            .await.map_err(|e| format!("{e:?}"))?
++            .map_err(|e| format!("{e:?}"))
++    }
++
++    fn cache_controlled_skip(&self, target: Slot) -> Result<(), BeaconChainError> {
++        let head = self.head_snapshot();
++        let block_root = head.beacon_block_root;
++        let (mut root, mut state) = if let Some(cached) = self.store
++            .get_advanced_hot_state_from_cache(block_root, target) {
++            cached
++        } else {
++            let mut state = head.beacon_state.clone();
++            (state.update_tree_hash_cache()?, state)
++        };
++        drop(head);
++        if state.slot() >= target { return Ok(()); }
++        while state.slot() < target {
++            per_slot_processing(&mut state, Some(root),
++                GloasVerificationContext::from_cache(self.builder_onboarding_cache.as_deref()),
++                &self.spec)?;
++            root = state.update_tree_hash_cache()?;
++            // Import and finalization need the intermediate summaries and HDiff bases,
++            // even if the destination pre-state is already cached. This is the same
++            // persistence path as ordinary block-verification catchup.
++            self.store.put_state(&root, &state)?;
++        }
++        Ok(())
++    }
++}

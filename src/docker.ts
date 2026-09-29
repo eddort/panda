@@ -1,6 +1,9 @@
 // @deno-types="@types/dockerode"
 import Docker from "dockerode";
 import { Writable } from "node:stream";
+import { createReadStream, createWriteStream } from "node:fs";
+import { pipeline } from "node:stream/promises";
+import { createGzip } from "node:zlib";
 
 export const LABEL = "io.zap-net.id";
 export const ROLE = "io.zap-net.role";
@@ -37,6 +40,10 @@ export class Infrastructure {
     } catch (error) {
       if (!missing(error)) throw error;
     }
+    if (/^sha256:[a-f0-9]{64}$/.test(ref)) {
+      if (await this.restoreImage(ref)) return;
+      throw new Error(`Local image ${ref} is missing`);
+    }
     const stream = await this.docker.pull(ref);
     await new Promise<void>((resolve, reject) => {
       this.docker.modem.followProgress(
@@ -44,6 +51,53 @@ export class Infrastructure {
         (error: Error | null) => error ? reject(error) : resolve(),
       );
     });
+  }
+  private imageArchive(id: string): string {
+    if (!/^sha256:[a-f0-9]{64}$/.test(id)) throw new Error("Expected immutable image ID");
+    return `.cache/baker/images/${id.slice(7)}.tar.gz`;
+  }
+  async cacheImage(id: string): Promise<void> {
+    const path = this.imageArchive(id);
+    try {
+      await Deno.stat(path);
+      return;
+    } catch (error) {
+      if (!(error instanceof Deno.errors.NotFound)) throw error;
+    }
+    await Deno.mkdir(".cache/baker/images", { recursive: true });
+    const temporary = `${path}.${crypto.randomUUID()}.tmp`;
+    try {
+      await pipeline(
+        await this.docker.getImage(id).get(),
+        createGzip(),
+        createWriteStream(temporary),
+      );
+      await Deno.rename(temporary, path);
+    } finally {
+      await Deno.remove(temporary).catch((error) => {
+        if (!(error instanceof Deno.errors.NotFound)) throw error;
+      });
+    }
+  }
+  async restoreImage(id: string): Promise<boolean> {
+    const path = this.imageArchive(id);
+    try {
+      await Deno.stat(path);
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) return false;
+      throw error;
+    }
+    const stream = await this.docker.loadImage(createReadStream(path));
+    await new Promise<void>((resolve, reject) => {
+      this.docker.modem.followProgress(
+        stream,
+        (error: Error | null) => error ? reject(error) : resolve(),
+      );
+    });
+    if ((await this.docker.getImage(id).inspect()).Id !== id) {
+      throw new Error(`Restored bake image identity mismatch: ${id}`);
+    }
+    return true;
   }
   async network(): Promise<string> {
     const result = await this.docker.createNetwork({

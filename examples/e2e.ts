@@ -1,3 +1,5 @@
+import { report as writeReport } from "./report.ts";
+import { finalizedExecutionHash } from "../src/consensus.ts";
 import assert from "node:assert/strict";
 import { Wallet } from "ethers";
 import { Devnet } from "../src/api.ts";
@@ -87,7 +89,7 @@ await net.setAutomine(false);
 const deploy = await send(5, {
   to: null,
   value: 0,
-  gasLimit: 100_000,
+  gasLimit: initial.profile === "gloas" ? 1_000_000 : 100_000,
   data: "0x6009600c60003960096000f34260005260206000f3",
 });
 await net.stepSlot();
@@ -102,11 +104,9 @@ await net.advanceUntil(
   async () => BigInt((await net.status()).finality.data.finalized.epoch) >= 2n,
   { maxSlots: 160, timeoutMs: 300_000 },
 );
-const cl = await net.beacon<
-  { data: { message: { body: { execution_payload: { block_hash: string } } } } }
->("/eth/v2/beacon/blocks/finalized");
+const cl = await finalizedExecutionHash(manifest);
 const el = await net.rpc<{ hash: string }>("eth_getBlockByNumber", ["finalized", false]);
-assert.equal(el.hash, cl.data.message.body.execution_payload.block_hash);
+assert.equal(el.hash, cl);
 
 const service = new Deno.Command(Deno.execPath(), {
   args: ["run", "--allow-net", "examples/indexer.ts", net.url],
@@ -133,6 +133,4 @@ const report = {
   elapsedMs: performance.now() - started,
   status: await net.status(),
 };
-await Deno.mkdir("reports", { recursive: true });
-await Deno.writeTextFile("reports/e2e.json", JSON.stringify(report, null, 2));
-console.log(JSON.stringify(report));
+await writeReport(net, "e2e", report);

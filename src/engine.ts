@@ -4,6 +4,54 @@ import type Docker from "dockerode";
 import { deadline } from "./http.ts";
 import { type Infrastructure } from "./docker.ts";
 
+export async function checkEngineCapabilities(
+  url: string,
+  secret: string,
+  required: string[],
+): Promise<string[]> {
+  const bytes = Uint8Array.from(
+    secret.trim().replace(/^0x/, "").match(/../g)!.map((x) => parseInt(x, 16)),
+  );
+  const key = await crypto.subtle.importKey(
+    "raw",
+    bytes,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const base64 = (data: Uint8Array) =>
+    btoa(String.fromCharCode(...data)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+  const encode = (value: unknown) => base64(new TextEncoder().encode(JSON.stringify(value)));
+  const message = `${encode({ alg: "HS256", typ: "JWT" })}.${
+    encode({ iat: Math.floor(Date.now() / 1000) })
+  }`;
+  const signature = base64(
+    new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(message))),
+  );
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${message}.${signature}`,
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "engine_exchangeCapabilities",
+      params: [required],
+    }),
+    signal: AbortSignal.timeout(10_000),
+  });
+  const data = await response.json();
+  if (
+    !response.ok || !Array.isArray(data.result) ||
+    required.some((method) => !data.result.includes(method))
+  ) {
+    throw new Error(`EL does not support this bake's Engine methods: ${required.join(", ")}`);
+  }
+  return data.result;
+}
+
 /** Geth v1.15.11 has no Engine API readiness event. Its structured Updated payload
  * log is emitted after the full payload is installed under the payload lock.
  * This adapter is deliberately version-specific; it never changes payload contents. */

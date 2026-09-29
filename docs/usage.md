@@ -1,16 +1,15 @@
 # Using zap-net
 
-A local Pectra devnet: Geth, a Lighthouse beacon node and validator client, one Deno/TypeScript
-controller, and Docker managed through dockerode. A one-shot ethereum-genesis-generator creates
-genesis. See [measurements](measurements.md) for validation results and benchmarks, and the
-[project plan](plan.md) for completed work and next steps.
+A local Ethereum devnet with Pectra/Gloas profiles: Geth, a Lighthouse beacon node and validator
+client, one Deno/TypeScript controller, and Docker managed through dockerode. A one-shot
+ethereum-genesis-generator creates genesis. See [measurements](measurements.md) for validation
+results and benchmarks, and the [project plan](plan.md) for completed work and next steps.
 
 ## Setup and startup
 
 ```sh
 sh scripts/bootstrap.sh
-./scripts/deno run -A scripts/prepare_clients.ts
-deno task build:clients        # Separate from startup; the initial build takes time.
+deno task bake pectra --replace # Build local artifacts from the pinned recipe on this machine.
 deno task smoke:docker
 deno task up                   # Foreground; Ctrl-C cleans up this instance's resources.
 ```
@@ -18,6 +17,9 @@ deno task up                   # Foreground; Ctrl-C cleans up this instance's re
 Tasks use the local Deno 2.9.7 runtime in `.tools`; a system Deno is only needed to invoke
 `deno task`. `deno.json` contains the compatible task list, while `deno.runtime.json` contains
 dependencies and runtime settings.
+
+See [bake profiles](bakes.md) for EL/CL version selection, tags and validation suites. For example,
+run `deno task up --profile gloas --bake trial` after building and verifying `gloas:trial`.
 
 ## Connections and configuration
 
@@ -44,7 +46,7 @@ await using net = await Devnet.start({ id: "my-e2e" });
 const initial = await net.status();
 await net.stepSlot();
 await net.advanceEpochs(2);
-await net.advanceTime(3600); // One protocol hour, including blocks and votes.
+await net.advanceTime(3600); // Jump one protocol hour; produce a block at the destination.
 await net.advanceTo(new Date((initial.now + 7200) * 1000));
 await net.setAutomine(true);
 // eth_sendRawTransaction returns the usual transaction hash; wait for the receipt separately.
@@ -61,15 +63,17 @@ not transfer ownership of its lifecycle.
 ## Protocol time
 
 `advanceTime` accepts seconds with millisecond precision. `advanceTo` accepts a Unix timestamp in
-seconds or a `Date`. Time only moves forward. A command executes every phase up to the target time;
-if the target falls within a slot, later duties wait for the next advancement. `stepSlot` and
+seconds or a `Date`. Time only moves forward. Jumps larger than one epoch skip intermediate blocks
+and votes, then produce a real block in the destination slot. Smaller jumps execute every phase. If
+the target falls within a slot, later duties wait for the next advancement. `stepSlot` and
 `advanceSlots` finish slots at the 11.5-second phase. The initial pause is at genesis + 11.5
 seconds, before the first block proposal in slot 1. Protocol slots remain 12 seconds long.
 
 `skipSlots(n)` explicitly skips slots without blocks or attestations. This can reduce participation,
 delay finality and incur inactivity penalties. The validator client restarts with its keys and
 slashing protection preserved. Lighthouse performs state transitions during subsequent state
-processing. Use `advanceTime` or `advanceTo` for ordinary advancement.
+processing. Large `advanceTime`/`advanceTo` jumps have the same inactivity semantics, but include
+the destination block. Use `advanceSlots`/`advanceEpochs` when continuous participation is required.
 
 ## Network parameters
 
@@ -144,9 +148,11 @@ not committed. Images and volumes named `zap-build-*` form a separate, reusable 
 ## Validator exits and consolidation
 
 The consolidation example sets `churnLimitQuotient: 4`: with 64 validators, standard churn leaves no
-capacity for consolidation. This is an explicit test-profile override; the default quotient is
-65536. The full exit example preserves standard delays and uses explicit `skipSlots` for long
-periods without blocks. Real inactivity penalties apply after skipped slots.
+capacity for consolidation. Gloas also requires the separate `consolidationChurnLimitQuotient: 4`.
+These are explicit test overrides; the ordinary churn defaults are 65536 for Pectra and 32768 for
+Gloas, and Gloas consolidation defaults to 65536. The full exit example preserves standard delays
+and uses explicit `skipSlots` for long periods without blocks. Real inactivity penalties apply after
+skipped slots.
 
 ## Engine API
 

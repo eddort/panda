@@ -1,3 +1,5 @@
+import { argumentsFor } from "./arguments.ts";
+import { profileName } from "./profiles.ts";
 import { Devnet } from "./api.ts";
 import { configuration } from "./config.ts";
 import { Controller } from "./controller.ts";
@@ -5,9 +7,14 @@ import { Infrastructure, LABEL, ROLE } from "./docker.ts";
 import { json, rpc } from "./http.ts";
 import { Network } from "./network.ts";
 
-const [command = "up", argument] = Deno.args;
+const { flags, positional } = argumentsFor(Deno.args, ["profile", "bake"]);
+const [command = "up", argument] = positional;
 const id = Deno.env.get("ZAP_ID") ?? "local";
-const config = configuration({ id });
+const config = configuration({
+  id,
+  ...(flags.profile ? { profile: profileName(flags.profile) } : {}),
+  ...(flags.bake ? { bake: flags.bake } : {}),
+});
 const directory = `${Deno.cwd()}/.zap/${id}`;
 const endpointFile = `${directory}/controller.json`;
 async function removeIfExists(path: string): Promise<void> {
@@ -81,6 +88,11 @@ async function up(): Promise<void> {
     try {
       const status = await new Devnet(old).status();
       if (status.id !== id) throw new Error("Controller ownership mismatch");
+      if (status.profile !== config.profile || status.bake !== config.bake) {
+        throw new Error(
+          `Running ${status.profile}:${status.bake}; requested ${config.profile}:${config.bake}. Use another ZAP_ID or stop this network first.`,
+        );
+      }
       console.log(JSON.stringify({ event: "already-running", id, url: old }));
       return;
     } catch (error) {

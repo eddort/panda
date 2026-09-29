@@ -1,9 +1,12 @@
-import { account, type Config, configuration, images, mnemonic } from "./config.ts";
+import { type Bake, readBake } from "./profiles.ts";
+import { requireImage } from "./artifacts.ts";
+import { account, type Config, configuration, mnemonic } from "./config.ts";
 import { Infrastructure, LABEL, ROLE } from "./docker.ts";
-import { EngineGate } from "./engine.ts";
+import { checkEngineCapabilities, EngineGate } from "./engine.ts";
 import { deadline, json, rpc, waitFor } from "./http.ts";
 
 export interface Manifest {
+  bake: Bake;
   config: Config;
   el: string;
   beacon: string;
@@ -81,17 +84,16 @@ export class Network {
         if (!(error instanceof Deno.errors.NotFound)) throw error;
       }
     }
-    let clientImage: string = config.mode === "controlled" ? images.controlled : images.lighthouse;
-    // A missing local build is an actionable error; never fall back to ordinary wall clocks.
-    if (config.mode === "controlled") await infra.docker.getImage(clientImage).inspect();
-    for (
-      const image of [
-        images.geth,
-        images.genesis,
-        ...(config.mode === "baseline" ? [images.lighthouse] : []),
-      ]
-    ) await infra.image(image);
-    clientImage = (await infra.docker.getImage(clientImage).inspect()).Id;
+    const bake = await readBake(config.profile, config.bake);
+    const recipe = bake.recipe;
+    const images = {
+      geth: await requireImage(infra, bake.images.el),
+      genesis: await requireImage(infra, bake.images.genesis),
+    };
+    const clientImage = await requireImage(
+      infra,
+      config.mode === "controlled" ? bake.images.cl : bake.images.baseline,
+    );
     const started = performance.now();
     try {
       const network = await infra.network();
@@ -104,8 +106,14 @@ export class Network {
         `CHURN_LIMIT_QUOTIENT=${config.churnLimitQuotient}`,
         `GENESIS_TIMESTAMP=${config.genesisTime}`,
         "GENESIS_DELAY=0",
-        "ELECTRA_FORK_EPOCH=0",
-        "SLOT_DURATION_IN_SECONDS=12",
+        "DEPOSIT_CONTRACT_ADDRESS=0x4242424242424242424242424242424242424242",
+        ...Object.entries(recipe.genesisEnv).map(([name, value]) => `${name}=${value}`),
+        ...(config.profile === "gloas"
+          ? [
+            `CHURN_LIMIT_QUOTIENT_GLOAS=${config.churnLimitQuotient}`,
+            `CONSOLIDATION_CHURN_LIMIT_QUOTIENT=${config.consolidationChurnLimitQuotient}`,
+          ]
+          : []),
         "WITHDRAWAL_TYPE=0x01",
         `WITHDRAWAL_ADDRESS=${account}`,
         `EL_PREMINE_ADDRS={"${account}":{"balance":"1000000ETH"}}`,
@@ -173,6 +181,11 @@ export class Network {
         NetworkingConfig: { EndpointsConfig: { [network]: { Aliases: ["el"] } } },
       });
       await waitFor("Geth RPC", () => rpc(el(8545), "eth_chainId"));
+      await checkEngineCapabilities(
+        el(8551),
+        await Deno.readTextFile(`${directory}/jwt/jwtsecret`),
+        recipe.engineMethods,
+      );
       if (config.mode === "controlled") {
         this.engine = await EngineGate.start(
           infra,
@@ -204,6 +217,12 @@ export class Network {
           "--staking",
           "--disable-packet-filter",
           "--epochs-per-blob-prune=1",
+          ...(config.profile === "gloas" ? ["--supernode"] : []),
+          // Small local registries favor fewer disk diffs during large empty-slot ranges.
+          // This is Lighthouse's storage layout; consensus constants remain unchanged.
+          ...(config.mode === "controlled" && recipe.preparedSkip
+            ? ["--hierarchy-exponents=9,13,16,18,21"]
+            : []),
         ],
         ExposedPorts: { "5052/tcp": {}, "5059/tcp": {} },
         HostConfig: {
@@ -227,6 +246,9 @@ export class Network {
           "--validators-dir=/shared/validator-keys/keys",
           "--secrets-dir=/shared/validator-keys/secrets",
           "--beacon-nodes=http://bn:5052",
+          ...(config.profile === "gloas" && config.mode === "controlled" && !recipe.preparedSkip
+            ? ["--use-long-timeouts", "--long-timeouts-multiplier=60"]
+            : []),
           "--init-slashing-protection",
           `--suggested-fee-recipient=${account}`,
           "--http",
@@ -243,6 +265,7 @@ export class Network {
         },
       });
       const manifest: Manifest = {
+        bake,
         config,
         directory,
         el: el(8545),
@@ -264,6 +287,7 @@ export class Network {
           id: config.id,
           elapsedMs: performance.now() - started,
           ...manifest,
+          bake: { profile: bake.profile, tag: bake.tag, key: bake.key },
         }),
       );
       return manifest;
@@ -301,6 +325,7 @@ export class Network {
     }
   }
   async skipValidator(manifest: Manifest, nowMs: number): Promise<void> {
+    const started = performance.now();
     const listed = await this.infra.docker.listContainers({
       all: true,
       filters: { label: [`${LABEL}=${this.config.id}`, `${ROLE}=vc`] },
@@ -309,7 +334,16 @@ export class Network {
     const old = this.infra.docker.getContainer(listed[0].Id);
     const info = await old.inspect();
     await old.stop({ t: 10 });
+    const stopped = performance.now();
     await json(`${manifest.bnClock}/advance/${nowMs}`, { method: "POST" });
+    if (manifest.bake.recipe.preparedSkip) {
+      const slot = Math.floor((nowMs / 1000 - manifest.config.genesisTime) / 12);
+      await waitFor("prepared empty-slot state", async () => {
+        const clock = await json<{ marks: Record<string, number> }>(manifest.bnClock);
+        return clock.marks.skip_ready === slot ? true : undefined;
+      }, 30_000);
+    }
+    const prepared = performance.now();
     await old.remove();
     const env = (info.Config.Env ?? []).filter((e) => !e.startsWith("ZAP_CLOCK_START_MS="));
     const replacement = await this.infra.container("vc", {
@@ -338,6 +372,15 @@ export class Network {
         ? true
         : undefined;
     }, 90_000);
+    console.log(JSON.stringify({
+      event: "slots-skipped",
+      id: this.config.id,
+      nowMs,
+      stopMs: stopped - started,
+      prepareMs: prepared - stopped,
+      restartMs: performance.now() - prepared,
+      elapsedMs: performance.now() - started,
+    }));
   }
   async stop(): Promise<void> {
     if (!this.lockOwned) {

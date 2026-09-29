@@ -1,3 +1,4 @@
+import { report as writeReport } from "./report.ts";
 import assert from "node:assert/strict";
 import {
   ContractFactory,
@@ -92,7 +93,7 @@ try {
           type: 2,
           chainId: 1337,
           nonce,
-          gasLimit: 2_000_000n,
+          gasLimit: initial.profile === "gloas" ? 12_000_000n : 2_000_000n,
           maxFeePerGas: 10_000_000_000n,
           maxPriorityFeePerGas: 1_000_000_000n,
         });
@@ -200,9 +201,7 @@ try {
     manualAdvanceCalls: 0,
     deployments,
   };
-  await Deno.mkdir("reports", { recursive: true });
-  await Deno.writeTextFile("reports/deploy.json", JSON.stringify(report, null, 2));
-  console.log(JSON.stringify(report));
+  await writeReport(net, "deploy", report);
 } finally {
   provider.destroy();
 }

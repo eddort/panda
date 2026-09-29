@@ -1,40 +1,42 @@
 # Mascot and artwork
 
-The zap-net mascot is a pixel-art firefly with a clock abdomen. Its light evokes "zap" and
-Lighthouse; the clock represents explicit control of protocol time. The small winding crown
-emphasizes that time advances on command. Its simple silhouette reflects the project: one
-controller, a local network and a small API.
+**Iskrovik** is zap-net's spark elemental: a small, concentrated electrical pulse with a calm,
+focused expression. Its amber energy makes the name "zap" visible. The connection to the project is
+a deliberate pulse that advances the network, represented in the banner by a spark passing through a
+short chain of blocks.
 
 <p align="center">
-  <img src="assets/mascot.png" alt="The zap-net mascot: a firefly with a clock abdomen" width="256">
+  <img src="assets/mascot.png" alt="Iskrovik, the zap-net spark elemental" width="256">
 </p>
 
 ## Files
 
-| File                            | Purpose                                                                     |
-| ------------------------------- | --------------------------------------------------------------------------- |
-| [mascot.png](assets/mascot.png) | Standalone mascot with a transparent background                             |
-| [logo.png](assets/logo.png)     | Mascot and pixel wordmark with a transparent background; for light surfaces |
-| [banner.png](assets/banner.png) | README banner with a dark background and light wordmark                     |
+| File                            | Purpose                                                              |
+| ------------------------------- | -------------------------------------------------------------------- |
+| [mascot.png](assets/mascot.png) | Detailed mascot with a transparent background                        |
+| [logo.png](assets/logo.png)     | Standalone spark mark with a transparent background and no lettering |
+| [banner.png](assets/banner.png) | Dark README banner showing the mascot and a short chain of blocks    |
 
-![zap-net logo](assets/logo.png)
+<p align="center">
+  <img src="assets/logo.png" alt="The zap-net spark mark, without letters or a monogram" width="128">
+</p>
 
 ## Style
 
-The visual reference is a 64×64 sprite from a 16-bit adventure game: a three-quarter view, a thin
-outline, restrained pixel shading and directional light. Narrow wings and a compact head keep the
-clock as the focal point. The silhouette, limited detail and open space preserve the minimal style.
+The visual reference is a polished 64×64 sprite from a 16-bit game: deliberate pixel clusters, a
+compact asymmetric silhouette, a thin selective outline and restrained shading. A dark core, amber
+energy and a small cyan accent keep the character readable at a small size.
 
-Palette: midnight blue `#142333`, blue teal `#284553`, cyan `#86BFC3`, pale cyan `#C1E1DB`, bronze
-`#86603D`, amber `#D4973E`, yellow `#F2C65B` and ivory `#F6E8BE`. These are palette references; the
-PNGs contain additional shades.
+Palette references: midnight `#142333`, dark teal `#284553`, amber `#D4973E`, warm yellow `#F2C65B`,
+ivory `#F6E8BE` and cyan `#86BFC3`. The PNGs contain additional shades.
 
-The files are large raster masters for the README and previews. 64×64 describes the intended sprite
-style, not the physical dimensions of these PNGs.
+The logo is an image-only spark mark. It contains no letters, wordmark or Z-shaped monogram. The
+project name remains ordinary text in the README. Keep the mark's compact silhouette and open space
+when placing it alongside other content.
 
-Preserve the aspect ratio. Use nearest-neighbor resampling when resizing in an editor. On dark
-surfaces, place the logo on a light background or use the ready-made banner. Keep costumes, tools
-and small decorative details out of the mascot; the clock already communicates the idea.
+The files are enlarged raster masters for the README and previews. 64×64 describes the intended
+sprite style, not the physical dimensions of these PNGs. Preserve the aspect ratio and use
+nearest-neighbor resampling when resizing in an editor.
 
 The artwork was created with the built-in ImageGen tool. Exact prompts are saved in
 [prompts.md](assets/prompts.md). The assets are raster PNGs; vector sources are not included.

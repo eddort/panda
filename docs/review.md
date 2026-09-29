@@ -25,3 +25,26 @@ with this host's Deno 1.36 failed while parsing the new nodeModulesDir value and
 the local runtime could start. The task-only launcher now disables its own lockfile parsing and the
 wrapper explicitly selects `deno.runtime.json` for execution. Independent verification: system
 `deno task check`, all 11 opt-in tests, and the real CLI lifecycle pass.
+
+## Bake isolation and large jumps
+
+- P2, fixed (`src/verification.ts`, `scripts/test_profile.ts`): the former global fingerprint
+  invalidated Pectra when only Gloas build sources changed, and profile verification repeated common
+  baker tests. Fingerprints now follow the selected executable suite and shared runtime; compiler
+  tests are separate. The unit regression covers isolation in both directions, shared-runtime
+  invalidation and archived native inputs. All 19 unit tests and 3 Docker baker tests passed.
+- P1, fixed (`clients/gloas_prepare_skip.rs`): the first prepared-state implementation cached
+  skipped states without persisting the summaries and HDiff bases needed by import. v2 reproduced a
+  BN shutdown at slot 8320 (`MissingHotStateSummary`). The selected v3 implementation uses ordinary
+  `store.put_state` for every intermediate state. Two real jumps imported blocks, processed
+  transactions and restored finality; all 64 validators remained active and their exported signing
+  histories passed. Historical states are pruned normally after finalization.
+- P2, fixed (`scripts/patch_gloas.py`): proposer, attester and PTC duty endpoints and withdrawal
+  calculation repeated the skipped range from the old head. Controlled mode now reuses compatible
+  advanced states for the captured head root. The selected binary measured 9.7/11.9 seconds with the
+  ordinary 512-slot first storage-diff layer. The user accepted this result and requested the
+  simpler implementation; v4 batching and v5 uniform-balance specialization were reverted. The
+  regression budget is now 20 seconds including the following transaction. Full verification of the
+  stable tag passed all 8 scenarios; measured jumps including the following transaction were
+  10.783/11.616 seconds. The existing Pectra bake separately passed the same two-jump correctness
+  checks in 17.594/18.302 seconds. No additional runtime/native changes followed these checks.

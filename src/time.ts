@@ -33,7 +33,12 @@ export class Timeline {
   readonly queue = new Serial();
   private fault?: unknown;
   private stopped = false;
-  constructor(readonly genesisMs: number, public nowMs: number, readonly backend: TimeBackend) {}
+  constructor(
+    readonly genesisMs: number,
+    public nowMs: number,
+    readonly backend: TimeBackend,
+    readonly phases: readonly number[] = PHASES,
+  ) {}
   get slot(): number {
     return Math.floor((this.nowMs - this.genesisMs) / SLOT_MS);
   }
@@ -60,7 +65,7 @@ export class Timeline {
       while (this.nowMs < target) {
         this.assertHealthy();
         const start = this.genesisMs + this.slot * SLOT_MS;
-        const next = PHASES.map((phase) => ({ at: start + phase, phase }))
+        const next = this.phases.map((phase) => ({ at: start + phase, phase }))
           .find((entry) => entry.at > this.nowMs) ?? { at: start + SLOT_MS, phase: 0 };
         const at = Math.min(target, next.at);
         await this.backend.move(at, at === next.at ? next.phase : undefined);
@@ -73,11 +78,30 @@ export class Timeline {
   }
   advanceTo(timestamp: number): Promise<void> {
     const target = milliseconds(timestamp);
-    return this.exclusive(() => this.to(target));
+    return this.exclusive(() => this.warpTo(target));
   }
   advanceTime(seconds: number): Promise<void> {
     const duration = milliseconds(seconds);
-    return this.exclusive(() => this.to(this.nowMs + duration));
+    return this.exclusive(() => this.warpTo(this.nowMs + duration));
+  }
+  /** Large jumps use empty slots and a real block at the destination.
+   * advanceSlots/advanceEpochs explicitly preserve continuous production. */
+  private async warpTo(target: number): Promise<void> {
+    integer(target, "target milliseconds");
+    if (target < this.nowMs) throw new Error("Protocol time can only move forward");
+    const targetSlot = Math.floor((target - this.genesisMs) / SLOT_MS);
+    if (this.backend.skip && targetSlot - this.slot > SLOTS_PER_EPOCH) {
+      await this.to(Math.max(this.nowMs, this.genesisMs + this.slot * SLOT_MS + 11_500));
+      const beforeDestination = this.genesisMs + (targetSlot - 1) * SLOT_MS + 11_500;
+      try {
+        await this.backend.skip(beforeDestination);
+        this.nowMs = beforeDestination;
+      } catch (error) {
+        this.fault = error;
+        throw error;
+      }
+    }
+    await this.to(target);
   }
   stepSlot(): Promise<void> {
     return this.advanceSlots(1);

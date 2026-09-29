@@ -1,3 +1,4 @@
+import { report as writeReport } from "./report.ts";
 import assert from "node:assert/strict";
 import { Devnet } from "../src/api.ts";
 import { exitValidator, validator } from "./validators.ts";
@@ -55,6 +56,4 @@ const report = {
   withdrawal,
   status: await net.status(),
 };
-await Deno.mkdir("reports", { recursive: true });
-await Deno.writeTextFile("reports/withdrawal.json", JSON.stringify(report, null, 2));
-console.log(JSON.stringify(report));
+await writeReport(net, "withdrawal", report);

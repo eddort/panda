@@ -1,3 +1,4 @@
+import { report as writeReport } from "./report.ts";
 import assert from "node:assert/strict";
 import { Devnet } from "../src/api.ts";
 import { depositValidator, send } from "./deposit_fixture.ts";
@@ -8,7 +9,13 @@ const start = performance.now();
 await using net = await Devnet.start({
   id: `protocol-${crypto.randomUUID().slice(0, 8)}`,
   churnLimitQuotient: 4,
+  consolidationChurnLimitQuotient: 4,
 });
+const profile = (await net.status()).profile;
+if (profile === "gloas") {
+  const spec = await net.beacon<{ data: Record<string, string> }>("/eth/v1/config/spec");
+  assert.equal(spec.data.CONSOLIDATION_CHURN_LIMIT_QUOTIENT, "4");
+}
 await net.setAutomine(true);
 const pubkey = await depositValidator(net, 64);
 await net.setAutomine(false);
@@ -32,11 +39,17 @@ const consolidate = async (source: number, target: number) => {
 await net.setAutomine(true);
 await consolidate(1, 1); // EIP-7251 switch from 0x01 to 0x02 credentials.
 await net.setAutomine(false);
-assert((await validator(net, 1)).validator.withdrawal_credentials.startsWith("0x02"));
+await net.advanceUntil(
+  async () => (await validator(net, 1)).validator.withdrawal_credentials.startsWith("0x02"),
+  { maxSlots: 4 },
+);
 await net.skipSlots(Math.max(0, 256 * 32 - (await net.status()).slot));
 await net.setAutomine(true);
 await consolidate(0, 1);
 await net.setAutomine(false);
+await net.advanceUntil(async () => (await validator(net, 0)).status === "active_exiting", {
+  maxSlots: 4,
+});
 const source = await validator(net, 0);
 assert.equal(source.status, "active_exiting");
 const balanceBefore = BigInt((await validator(net, 1)).balance);
@@ -56,7 +69,6 @@ const report = {
   target: await validator(net, 1),
   status: await net.status(),
   churnLimitQuotient: 4,
+  consolidationChurnLimitQuotient: profile === "gloas" ? 4 : undefined,
 };
-await Deno.mkdir("reports", { recursive: true });
-await Deno.writeTextFile("reports/protocol.json", JSON.stringify(report, null, 2));
-console.log(JSON.stringify(report));
+await writeReport(net, "protocol", report);

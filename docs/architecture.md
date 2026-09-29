@@ -1,9 +1,11 @@
 # Architecture and verification boundaries
 
-The execution client is unmodified Geth v1.15.11 (`36b2371c59cd91a9b1da062b3e382f05a6d8687e`).
-Lighthouse v7.1.0 is pinned at `cfb1f7331064b758c6786e4e1dc15507af5ff5d1`; genesis-generator v4.0.0
-is pinned at `f06b98c2cb789c6ac45fd0e6167173820dc095d2`. Image digests are in `src/config.ts`. The
-target is Prague/Electra, without later forks. Deno 2.9.7 passed the dockerode 4.0.7
+Hardfork recipes live in `profiles/pectra.json` and `profiles/gloas.json`. Pectra targets
+Prague/Electra with unmodified Geth v1.15.11 and Lighthouse v7.1.0. Gloas targets the pinned
+experimental Amsterdam/Gloas implementations. A bake records the actual source commits, clock patch
+hashes, toolchains, immutable image IDs and platform in `bakes/<hardfork>/<tag>.json`.
+`src/baker.ts` builds or imports artifacts; runtime startup reads the selected bake without
+compiling. See [bake commands and provenance](bakes.md). Deno 2.9.7 passed the dockerode 4.0.7
 socket/logs/exec/events lifecycle smoke test. Earlier attempted Deno 2.2.12 and 2.5.6 exposed Unix
 HTTP stream failures, so they are not supported.
 
@@ -23,11 +25,12 @@ flowchart LR
   C -->|ordinary JSON-RPC| EL
 ```
 
-The controller serializes time mutations. Each slot has phase boundaries at 0, 4, 6, 8, 9 and 11.5
-seconds: proposal, attestations/sync messages, selection-proof preparation, aggregates, state
-advance and fork-choice preparation. Advancing the BN first prevents the VC from proposing into a
-future slot of the BN. A control clock acknowledgement only establishes the clock value; completion
-watermarks and EL/CL head agreement establish completion of the protocol work.
+The controller serializes time mutations. Pectra slots have phase boundaries at 0, 4, 6, 8, 9 and
+11.5 seconds: proposal, attestations/sync messages, selection-proof preparation, aggregates, state
+advance and fork-choice preparation. Gloas uses 0, 3, 6, 9 and 11.5 seconds, with payload
+attestation committee (PTC) work at 9 seconds. Advancing the BN first prevents the VC from proposing
+into a future slot of the BN. A control clock acknowledgement only establishes the clock value;
+completion watermarks and EL/CL head agreement establish completion of the protocol work.
 
 `ManualSlotClock` only supplies time calculations and does not drive async tasks.
 `BeaconChainHarness` explicitly drives block/attestation processing in tests, including optional
@@ -48,6 +51,10 @@ The maintained patch changes:
   successful-work watermarks.
 - `validator_client/src/lib.rs`: genesis wait and startup watermark.
 - `beacon_node_fallback`: slot-based status schedule; request deadlines remain real.
+
+The Gloas patch additionally covers payload attestations, proposer/builder preferences and the
+attestation deadline raced against a head event. That last deadline must use protocol time: a large
+skipped-slot state transition can otherwise let the real timer fire before duties finish loading.
 
 Network gossip subscriptions, real-time metrics/notifiers, and optional services are not converted
 globally. P2P is disabled in this single-node topology. Extending to multi-node/fork-transition
@@ -74,6 +81,11 @@ Source:
 The log stream uses dockerode; waits are bounded and readiness IDs are capped at 128. This
 dependency must be rechecked before changing the Geth version.
 
+Startup checks the selected recipe's Engine capabilities using a real-time JWT. Pectra reads the
+execution payload inside the Beacon block. Gloas reads its separate execution payload envelope and
+checks the bid hash and slot against it. A finalized Gloas Beacon checkpoint commits its execution
+parent; the checkpoint's own envelope is not yet the finalized execution payload.
+
 Docker containers reach this adapter through `host.docker.internal`; it therefore listens on a host
 wildcard address. It verifies the shared JWT signature and **real-time** issue time before
 processing any call, and Geth verifies the JWT again. Public RPC, Beacon API and clock/VC ports are
@@ -86,22 +98,37 @@ re-evaluate pending work. Direct calls to the private EL endpoint bypass automin
 the controller's advertised RPC endpoint.
 
 For an upstream update: pin new commits and images, inspect every patch hunk and protocol sleep call
-site, regenerate the patch with `scripts/patch_lighthouse.py` against a clean pinned checkout, run
-the Rust clock test, ordinary baseline and all real e2e checks. Preserve original signature/state
-checks. Build cost is independent of ordinary devnet startup.
+site, regenerate the appropriate maintained patch against a clean pinned checkout
+(`scripts/patch_lighthouse.py` or `scripts/patch_gloas.py`), run the Rust clock test and
+`test:profile` for that hardfork/tag. The profile suite includes ordinary baseline and all real e2e
+checks. Preserve original signature/state checks. Build cost is independent of ordinary devnet
+startup.
 
-Forward travel and explicit skipped slots are different operations. `advanceTime`/`advanceTo`
-execute every intervening proposal, vote and state transition. `skipSlots` finishes the current
-slot, stops the VC, advances BN time and restarts the VC with the same keys and slashing protection
-at the new time. The next block performs real empty-slot transitions, penalties and committee
-changes. Private VC port numbers may change; its manifest is updated. No fake votes fill the gap.
+`advanceSlots`/`advanceEpochs` execute every intervening proposal, vote and state transition.
+`advanceTime`/`advanceTo` use skipped slots for jumps larger than one epoch and produce a real
+destination block. `skipSlots` finishes the current slot, stops the VC, advances BN time and
+restarts the VC with the same keys and slashing protection at the new time. Real empty-slot
+transitions, penalties and committee changes are preserved. Gloas bakes with `preparedSkip` run
+these transitions once before restarting the VC and persist every intermediate state summary and
+configured HDiff base through the ordinary store methods required by import and finalization.
+Replay-only summaries use bounded write batches; only useful epoch/destination states are cloned
+into RAM. Controlled prepared bakes use a 512-slot first diff layer to reduce disk work for the
+small registry. Duties, withdrawal calculation and block verification reuse compatible states for
+the same head root. Older bakes perform catchup during block processing. Private VC port numbers may
+change; the manifest is updated. No fake votes fill the gap.
 
-The default mainnet churn quotient is 65536. With 64 validators, Electra has no consolidation churn
-capacity: its activation/exit allocation consumes the available churn. `examples/protocol.ts`
-explicitly sets `churnLimitQuotient: 4` (512 ETH total balance churn, 256 ETH consolidation capacity
-before balance changes) to test consolidation without thousands of keys. All ordinary timing delays,
-including 256-epoch exit eligibility and withdrawal delay, remain intact. See
+The default mainnet churn quotient is 65536 for Pectra and 32768 for Gloas. With 64 validators,
+Electra has no consolidation churn capacity: its activation/exit allocation consumes the available
+churn. `examples/protocol.ts` explicitly sets `churnLimitQuotient: 4` (512 ETH total balance churn,
+256 ETH consolidation capacity before balance changes) to test consolidation without thousands of
+keys. All ordinary timing delays, including 256-epoch exit eligibility and withdrawal delay, remain
+intact. See
 [Electra churn rules](https://github.com/ethereum/consensus-specs/blob/v1.5.0/specs/electra/beacon-chain.md).
+
+Gloas separates consolidation churn from activation/exit churn. Its default
+`consolidationChurnLimitQuotient` is 65536, independently of the default balance churn quotient
+32768. The consolidation fixture explicitly sets both to 4 and checks the generated Beacon spec.
+Changing the ordinary churn quotient alone would leave this small Gloas network without capacity.
 
 The exit fixture observes a real EL withdrawal. A validator may still belong to the current sync
 committee after exit and receive small subsequent rewards. In pinned Lighthouse, the API status

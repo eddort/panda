@@ -26,6 +26,9 @@ export class Devnet {
   status(): Promise<
     {
       id: string;
+      profile: import("./profiles.ts").ProfileName;
+      bake: string;
+      bakeKey: string;
       now: number;
       slot: number;
       automine: boolean;

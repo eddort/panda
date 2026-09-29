@@ -4,6 +4,8 @@ import { configuration } from "../src/config.ts";
 import { Infrastructure, LABEL } from "../src/docker.ts";
 import { waitFor } from "../src/http.ts";
 import { Network } from "../src/network.ts";
+import { profileReport } from "../examples/report.ts";
+import { readBake } from "../src/profiles.ts";
 
 const id = `lifecycle-${crypto.randomUUID().slice(0, 8)}`;
 const env = { ZAP_ID: id, ZAP_PORT: "0" };
@@ -42,6 +44,23 @@ try {
   const first = await start("up");
   const genesis = (await first.status()).el.hash;
   assert((await run("up")).includes("already-running"));
+  const running = await first.status();
+  const incompatible = await new Deno.Command(Deno.execPath(), {
+    args: [
+      "run",
+      "--config=deno.runtime.json",
+      "-A",
+      "src/cli.ts",
+      "up",
+      "--profile",
+      running.profile === "pectra" ? "gloas" : "pectra",
+    ],
+    env,
+    stdout: "piped",
+    stderr: "piped",
+  }).output();
+  assert(!incompatible.success);
+  assert(new TextDecoder().decode(incompatible.stderr).includes("requested"));
   await assert.rejects(new Network(configuration({ id })).start(), /owned by live process/);
   await first.stepSlot();
   await run("down");
@@ -62,10 +81,11 @@ try {
     repeatedDown: true,
     resetGenesis: genesis,
     duplicateOwnerRejected: true,
+    differentProfileRejected: true,
   };
-  await Deno.mkdir("reports", { recursive: true });
-  await Deno.writeTextFile("reports/lifecycle.json", JSON.stringify(report, null, 2));
-  console.log(JSON.stringify(report));
+  const config = configuration();
+  const bake = await readBake(config.profile, config.bake);
+  await profileReport({ ...config, bakeKey: bake.key }, "lifecycle", report);
 } finally {
   try {
     await run("down");

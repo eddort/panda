@@ -26,6 +26,9 @@ export class Controller {
   async status() {
     return {
       id: this.manifest.config.id,
+      profile: this.manifest.config.profile,
+      bake: this.manifest.config.bake,
+      bakeKey: this.manifest.bake.key,
       now: this.time.timestamp,
       slot: this.time.slot,
       automine: this.automine.enabled,

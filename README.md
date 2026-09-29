@@ -1,6 +1,6 @@
 # zap-net
 
-![zap-net — a pixel-art firefly with a clock abdomen](docs/assets/banner.png)
+![Iskrovik, the zap-net spark mascot, sending a pulse through a chain of blocks](docs/assets/banner.png)
 
 **Real Ethereum. Your time.**
 
@@ -54,7 +54,7 @@ first Lighthouse build takes time; client compilation is separate from ordinary 
 ```sh
 sh scripts/bootstrap.sh
 ./scripts/deno run -A scripts/prepare_clients.ts
-./scripts/deno task build:clients
+./scripts/deno task bake pectra --replace
 ./scripts/deno task smoke:docker
 ./scripts/deno task up
 ```
@@ -96,9 +96,9 @@ Automine is off by default. Enable it with `await net.setAutomine(true)` to prod
 eligible pending transactions, then wait for receipts as usual. See the
 [deployment example](examples/deploy.ts) for sequential contract deployment with ethers.
 
-`skipSlots(n)` is a separate operation that advances through slots without blocks or votes. It can
-delay finality and incur inactivity penalties. Use normal advancement when the test needs continuous
-participation.
+Large `advanceTime`/`advanceTo` jumps skip intermediate blocks and votes, then produce a destination
+block. `skipSlots(n)` also skips the destination block. Skipping can delay finality and incur
+inactivity penalties; use `advanceSlots`/`advanceEpochs` for continuous participation.
 
 ## Scope and limitations
 
@@ -133,4 +133,4 @@ reports. Keep resource measurements separate from other devnet tests.
 - [Architecture](docs/architecture.md) — clock boundaries, client patches and Engine API
   coordination.
 - [Project plan](docs/plan.md) — completed work and next steps.
-- [Artwork](docs/branding.md) — the clockwork firefly, logo and banner.
+- [Artwork](docs/branding.md) — Iskrovik, the spark mark and the project banner.

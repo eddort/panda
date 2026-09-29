@@ -1,0 +1,20 @@
+{
+  "profile": "pectra",
+  "tag": "default",
+  "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
+  "runId": "12be81b7-cab6-46e3-bd28-ca7e20817302",
+  "suiteHash": "260b7fc8f0f25fe2a47ae0cd2c53a965cee34c56229ee1bd96df820ec9c47b52",
+  "startedAt": "2026-09-29T14:24:00.233Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "protocol",
+    "withdrawal",
+    "deploy"
+  ],
+  "finishedAt": "2026-09-29T14:33:05.910Z",
+  "elapsedMs": 545689.674917,
+  "passed": true,
+  "status": "passed"
+}

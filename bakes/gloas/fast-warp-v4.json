@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "profile": "gloas",
+  "tag": "fast-warp-v4",
+  "key": "a01fe250e04bc6fece1fa20b4599ab1c2643a837eaf47123fd7ff5c995888da9",
+  "createdAt": "2026-09-29T17:19:29.002Z",
+  "recipe": {
+    "schema": 1,
+    "slotMs": 12000,
+    "slotsPerEpoch": 32,
+    "tailMs": 11500,
+    "clockSource": "clients/controlled_clock.rs",
+    "clockTest": "clients/controlled_clock_test.rs",
+    "sourceFiles": [
+      "clients/gloas_weighted_selection.rs",
+      "clients/gloas_prepare_skip.rs"
+    ],
+    "preparedSkip": true,
+    "nativeTests": [
+      {
+        "package": "types",
+        "target": "zap_weighted_selection"
+      }
+    ],
+    "runtime": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+    "clRepository": "https://github.com/sigp/lighthouse.git",
+    "elRepository": "https://github.com/ethereum/go-ethereum.git",
+    "goBuilder": "golang:1.25-bookworm",
+    "tests": [
+      "baseline",
+      "lifecycle",
+      "e2e",
+      "warp",
+      "protocol",
+      "withdrawal",
+      "deploy",
+      "gloas"
+    ],
+    "name": "gloas",
+    "elFork": "amsterdam",
+    "clFork": "gloas",
+    "clRef": "2d281dfa1b407f7c81cd123954a9fd18ee8f02d2",
+    "patch": "clients/lighthouse-gloas.patch",
+    "rust": "rust:1.88.0-bookworm",
+    "elImage": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
+    "genesisImage": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
+    "baselineImage": "ethpandaops/lighthouse@sha256:61ee7093e24598f93319322bed4b40a7f80614b1f3f584e97ad7a0f7d612bf75",
+    "phases": [
+      0,
+      3000,
+      6000,
+      9000,
+      11500
+    ],
+    "attestationMs": 3000,
+    "aggregateMs": 6000,
+    "churnLimitQuotient": 32768,
+    "engineMethods": [
+      "engine_forkchoiceUpdatedV4",
+      "engine_getPayloadV6",
+      "engine_newPayloadV5"
+    ],
+    "genesisEnv": {
+      "ELECTRA_FORK_EPOCH": "0",
+      "FULU_FORK_EPOCH": "0",
+      "GLOAS_FORK_EPOCH": "0",
+      "HEZE_FORK_EPOCH": "18446744073709551615",
+      "SLOT_DURATION_IN_SECONDS": "12",
+      "SLOT_DURATION_MS": "12000"
+    }
+  },
+  "source": {
+    "cl": "2d281dfa1b407f7c81cd123954a9fd18ee8f02d2"
+  },
+  "hashes": {
+    "clients/lighthouse-gloas.patch": "daf407f07ebcef1140c22727fc7a3ac702e8943d0cdf64363a614010128b4265",
+    "clients/controlled_clock.rs": "ac7172ce05b01a5cd51aa946855734bde7afcdd429d2332f4863ae5979d525c3",
+    "clients/controlled_clock_test.rs": "4ad5e9a0bcd57b15cc9bd52f901f821edf9d640017a9b2e45532a7d2e63a78b8",
+    "clients/gloas_weighted_selection.rs": "e38a847e71364f1baa5a742e81b00fbcf5f11c3252708d9a4881b16dfdc426b3",
+    "clients/gloas_prepare_skip.rs": "11f415faebd95c1ebbd3a6cf9ccf4870be5eae3415c858a818c4775eb473d599"
+  },
+  "images": {
+    "cl": {
+      "ref": "zap-lighthouse:bake-a01fe250e04bc6fece1fa20b",
+      "id": "sha256:522f5598c23ba536046909cc643a4013ef3e8ed3fcb089c62af7949bbe68cece",
+      "platform": "linux/arm64"
+    },
+    "el": {
+      "ref": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
+      "id": "sha256:50acd60c272047362ff5369de1eae09dc0094ba714eeff0f88e8ab64d53903e5",
+      "digest": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
+      "platform": "linux/arm64"
+    },
+    "genesis": {
+      "ref": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
+      "id": "sha256:95d66723fab247e476861b7168e8b20150e85daeee734f2417a79c2db8e2b1a3",
+      "digest": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
+      "platform": "linux/arm64"
+    },
+    "baseline": {
+      "ref": "ethpandaops/lighthouse@sha256:61ee7093e24598f93319322bed4b40a7f80614b1f3f584e97ad7a0f7d612bf75",
+      "id": "sha256:e2ccd0b4a799d87de2bc89dd61e72bc3f4ae125c97d8bfcd3b1088a615b33fde",
+      "digest": "ethpandaops/lighthouse@sha256:61ee7093e24598f93319322bed4b40a7f80614b1f3f584e97ad7a0f7d612bf75",
+      "platform": "linux/arm64"
+    }
+  },
+  "builders": {
+    "runtime": {
+      "ref": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+      "id": "sha256:813cd0370d827a30abbef1cf99f88217f87fda9612dd5241c9015ba182d32428",
+      "digest": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+      "platform": "linux/arm64"
+    },
+    "rust": {
+      "ref": "rust:1.88.0-bookworm",
+      "id": "sha256:9ad0c47880881464036f8b5779f49a15d058154581404d0d50a20f9d11f3436e",
+      "digest": "rust@sha256:af306cfa71d987911a781c37b59d7d67d934f49684058f96cf72079c3626bfe0",
+      "platform": "linux/arm64"
+    }
+  }
+}

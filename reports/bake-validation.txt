@@ -1,0 +1,79 @@
+deno task check
+Checked 68 files
+Checked 43 files
+Check src/api.ts
+Check src/arguments.ts
+Check src/automine.ts
+Check src/baker.ts
+Check src/cli.ts
+Check src/config.ts
+Check src/consensus.ts
+Check src/controller.ts
+Check src/docker.ts
+Check src/engine.ts
+Check src/http.ts
+Check src/network.ts
+Check src/profile.ts
+Check src/profiles.ts
+Check src/time.ts
+Check src/verification.ts
+Check scripts/bake.ts
+Check scripts/bakes.ts
+Check scripts/baseline.ts
+Check scripts/build.ts
+Check scripts/lifecycle_test.ts
+Check scripts/measure.ts
+Check scripts/prepare_clients.ts
+Check scripts/profile.ts
+Check scripts/smoke_docker.ts
+Check scripts/test_clock.ts
+Check scripts/test_profile.ts
+Check tests/automine_test.ts
+Check tests/baker_test.ts
+Check tests/docker_test.ts
+Check tests/e2e_test.ts
+Check tests/profiles_test.ts
+Check tests/time_test.ts
+Check examples/baseline.ts
+Check examples/deploy.ts
+Check examples/deposit_fixture.ts
+Check examples/e2e.ts
+Check examples/gloas.ts
+Check examples/indexer.ts
+Check examples/protocol.ts
+Check examples/report.ts
+Check examples/validators.ts
+Check examples/withdrawal.ts
+
+deno task test
+automine eligibility excludes nonce gaps, insufficient funds, fee caps and oversized gas ... ok (241µs)
+disabling automine waits for an in-flight pool check and prevents another slot ... ok (165µs)
+a notification during an empty pool check rechecks newly arrived work ... ok (446µs)
+hardfork profiles reject unknown names and unsafe bake paths ... ok (1ms)
+build identity is independent of JSON key ordering and changes with patch/source/platform ... ok (8ms)
+each hardfork's timeline executes its declared phases and completes a full slot ... ok (598µs)
+bake lock protects a running build and atomic publication preserves prior records ... ok (3ms)
+CLI parses hardfork/tag without consuming control arguments and rejects typos ... ok (168µs)
+forward time executes phase barriers, exact dates and partial slots ... ok (744µs)
+concurrent advances serialize and accumulate, rather than lose time ... ok (194µs)
+a partially failed clock update faults subsequent mutations ... ok (229µs)
+advanceUntil is bounded, detects existing success and processes epochs ... ok (209µs)
+skip has separate semantics and does not execute intervening duties ... ok (262µs)
+shutdown interrupts a long advance at the next phase boundary ... ok (102µs)
+ok | 14 passed | 0 failed | 9 ignored (556ms)
+
+ZAP_DOCKER_TEST=1 ./scripts/deno test -A tests/baker_test.ts
+baker pins imports, reuses artifacts across tags and preserves a tag on failed replacement ... ok (84ms)
+local bake archive restores the identical image after removal from Docker ... ok (215ms)
+ok | 2 passed | 0 failed (303ms)
+
+deno task test:clock pectra
+    Finished `release` profile [optimized] target(s) in 2m 35s
+test protocol_time_waits_for_commands_and_rejects_backwards_moves ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+Native Gloas clock test during deno task bake gloas --replace
+    Finished `release` profile [optimized] target(s) in 30.25s
+test protocol_time_waits_for_commands_and_rejects_backwards_moves ... ok
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+    Finished `release` profile [optimized] target(s) in 9m 08s

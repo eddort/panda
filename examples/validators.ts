@@ -7,6 +7,7 @@ export interface ValidatorRecord {
   balance: string;
   status: string;
   validator: {
+    slashed: boolean;
     pubkey: string;
     exit_epoch: string;
     withdrawable_epoch: string;

@@ -1,0 +1,22 @@
+{
+  "profile": "gloas",
+  "tag": "stable",
+  "bakeKey": "8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9",
+  "runId": "35677405-28f8-4382-ba62-a1ed1200880d",
+  "suiteHash": "ec1fa31b8077db6817ce923d738cbad0de3a54626f1df606267ed6f2d483ce2f",
+  "startedAt": "2026-09-29T17:30:01.504Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "protocol",
+    "withdrawal",
+    "deploy",
+    "gloas"
+  ],
+  "finishedAt": "2026-09-29T17:39:14.901Z",
+  "elapsedMs": 553400.936292,
+  "passed": true,
+  "status": "passed"
+}

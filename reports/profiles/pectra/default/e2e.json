@@ -1,0 +1,161 @@
+{
+  "event": "e2e-passed",
+  "elapsedMs": 85866.024625,
+  "status": {
+    "id": "e2e-0c045a61",
+    "profile": "pectra",
+    "bake": "default",
+    "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
+    "now": 2000001559.5,
+    "slot": 129,
+    "automine": false,
+    "el": {
+      "baseFeePerGas": "0x25",
+      "blobGasUsed": "0x0",
+      "difficulty": "0x0",
+      "excessBlobGas": "0x0",
+      "extraData": "0xd883010f0b846765746888676f312e32342e32856c696e7578",
+      "gasLimit": "0x1b0a78a",
+      "gasUsed": "0x0",
+      "hash": "0x24969ec7abac3ff8f7cc2e0b370a9a9f7ff5657772eb62db87d8dc951bd4197a",
+      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "miner": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "mixHash": "0x7fe3fb421e971027ca293bea7ae6a080d278ca755046a1bdb3c38ed4c59a7fa6",
+      "nonce": "0x0000000000000000",
+      "number": "0x81",
+      "parentBeaconBlockRoot": "0x096633e7340f377bbab829cb0bed6fb116aa220c2848678c240d13c707e4e234",
+      "parentHash": "0x4f59b65c6ab2171a4dcbab4506baf6c74c8f0f4c07c74a76f3942b393cfcbc93",
+      "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+      "size": "0x460",
+      "stateRoot": "0x8e9b52d3eed420ceba6afe6d76dacce65ff1ffff9ec34ca066ac714edfb71299",
+      "timestamp": "0x77359a0c",
+      "transactions": [],
+      "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      "uncles": [],
+      "withdrawals": [
+        {
+          "index": "0x7b6",
+          "validatorIndex": "0x3e",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7b7",
+          "validatorIndex": "0x3f",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7b8",
+          "validatorIndex": "0x0",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7b9",
+          "validatorIndex": "0x1",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7ba",
+          "validatorIndex": "0x2",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7bb",
+          "validatorIndex": "0x3",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7bc",
+          "validatorIndex": "0x4",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7bd",
+          "validatorIndex": "0x5",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7be",
+          "validatorIndex": "0x6",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7bf",
+          "validatorIndex": "0x7",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7c0",
+          "validatorIndex": "0x8",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7c1",
+          "validatorIndex": "0x9",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7c2",
+          "validatorIndex": "0xa",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7c3",
+          "validatorIndex": "0xb",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7c4",
+          "validatorIndex": "0xc",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        },
+        {
+          "index": "0x7c5",
+          "validatorIndex": "0xd",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x12826b"
+        }
+      ],
+      "withdrawalsRoot": "0x7f61aebeb477322792bd5b888d7d6fbfd1df56f22197dd364ae76f914df2b1eb"
+    },
+    "finality": {
+      "execution_optimistic": false,
+      "finalized": false,
+      "data": {
+        "previous_justified": {
+          "epoch": "2",
+          "root": "0xc05d6472884ee001b41466d712e6d4995f3a6df1358bac8a44326cdddff09ff9"
+        },
+        "current_justified": {
+          "epoch": "3",
+          "root": "0x08291b157c68e0123bcf67568a127a55557f127d313c0e34a57f5eae994d45da"
+        },
+        "finalized": {
+          "epoch": "2",
+          "root": "0xc05d6472884ee001b41466d712e6d4995f3a6df1358bac8a44326cdddff09ff9"
+        }
+      }
+    }
+  },
+  "profile": "pectra",
+  "bake": "default",
+  "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
+  "runId": "12be81b7-cab6-46e3-bd28-ca7e20817302",
+  "recordedAt": "2026-09-29T14:26:43.244Z"
+}
