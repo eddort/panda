@@ -1,6 +1,6 @@
 {
   "event": "protocol-passed",
-  "elapsedMs": 186670.038792,
+  "elapsedMs": 171992.874167,
   "activated": {
     "index": "64",
     "balance": "32000000000",
@@ -47,7 +47,7 @@
     }
   },
   "status": {
-    "id": "protocol-a4207a90",
+    "id": "protocol-b5dce3f0",
     "now": 2000198539.5,
     "slot": 16544,
     "automine": false,

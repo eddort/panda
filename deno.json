@@ -14,6 +14,7 @@
     "e2e": "./scripts/deno run -A examples/e2e.ts",
     "e2e:withdrawal": "./scripts/deno run -A examples/withdrawal.ts",
     "e2e:protocol": "./scripts/deno run -A examples/protocol.ts",
+    "e2e:deploy": "./scripts/deno run -A examples/deploy.ts",
     "test:clock": "./scripts/deno run -A scripts/test_clock.ts",
     "test:lifecycle": "./scripts/deno run -A scripts/lifecycle_test.ts",
     "measure": "./scripts/deno run -A scripts/measure.ts"

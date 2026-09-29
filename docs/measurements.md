@@ -61,18 +61,19 @@ total host disk consumption. The native controlled runtime image is 218,443,288 
 
 ## Executed checks
 
-| Command / scenario                 | Result                                                                                                                                                                                                             |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `deno task check`                  | Format, lint, TypeScript checks including examples passed                                                                                                                                                          |
-| `deno task test`                   | 9 unit regressions passed; Docker and full e2e opt-in tests are skipped by default                                                                                                                                 |
-| `ZAP_DOCKER_TEST=1 deno task test` | 10 passed, 1 e2e opt-in skipped; failed-start rollback preserves foreign volume and cleanup is repeatable                                                                                                          |
-| `deno task smoke:docker`           | Passed socket, network, volume, container, logs, exec, events, stop/remove/repeated cleanup; 1.469 s with cached Alpine                                                                                            |
-| `deno task test:clock`             | Native Rust clock regression passed: real pause, monotonic advance, backwards rejection, no zero-duration spin                                                                                                     |
-| `deno task e2e`                    | Passed in 76.106 s: forward duration/date, timestamp beyond host time, 13-second real pause, EVM TIMESTAMP, batch/errors/notifications, low fee, nonce gap, concurrent sends, actual finality and external indexer |
-| `deno task e2e:withdrawal`         | Passed in 101.509 s: signed exit, EL withdrawal, committee rotation, zero actual balance and withdrawal_done                                                                                                       |
-| `deno task e2e:protocol`           | Passed in 186.670 s: 32 ETH deposit, imported key activated at epoch 11, 0x02 credential switch and actual consolidation                                                                                           |
-| `deno task test:lifecycle`         | Passed in 27.502 s: repeated up/down, reset with identical EL genesis, duplicate-owner rejection, no leftover stand resources                                                                                      |
-| Five repository skills             | All pass skill-creator validation; each was applied during implementation                                                                                                                                          |
+| Command / scenario                           | Result                                                                                                                                                                                                             |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `deno task check`                            | Format, lint, TypeScript checks including examples passed                                                                                                                                                          |
+| `deno task test`                             | 9 unit regressions passed; 1 Docker and 4 real e2e tests skipped by default                                                                                                                                        |
+| `ZAP_DOCKER_TEST=1 ZAP_E2E=1 deno task test` | 14 passed, 0 failed in 6 min 10 s; includes failed-start rollback, ownership protection and all four real e2e scenarios sequentially                                                                               |
+| `deno task smoke:docker`                     | Passed socket, network, volume, container, logs, exec, events, stop/remove/repeated cleanup; 1.469 s with cached Alpine                                                                                            |
+| `deno task test:clock`                       | Native Rust clock regression passed: real pause, monotonic advance, backwards rejection, no zero-duration spin                                                                                                     |
+| `deno task e2e`                              | Passed in 74.331 s: forward duration/date, timestamp beyond host time, 13-second real pause, EVM TIMESTAMP, batch/errors/notifications, low fee, nonce gap, concurrent sends, actual finality and external indexer |
+| `deno task e2e:withdrawal`                   | Passed in 99.878 s: signed exit, EL withdrawal, committee rotation, zero actual balance and withdrawal_done                                                                                                        |
+| `deno task e2e:protocol`                     | Passed in 171.993 s: 32 ETH deposit, imported key activated at epoch 11, 0x02 credential switch and actual consolidation                                                                                           |
+| `deno task e2e:deploy`                       | Passed: 20 dependent deployments through raw RPC and ethers.ContractFactory, one transaction per consecutive block, no manual time advancement                                                                     |
+| `deno task test:lifecycle`                   | Passed in 27.502 s: repeated up/down, reset with identical EL genesis, duplicate-owner rejection, no leftover stand resources                                                                                      |
+| Five repository skills                       | All pass skill-creator validation; each was applied during implementation                                                                                                                                          |
 
 Finality was checked by equality of the Beacon finalized block's execution hash and Geth's
 `finalized` hash, not by slot count. The withdrawal fixture reached slot 24576 (294,912 protocol
@@ -85,6 +86,36 @@ Consolidation is explicitly tested with `churnLimitQuotient: 4`: the default mai
 leaves no consolidation capacity at 64 validators. The default exit/withdrawal test keeps 65536 and
 standard 256-epoch delays. EL genesis repeatability and independently regenerated CL genesis SSZ
 hashes are recorded in `reports/lifecycle.json` and `reports/provenance.json`.
+
+## Sequential contract deployment
+
+`deno task e2e:deploy` passed both within the full suite and in a separate repeat after correcting
+the even-sample median calculation. The repeat's raw results are in
+[reports/deploy.json](../reports/deploy.json). Readiness with cached images took 10.186 s. Once
+ready, the 20 deployments and their assertions took 8.852 s; including startup and the final
+consensus duties, the script took 19.320 s.
+
+| Path                                                                              | Contracts | Real elapsed time |
+| --------------------------------------------------------------------------------- | --------- | ----------------- |
+| Signed raw JSON-RPC, polling for receipt                                          | 10        | 4.651 s           |
+| `ethers.ContractFactory.deploy` and `waitForDeployment`, including gas estimation | 10        | 4.201 s           |
+
+Median deploy-call-to-receipt latency was 390 ms; p95 688 ms; maximum 1,119 ms. The largest gap
+between successive receipts was 1,126 ms. Latency includes client preparation/signing, and mode
+elapsed time also includes the per-contract assertions. These are observed timings, not latency
+guarantees.
+
+Every constructor stores the previous contract's address. The test alternates 15-byte and 4-KiB
+runtime code and checks that code, constructor storage, EVM TIMESTAMP, receipt/block hashes and
+exactly one transaction per block. Blocks were numbered 1 through 20 with timestamps advancing by 12
+seconds each: 240 protocol seconds total, with zero manual time-advance calls and no sleep between
+deployments. Automine drives genuine EL/CL processing. The 4-KiB fixture uses unreachable padding to
+exercise code-deposit gas; it does not benchmark a complex application's deployment.
+
+The ethers client uses `pollingInterval: 25`, `cacheTimeout: -1` and `batchMaxCount: 1`; the tested
+configuration is shown in [README](../README.md). These settings avoid client polling/cache delays
+masking the network's accelerated blocks. Three unrelated containers were running; no other zap-net
+test ran concurrently.
 
 ## Scope and limits
 
@@ -103,7 +134,7 @@ not snapshotted, so this is not a claim of bit-for-bit reproducible client binar
 See [review findings and fixed regressions](review.md). Raw reports contain only local development
 keys/addresses, public fixture data and timings; JWT secrets and private key files are not included.
 
-Final launcher regression: `ZAP_DOCKER_TEST=1 ZAP_E2E=1 deno task test` passed all **11 tests**
+Final launcher regression: `ZAP_DOCKER_TEST=1 ZAP_E2E=1 deno task test` passed all **14 tests**
 through the installed system Deno 1.36.4; workload execution uses the pinned local Deno 2.9.7.
 `deno.json` is the backwards-compatible task launcher (no runtime lockfile parsing);
 `deno.runtime.json` owns the pinned runtime configuration and `deno.lock`. A separate post-fix

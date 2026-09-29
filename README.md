@@ -69,10 +69,11 @@ genesis. Число genesis validators уменьшено явно. Профил
 ```sh
 deno task test                         # быстрые unit checks, Docker/e2e помечены skipped
 ZAP_DOCKER_TEST=1 deno task test        # проверка rollback и защиты чужих ресурсов
-ZAP_E2E=1 deno task test                # реальная сеть; нужен собранный образ
+ZAP_E2E=1 deno task test                # все четыре реальных e2e последовательно; нужен образ
 deno task e2e                          # время, automine, финализация, отдельный индексатор
 deno task e2e:withdrawal               # реальный exit → withdrawal через сотни эпох
 deno task e2e:protocol                 # депозит, активация, consolidation с явным churn override
+deno task e2e:deploy                   # 20 последовательных деплоев через RPC и ethers
 deno task test:lifecycle               # повторные up/down/reset и воспроизводимый genesis
 deno task test:clock                   # Rust regression часов; использует build cache
 deno task measure                      # два свежих стенда, CPU/RAM/диск/скорость
@@ -80,6 +81,35 @@ deno task diagnose
 deno task profile                     # работающий стенд; продвигает 32 слота
 deno task check
 ```
+
+Для последовательного деплоя включите `await net.setAutomine(true)`, дождитесь receipt предыдущей
+транзакции и отправляйте следующую. Automine сам производит следующий блок; вызывать `stepSlot` или
+делать `sleep` между транзакциями не требуется. Каждый блок всё равно проходит настоящую обработку
+EL/CL, поэтому ненулевая вычислительная задержка остаётся.
+
+При использовании ethers настройте ожидание receipt для быстрого локального стенда:
+
+```ts
+import { JsonRpcProvider, NonceManager, Wallet } from "ethers";
+import { privateKey } from "./src/config.ts";
+
+const provider = new JsonRpcProvider(net.url, 1337, {
+  staticNetwork: true, // у этого стенда фиксированный chainId
+  pollingInterval: 25,
+  cacheTimeout: -1,
+  batchMaxCount: 1,
+});
+const signer = new NonceManager(new Wallet(privateKey, provider));
+// new ContractFactory(abi, bytecode, signer).deploy(...)
+// await contract.waitForDeployment() перед следующим зависимым деплоем.
+// По завершении работы вызовите provider.destroy().
+```
+
+Polling и batching — параметры клиента; они не меняют протокольную длину слота. Кэш запросов
+отключён, чтобы последовательные операции не видели устаревший nonce или номер блока. См.
+[параметры ethers](https://docs.ethers.org/v6/api/providers/jsonrpc/#JsonRpcApiProviderOptions). В
+[примере деплоя](examples/deploy.ts) проверяются конструктор, runtime-код и непрерывная
+последовательность блоков; отдельные задержки сохраняются в `reports/deploy.json`.
 
 `advanceUntil` имеет предел слотов и реальное время ожидания. Ошибка внутри фазы не откатывает
 клиентов: дальнейшее продвижение блокируется до reset, чтобы не продолжать с неопределённым
