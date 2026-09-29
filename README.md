@@ -1,136 +1,136 @@
 # zap-net
 
-Локальный Pectra devnet: Geth + Lighthouse beacon node + validator client, один контроллер
-Deno/TypeScript, Docker через dockerode. Genesis создаёт одноразовый ethereum-genesis-generator.
-Статус проверок и замеры — в [docs/measurements.md](docs/measurements.md). Выполненные пункты и
-следующие этапы — в [плане проекта](docs/plan.md).
+![zap-net — a pixel-art firefly with a clock abdomen](docs/assets/banner.png)
+
+**Real Ethereum. Your time.**
+
+A local Ethereum devnet for integration tests that need control over protocol time. zap-net runs
+Geth and Lighthouse in Docker, with a small Deno/TypeScript API to start the network, produce
+blocks, advance epochs and clean up afterward.
+
+The goal is to make tests involving time, consensus and validator lifecycle practical to run
+locally. A test decides when the chain advances, while the clients perform the actual execution,
+signing, voting and state transitions.
+
+## Why zap-net?
+
+Ethereum applications often need to wait for a deadline, a finalized block or a validator
+transition. On a network driven by the host clock, those waits become part of every test run.
+zap-net makes protocol time explicit: pause the chain while inspecting state, advance one slot to
+observe a block, or move through many epochs to reach the condition a test needs.
+
+It is useful for:
+
+- **Time-dependent contracts:** exercise timelocks, vesting and expiry against real block
+  timestamps.
+- **Application integrations:** test deployments, receipts, indexers and finalized-block consumers
+  against execution and consensus clients.
+- **Validator workflows:** exercise deposits, activation, exits and withdrawals with the protocol's
+  state transitions and delays.
+
+The network can run ahead of the host clock. Advancing time still requires computation: ordinary
+advancement processes every intermediate slot, including block proposals and validator duties.
+
+## How it works
+
+One Deno process owns the network lifecycle and exposes HTTP JSON-RPC, Beacon API and time controls.
+It manages Geth, a Lighthouse beacon node, a validator client and a one-shot genesis generator
+through Docker. Each instance has its own resource label, so cleanup is scoped to that instance.
+
+Geth runs without a fork. A Lighthouse patch gives protocol clocks and schedules an explicit time
+source. The controller advances protocol phases and waits for their work to finish; an Engine API
+gate coordinates execution payload preparation with those phases. Signature checks, execution
+validation and finality remain part of the real client pipeline.
+
+The default network targets **Pectra (Prague/Electra)** with the mainnet preset: 12-second slots,
+32-slot epochs and 64 genesis validators. Validator count is reduced explicitly. Network deadlines,
+JWT timestamps and watchdogs continue to use real time, including while protocol time is paused.
+
+## Quick start
+
+Requires a running local Docker daemon. Bootstrap installs the pinned Deno runtime in `.tools/`. The
+first Lighthouse build takes time; client compilation is separate from ordinary network startup.
 
 ```sh
 sh scripts/bootstrap.sh
 ./scripts/deno run -A scripts/prepare_clients.ts
-deno task build:clients        # отдельно; первоначальная сборка длительная
-deno task smoke:docker
-deno task up                   # foreground, Ctrl-C очищает ресурсы этого стенда
+./scripts/deno task build:clients
+./scripts/deno task smoke:docker
+./scripts/deno task up
 ```
 
-Задачи запускают локальный Deno 2.9.7 из `.tools`: системный Deno служит только для `deno task`.
-`deno.json` содержит совместимый список задач, `deno.runtime.json` — зависимости и рабочие
-настройки.
+HTTP JSON-RPC and Beacon API share `http://127.0.0.1:8545`: use `/` for JSON-RPC and the standard
+`/eth/v1/...` and `/eth/v2/...` paths for Beacon API.
 
-В другом терминале: `deno task down` или `deno task reset`. `ZAP_ID` выбирает стенд (по умолчанию
-`local`), `ZAP_PORT` — порт контроллера (8545). Docker socket:
-`ZAP_DOCKER_SOCKET=/path/to/docker.sock` либо `DOCKER_HOST=unix:///path/to/docker.sock`. Docker
-Desktop на macOS определяется автоматически. Удалённый Docker daemon пока не поддерживается:
-используются локальные bind mounts. Публичные RPC и Beacon API привязаны к 127.0.0.1. Внутренний
-Engine-прокси принимает соединения контейнеров через host gateway и проверяет JWT; см.
-[архитектуру](docs/architecture.md).
+Press Ctrl-C to stop and clean up, or run `./scripts/deno task down` in another terminal.
+`./scripts/deno task reset` starts again with fresh state. Use `ZAP_ID` and `ZAP_PORT` for separate
+instances. Once Deno is available on your path, the same commands can be written as `deno task …`.
 
-JSON-RPC доступен на корне адреса контроллера; стандартные пути Beacon API `/eth/v1/...` и
-`/eth/v2/...` — на том же адресе. Automine изначально выключен. Ключи и mnemonic публичные,
-предназначены только для этого локального стенда.
+## Control time
+
+From a TypeScript file in the repository root:
 
 ```ts
 import { Devnet } from "./src/api.ts";
 
-await using net = await Devnet.start({ id: "my-e2e" });
-const initial = await net.status();
-await net.stepSlot();
-await net.advanceEpochs(2);
-await net.advanceTime(3600); // час протокольного времени с блоками и голосами
-await net.advanceTo(new Date((initial.now + 7200) * 1000));
-await net.setAutomine(true);
-// eth_sendRawTransaction возвращает обычный tx hash; receipt ожидается отдельно.
+await using net = await Devnet.start({ id: "my-test" });
+
+await net.stepSlot(); // Produce a block and complete the slot's duties.
+await net.advanceEpochs(2); // Advance through two epochs.
+await net.advanceTime(3600); // Process one hour of protocol time.
+
 await net.advanceUntil(
   async () => BigInt((await net.status()).finality.data.finalized.epoch) >= 3n,
   { maxSlots: 160 },
 );
 ```
 
-К уже работающему контроллеру: `new Devnet("http://127.0.0.1:8545")`. `close()`/`await using`
-останавливают только стенд, созданный этим объектом; подключение к чужому контроллеру не получает
-владение его жизненным циклом.
+`await using` cleans up the instance when the scope ends. To connect to an existing controller, use
+`new Devnet("http://127.0.0.1:8545")`; closing that connection does not stop the network.
 
-`advanceTime` принимает секунды с точностью до миллисекунды; `advanceTo` — Unix timestamp в секундах
-или `Date`. Часы движутся только вперёд. Команда исполняет все фазы до указанного момента; если
-момент внутри слота, следующие обязанности ожидают следующего продвижения. `stepSlot` и
-`advanceSlots` завершают слоты на фазе 11,5 с. Начальная пауза — genesis + 11,5 с, до первого
-предложения блока в слоте 1. Протокольные слоты сохраняют длину 12 секунд.
+Use `advanceSlots(n)` for a specific number of slots, `advanceTo(timestampOrDate)` for a target
+time, or `advanceUntil(predicate, options)` to wait for a condition within a slot budget and a
+real-time deadline. Time only moves forward.
 
-`skipSlots(n)` явно пропускает слоты без блоков/attestations. Это может ухудшать участие,
-задерживать финализацию и вызывать inactivity penalties. VC перезапускается с сохранением ключей и
-slashing protection; state transitions выполняет Lighthouse при последующей обработке состояния. Для
-обычной перемотки используйте `advanceTime`/`advanceTo`.
+Automine is off by default. Enable it with `await net.setAutomine(true)` to produce blocks for
+eligible pending transactions, then wait for receipts as usual. See the
+[deployment example](examples/deploy.ts) for sequential contract deployment with ethers.
 
-По умолчанию genesis timestamp = 2 000 000 000 (2033 год): это намеренная проверка будущего времени
-относительно хоста. Можно задать `genesisTime` в `Devnet.start`. Mainnet preset: 32 слота/эпоху, 64
-genesis validators, обычные параметры churn, активации и withdrawals; fork Electra/Prague активен с
-genesis. Число genesis validators уменьшено явно. Профиля `minimal` нет.
+`skipSlots(n)` is a separate operation that advances through slots without blocks or votes. It can
+delay finality and incur inactivity penalties. Use normal advancement when the test needs continuous
+participation.
+
+## Scope and limitations
+
+The current topology is one execution client, one beacon node and one validator client. Public APIs
+bind to localhost, and Docker must run locally because the network uses local bind mounts.
+Development keys are public and intended only for this environment.
+
+HTTP JSON-RPC is supported. WebSocket, long-lived Beacon SSE, multiple beacon nodes and arbitrary
+external validators are outside the current verified scope. Resuming an existing chain after a
+controller restart is not implemented; use `down` followed by `up` to start fresh. Geth's real-time
+transaction-pool expiry continues during a protocol pause.
+
+## Validation
 
 ```sh
-deno task test                         # быстрые unit checks, Docker/e2e помечены skipped
-ZAP_DOCKER_TEST=1 deno task test        # проверка rollback и защиты чужих ресурсов
-ZAP_E2E=1 deno task test                # все четыре реальных e2e последовательно; нужен образ
-deno task e2e                          # время, automine, финализация, отдельный индексатор
-deno task e2e:withdrawal               # реальный exit → withdrawal через сотни эпох
-deno task e2e:protocol                 # депозит, активация, consolidation с явным churn override
-deno task e2e:deploy                   # 20 последовательных деплоев через RPC и ethers
-deno task test:lifecycle               # повторные up/down/reset и воспроизводимый genesis
-deno task test:clock                   # Rust regression часов; использует build cache
-deno task measure                      # два свежих стенда, CPU/RAM/диск/скорость
-deno task diagnose
-deno task profile                     # работающий стенд; продвигает 32 слота
-deno task check
+./scripts/deno task check
+./scripts/deno task test
+./scripts/deno task e2e # Requires the locally built client image.
 ```
 
-Для последовательного деплоя включите `await net.setAutomine(true)`, дождитесь receipt предыдущей
-транзакции и отправляйте следующую. Automine сам производит следующий блок; вызывать `stepSlot` или
-делать `sleep` между транзакциями не требуется. Каждый блок всё равно проходит настоящую обработку
-EL/CL, поэтому ненулевая вычислительная задержка остаётся.
+The default test suite runs unit checks and skips Docker and end-to-end scenarios. Separate
+scenarios cover time advancement, automine, finality, validator lifecycle, deployments and resource
+ownership. Finality checks compare the Beacon finalized block's execution hash with Geth's finalized
+hash.
 
-При использовании ethers настройте ожидание receipt для быстрого локального стенда:
+[Measurements and validation](docs/measurements.md) records executed checks, host conditions and raw
+reports. Keep resource measurements separate from other devnet tests.
 
-```ts
-import { JsonRpcProvider, NonceManager, Wallet } from "ethers";
-import { privateKey } from "./src/config.ts";
+## Documentation
 
-const provider = new JsonRpcProvider(net.url, 1337, {
-  staticNetwork: true, // у этого стенда фиксированный chainId
-  pollingInterval: 25,
-  cacheTimeout: -1,
-  batchMaxCount: 1,
-});
-const signer = new NonceManager(new Wallet(privateKey, provider));
-// new ContractFactory(abi, bytecode, signer).deploy(...)
-// await contract.waitForDeployment() перед следующим зависимым деплоем.
-// По завершении работы вызовите provider.destroy().
-```
-
-Polling и batching — параметры клиента; они не меняют протокольную длину слота. Кэш запросов
-отключён, чтобы последовательные операции не видели устаревший nonce или номер блока. См.
-[параметры ethers](https://docs.ethers.org/v6/api/providers/jsonrpc/#JsonRpcApiProviderOptions). В
-[примере деплоя](examples/deploy.ts) проверяются конструктор, runtime-код и непрерывная
-последовательность блоков; отдельные задержки сохраняются в `reports/deploy.json`.
-
-`advanceUntil` имеет предел слотов и реальное время ожидания. Ошибка внутри фазы не откатывает
-клиентов: дальнейшее продвижение блокируется до reset, чтобы не продолжать с неопределённым
-состоянием. Независимые запросы и сетевые watchdog остаются на реальном времени. Внешний сервис
-видит продвинутые timestamps блоков; его собственные системные часы не меняются.
-
-Исходники форка, сборочные артефакты и состояние стендов лежат в `.cache/`, `.tools/`, `.zap/` и не
-коммитятся. Образы и volumes `zap-build-*` — отдельный повторно используемый build cache.
-`down/reset` очищают ресурсы только выбранного `ZAP_ID`. Глобальный Docker prune не используется.
-
-В примере consolidation задан `churnLimitQuotient: 4`: с 64 валидаторами стандартный churn не
-оставляет ёмкости для consolidation. Это явное отличие тестового профиля; по умолчанию quotient =
-65536. Полный пример выхода сохраняет стандартные задержки и использует явный `skipSlots` для
-длинных периодов без блоков. После пропусков действуют настоящие штрафы за неучастие.
-
-Geth используется без форка. Для управляемого производства блоков тот же Deno-процесс содержит
-Engine-прокси: он откладывает подготовку будущего payload и ждёт завершения сборки текущего по
-JSON-логу закреплённого Geth. При обновлении Geth эту зависимость нужно проверить заново.
-[Результаты ревью](docs/review.md) описывают найденные дефекты и проверки исправлений.
-
-Поддерживается HTTP JSON-RPC. WebSocket, длительный Beacon SSE, несколько BN и произвольные внешние
-валидаторы в этой версии не проверены/не поддерживаются. После аварийного завершения выполните
-`deno task down`, затем `deno task up`: продолжение старого состояния после перезапуска контроллера
-пока не реализовано. На паузе real-time txpool expiry Geth продолжает действовать.
+- [Usage guide](docs/usage.md) — configuration, API details, ethers settings and troubleshooting.
+- [Architecture](docs/architecture.md) — clock boundaries, client patches and Engine API
+  coordination.
+- [Project plan](docs/plan.md) — completed work and next steps.
+- [Artwork](docs/branding.md) — the clockwork firefly, logo and banner.
