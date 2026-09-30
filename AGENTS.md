@@ -12,10 +12,12 @@ Commands: `sh scripts/bootstrap.sh`; `deno task smoke:docker`; `deno task check`
 `deno task test:profile <hardfork> --bake <tag>` and
 `deno task up --profile <hardfork> --bake <tag>`.
 
-Use `.agents/skills/develop-feature/SKILL.md` for implementation, `test-change/SKILL.md` for
-validation, `review-changes/SKILL.md` for review, `debug-devnet/SKILL.md` for stalled chains, and
-`profile-resources/SKILL.md` for measurements. Read the selected skill, execute its relevant
-commands, and record actual results. Never report an unexecuted integration scenario as passing.
+Use `.agents/skills/maintain-bakes/SKILL.md` for hardfork profiles, client versions, patches, tags
+and bake verification. Use `.agents/skills/develop-feature/SKILL.md` for implementation,
+`test-change/SKILL.md` for validation, `review-changes/SKILL.md` for review, `debug-devnet/SKILL.md`
+for stalled chains, and `profile-resources/SKILL.md` for measurements. Read the selected skill,
+execute its relevant commands, and record actual results. Never report an unexecuted integration
+scenario as passing.
 
 TDD is mandatory: define observable acceptance criteria and add a failing regression before
 implementing or optimizing the affected behavior, then make it pass and refactor with the same
