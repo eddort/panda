@@ -1,42 +1,56 @@
-# Mascot and artwork
+# Panda name and artwork
 
-**Iskrovik** is zap-net's spark elemental: a small, concentrated electrical pulse with a calm,
-focused expression. Its amber energy makes the name "zap" visible. The connection to the project is
-a deliberate pulse that advances the network, represented in the banner by a spark passing through a
-short chain of blocks.
+**Panda** is a local Ethereum development environment with real execution and consensus clients and
+validators. The name refers to the panda associated with Ethereum's Merge: the two layers working
+together as one Ethereum network. The
+[Ethereum Foundation's explanation of the Eth1/Eth2 renaming](https://blog.ethereum.org/2022/01/24/the-great-eth2-renaming)
+uses two bears merging into a panda to illustrate that relationship.
+
+The mascot is an original seated panda with a calm expression, a compact silhouette and a restrained
+black-and-white palette. It represents the complete network behind the developer's workspace. Time
+control is one capability of that environment.
 
 <p align="center">
-  <img src="assets/mascot.png" alt="Iskrovik, the zap-net spark elemental" width="256">
+  <img src="assets/mascot.png" alt="Panda, the project's seated pixel-art mascot" width="256">
 </p>
+
+## Name
+
+Use **Panda** in titles and prose. Keep the name short and consistent throughout the documentation.
+The logo is a standalone panda-head mark; the banner pairs the mascot with the **Panda** wordmark.
+
+The current CLI runs through Deno tasks. Existing `ZAP_*` variables, `.zap/` state paths and
+`io.zap-net.*` Docker labels remain compatibility identifiers; see the
+[configuration guide](usage.md#connections-and-configuration). Historical research and raw reports
+keep their original names and identifiers.
 
 ## Files
 
-| File                            | Purpose                                                              |
-| ------------------------------- | -------------------------------------------------------------------- |
-| [mascot.png](assets/mascot.png) | Detailed mascot with a transparent background                        |
-| [logo.png](assets/logo.png)     | Standalone spark mark with a transparent background and no lettering |
-| [banner.png](assets/banner.png) | Dark README banner showing the mascot and a short chain of blocks    |
+| File                            | Purpose                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| [mascot.png](assets/mascot.png) | Full seated mascot with a transparent background                          |
+| [logo.png](assets/logo.png)     | Simplified panda-head mark with a transparent background and no lettering |
+| [banner.png](assets/banner.png) | Dark README banner with the mascot and Panda wordmark                     |
 
 <p align="center">
-  <img src="assets/logo.png" alt="The zap-net spark mark, without letters or a monogram" width="128">
+  <img src="assets/logo.png" alt="Panda's pixel-art panda-head logo" width="128">
 </p>
 
 ## Style
 
-The visual reference is a polished 64×64 sprite from a 16-bit game: deliberate pixel clusters, a
-compact asymmetric silhouette, a thin selective outline and restrained shading. A dark core, amber
-energy and a small cyan accent keep the character readable at a small size.
+The art direction is a polished 64×64 sprite from a 16-bit game: crisp square pixels, deliberate
+clusters, carefully stepped contours and restrained shading. The face, eye patches and rounded ears
+should remain recognizable at a small size. Keep the character simple, with no costumes, tools,
+clocks or decorative symbols.
 
-Palette references: midnight `#142333`, dark teal `#284553`, amber `#D4973E`, warm yellow `#F2C65B`,
-ivory `#F6E8BE` and cyan `#86BFC3`. The PNGs contain additional shades.
+Palette references: charcoal `#17212B`, deep blue-gray `#304451`, cool gray `#889DA6`, soft gray
+`#C5D0D2`, ivory `#F2F1E8` and off-white `#FCFCF7`. The banner uses a dark navy `#142333`
+background. These guide the artwork; the PNGs contain additional shades.
 
-The logo is an image-only spark mark. It contains no letters, wordmark or Z-shaped monogram. The
-project name remains ordinary text in the README. Keep the mark's compact silhouette and open space
-when placing it alongside other content.
+The PNGs are enlarged raster masters for the README and previews. 64×64 describes the intended
+sprite style, not their physical file dimensions. Preserve the aspect ratio and transparency; use
+nearest-neighbor resampling when resizing in an image editor.
 
-The files are enlarged raster masters for the README and previews. 64×64 describes the intended
-sprite style, not the physical dimensions of these PNGs. Preserve the aspect ratio and use
-nearest-neighbor resampling when resizing in an editor.
-
-The artwork was created with the built-in ImageGen tool. Exact prompts are saved in
-[prompts.md](assets/prompts.md). The assets are raster PNGs; vector sources are not included.
+The artwork was created with the built-in ImageGen tool. Exact prompts and reference relationships
+are recorded in [prompts.md](assets/prompts.md). These are original raster assets, not a copy of
+Ethereum's Merge illustration. Vector sources are not included.

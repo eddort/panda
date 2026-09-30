@@ -1,6 +1,6 @@
 ---
 name: profile-resources
-description: Measure zap-net startup, component CPU/memory/disk and slot advancement speed against an ordinary-network baseline.
+description: Measure Panda startup, component CPU/memory/disk and slot advancement speed against an ordinary-network baseline.
 ---
 
 Run deno task baseline for ordinary clients and deno task profile for the controlled stand. Record
@@ -22,6 +22,6 @@ separate number, not part of ordinary startup.
 
 `deno task measure` creates two fresh stands sequentially and records readiness, first block,
 128-slot throughput, Docker and controller CPU/RSS, and persistent-data disk usage in
-`reports/controlled.json`. Run it without other zap-net integration tests competing for CPU. The
+`reports/controlled.json`. Run it without other Panda integration tests competing for CPU. The
 baseline records ordinary wall-clock production in `reports/baseline.json`. Both commands clean up
 their stands.

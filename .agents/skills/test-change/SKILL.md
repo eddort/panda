@@ -1,6 +1,6 @@
 ---
 name: test-change
-description: Select and run meaningful unit, Docker, and real EL/CL regression tests for zap-net changes.
+description: Select and run meaningful unit, Docker, and real EL/CL regression tests for Panda changes.
 ---
 
 Choose checks by the observable behavior changed. Start with deno task check and deno task test. Use

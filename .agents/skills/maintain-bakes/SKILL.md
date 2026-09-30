@@ -1,11 +1,11 @@
 ---
 name: maintain-bakes
-description: Maintain zap-net hardfork bake profiles, pinned EL/CL versions, patches, immutable tags and profile test suites. Use when adding a hardfork, updating client versions, porting a bake patch or repairing artifact reuse and verification.
+description: Maintain Panda hardfork bake profiles, pinned EL/CL versions, patches, immutable tags and profile test suites. Use when adding a hardfork, updating client versions, porting a bake patch or repairing artifact reuse and verification.
 ---
 
 # Maintain hardfork bakes
 
-Work from the zap-net root with `./scripts/deno`. Read `AGENTS.md`, the selected
+Work from the Panda root with `./scripts/deno`. Read `AGENTS.md`, the selected
 `bakes/<hardfork>/recipe.json`, and the relevant `tags/<tag>.json` before changing anything. Inspect
 the current diff so existing work and staging remain intact.
 

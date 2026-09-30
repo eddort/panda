@@ -1,49 +1,48 @@
-# zap-net
+# Panda
 
-![Iskrovik, the zap-net spark mascot, sending a pulse through a chain of blocks](docs/assets/banner.png)
+![Panda — a pixel-art panda and the project wordmark](docs/assets/banner.png)
 
-**Real Ethereum. Your time.**
+**Ethereum development with real clients and validators.**
 
-A local Ethereum devnet for integration tests that need control over protocol time. zap-net runs
-Geth and Lighthouse in Docker, with a small Deno/TypeScript API to start the network, produce
-blocks, advance epochs and clean up afterward.
+Panda is a local Ethereum development environment built from Geth, a Lighthouse beacon node and real
+validators. One Deno controller manages the clients in Docker and exposes a small TypeScript API for
+network lifecycle, transactions, consensus state and protocol time.
 
-The goal is to make tests involving time, consensus and validator lifecycle practical to run
-locally. A test decides when the chain advances, while the clients perform the actual execution,
+The goal is to make the full execution and consensus stack practical to use in application
+development and integration tests. Start an isolated network, deploy contracts, inspect both layers,
+exercise validator workflows and clean up afterward. The clients perform the actual execution,
 signing, voting and state transitions.
 
-## Why zap-net?
+## What Panda is for
 
-Ethereum applications often need to wait for a deadline, a finalized block or a validator
-transition. On a network driven by the host clock, those waits become part of every test run.
-zap-net makes protocol time explicit: pause the chain while inspecting state, advance one slot to
-observe a block, or move through many epochs to reach the condition a test needs.
+Panda gives tests access to HTTP JSON-RPC, Beacon API and explicit network controls. It is useful
+when a scenario depends on how execution, consensus and validators work together:
 
-It is useful for:
-
-- **Time-dependent contracts:** exercise timelocks, vesting and expiry against real block
-  timestamps.
-- **Application integrations:** test deployments, receipts, indexers and finalized-block consumers
-  against execution and consensus clients.
+- **Contracts and applications:** test deployments, receipts, indexers and services against a
+  running Ethereum network.
+- **Consensus-aware integrations:** inspect Beacon state, validator duties and finality alongside
+  execution-layer transactions and balances.
 - **Validator workflows:** exercise deposits, activation, exits and withdrawals with the protocol's
   state transitions and delays.
-
-The network can run ahead of the host clock. Advancing time still requires computation: ordinary
-advancement processes every intermediate slot, including block proposals and validator duties.
+- **Repeatable environments:** start fresh instances, select a hardfork and a pinned client build,
+  and scope cleanup to the instance a test owns.
+- **Time-dependent scenarios:** pause protocol time, produce individual blocks, advance through
+  epochs or test timelocks and expiry against real block timestamps.
 
 ## How it works
 
-One Deno process owns the network lifecycle and exposes HTTP JSON-RPC, Beacon API and time controls.
-It manages Geth, a Lighthouse beacon node, a validator client and a one-shot genesis generator
-through Docker. Each instance has its own resource label, so cleanup is scoped to that instance.
+One Deno process owns the network lifecycle. It manages Geth, a Lighthouse beacon node, a validator
+client and a one-shot genesis generator through dockerode. Each instance has its own resource label,
+so cleanup is scoped to that instance.
 
-Geth runs without a fork. A Lighthouse patch gives protocol clocks and schedules an explicit time
-source. The controller advances protocol phases and waits for their work to finish; an Engine API
-gate coordinates execution payload preparation with those phases. Signature checks, execution
-validation and finality remain part of the real client pipeline.
+Geth provides the execution layer. A Lighthouse patch gives protocol clocks and schedules an
+explicit time source. The controller advances protocol phases and waits for their work to finish; an
+Engine API gate coordinates execution payload preparation with those phases. Signature checks,
+execution validation and finality remain part of the real client pipeline.
 
-The default network targets **Pectra (Prague/Electra)** with the mainnet preset: 12-second slots,
-32-slot epochs and 64 genesis validators. Validator count is reduced explicitly. Network deadlines,
+Hardfork profiles cover **Pectra (Prague/Electra)** and the pinned experimental **Gloas
+(Amsterdam/Gloas)** implementations. The default is Pectra. Both use the mainnet preset: 12-second
+slots, 32-slot epochs and an explicitly reduced default of 64 genesis validators. Network deadlines,
 JWT timestamps and watchdogs continue to use real time, including while protocol time is paused.
 
 ## Quick start
@@ -53,31 +52,33 @@ first Lighthouse build takes time; client compilation is separate from ordinary 
 
 ```sh
 sh scripts/bootstrap.sh
-./scripts/deno run -A scripts/prepare_clients.ts
-./scripts/deno task bake pectra --replace
 ./scripts/deno task smoke:docker
-./scripts/deno task up
+./scripts/deno task bake pectra --tag local
+./scripts/deno task test:profile pectra --bake local
+./scripts/deno task up --profile pectra --bake local
 ```
 
 HTTP JSON-RPC and Beacon API share `http://127.0.0.1:8545`: use `/` for JSON-RPC and the standard
 `/eth/v1/...` and `/eth/v2/...` paths for Beacon API.
 
 Press Ctrl-C to stop and clean up, or run `./scripts/deno task down` in another terminal.
-`./scripts/deno task reset` starts again with fresh state. Use `ZAP_ID` and `ZAP_PORT` for separate
-instances. Once Deno is available on your path, the same commands can be written as `deno task …`.
+`./scripts/deno task reset --profile pectra --bake local` starts again with fresh state. Use
+`ZAP_ID` and `ZAP_PORT` for separate instances. Once Deno is available on your path, the same
+commands can be written as `deno task …`.
 
-## Control time
+## TypeScript API
 
-From a TypeScript file in the repository root:
+From a TypeScript file in the repository root, using the bake built above:
 
 ```ts
 import { Devnet } from "./src/api.ts";
 
-await using net = await Devnet.start({ id: "my-test" });
+await using net = await Devnet.start({ id: "my-test", profile: "pectra", bake: "local" });
 
+const chainId = await net.rpc<string>("eth_chainId");
+const validators = await net.beacon("/eth/v1/beacon/states/head/validators");
 await net.stepSlot(); // Produce a block and complete the slot's duties.
 await net.advanceEpochs(2); // Advance through two epochs.
-await net.advanceTime(3600); // Process one hour of protocol time.
 
 await net.advanceUntil(
   async () => BigInt((await net.status()).finality.data.finalized.epoch) >= 3n,
@@ -88,14 +89,18 @@ await net.advanceUntil(
 `await using` cleans up the instance when the scope ends. To connect to an existing controller, use
 `new Devnet("http://127.0.0.1:8545")`; closing that connection does not stop the network.
 
-Use `advanceSlots(n)` for a specific number of slots, `advanceTo(timestampOrDate)` for a target
-time, or `advanceUntil(predicate, options)` to wait for a condition within a slot budget and a
-real-time deadline. Time only moves forward.
-
 Automine is off by default. Enable it with `await net.setAutomine(true)` to produce blocks for
 eligible pending transactions, then wait for receipts as usual. See the
 [deployment example](bakes/shared/tests/deploy.ts) for sequential contract deployment with ethers.
 
+## Protocol time
+
+Protocol time is explicit and can run ahead of the host clock. Use `advanceSlots(n)` or
+`advanceEpochs(n)` for continuous block production and validator participation. Use
+`advanceUntil(predicate, options)` to wait for a condition within a slot budget and a real-time
+deadline. Time only moves forward, and advancing it still requires client computation.
+
+`advanceTime(seconds)` advances by a duration; `advanceTo(timestampOrDate)` targets a specific time.
 Large `advanceTime`/`advanceTo` jumps skip intermediate blocks and votes, then produce a destination
 block. `skipSlots(n)` also skips the destination block. Skipping can delay finality and incur
 inactivity penalties; use `advanceSlots`/`advanceEpochs` for continuous participation.
@@ -116,6 +121,13 @@ transaction-pool expiry continues during a protocol pause.
 Recipes, patches and profile tests live together under `bakes/<hardfork>/`; reusable parts live in
 `bakes/shared/`. See [the bake layout and extension guide](bakes/README.md) to add another hardfork
 or build a client version under a new tag.
+
+## Existing configuration
+
+Panda was previously named `zap-net`. The current runtime retains `ZAP_*` environment variables, the
+`.zap/` state directory and `io.zap-net.*` Docker ownership labels for compatibility with existing
+instances and bakes. Use the commands and identifiers documented here; the CLI is invoked through
+Deno tasks. Historical research and raw reports retain the names used when they were recorded.
 
 ## Validation
 
@@ -139,4 +151,3 @@ reports. Keep resource measurements separate from other devnet tests.
 - [Architecture](docs/architecture.md) — clock boundaries, client patches and Engine API
   coordination.
 - [Project plan](docs/plan.md) — completed work and next steps.
-- [Artwork](docs/branding.md) — Iskrovik, the spark mark and the project banner.

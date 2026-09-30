@@ -1,6 +1,6 @@
 ---
 name: develop-feature
-description: Implement features in zap-net, including Deno APIs, Docker lifecycle, and the Lighthouse clock patch.
+description: Implement features in Panda, including Deno APIs, Docker lifecycle, and the Lighthouse clock patch.
 ---
 
 Read AGENTS.md and the affected source before editing. Protocol time belongs to the Lighthouse

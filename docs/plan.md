@@ -1,106 +1,111 @@
-# План zap-net
+# Panda project plan
 
-Состояние на 29 сентября 2026 года. Рабочая первая версия реализована и проверена на macOS arm64 с
-Docker Desktop. Текущий приоритет — закрепить выбранный стабильный вариант. Дальнейшая оптимизация
-остановлена по просьбе пользователя; следующие этапы ниже остаются возможным будущим развитием.
+Recorded status as of September 29, 2026. The first working version was implemented and verified on
+macOS arm64 with Docker Desktop. The current priority is to consolidate the selected stable version.
+Further optimization was paused at the user's request; the later stages below remain possible future
+work. The results in this document describe those earlier runs.
 
-## Уже сделано
+## Completed
 
-- [x] Реальная сеть Pectra: неизменённый Geth, форк Lighthouse BN/VC, 64 genesis validators,
-      одноразовый ethereum-genesis-generator. Версии исходников и образы закреплены.
-- [x] Один контроллер TypeScript/Deno; управление Docker через dockerode, без Compose/Kurtosis.
-- [x] Протокольное время отделено от реальных сетевых таймаутов и JWT. На паузе head не меняется.
-- [x] Перемотка вперёд на срок и до даты: `advanceTime` и `advanceTo`. Работают `stepSlot`,
-      `advanceSlots`, `advanceEpochs`, ограниченный `advanceUntil` и отдельный `skipSlots`.
-- [x] При обычном продвижении выполняются настоящие блоки, подписи и attestations. Финализация
-      проверена совпадением execution hash у Beacon finalized и Geth finalized.
-- [x] Automine обрабатывает конкурентные отправки, nonce gaps и низкие комиссии; HTTP JSON-RPC
-      сохраняет ответы, ошибки, batch и notification semantics.
-- [x] Проверены 20 зависимых деплоев через raw RPC и `ethers.ContractFactory`: каждый попадает в
-      следующий блок без ручных команд времени. Проверяются конструктор, runtime-код, timestamp и
-      задержки receipt; быстрые настройки ethers приведены в README.
-- [x] Пройдены депозит, активация нового ключа, подписанный exit, фактическая withdrawal и
-      consolidation. Для consolidation явно изменяется churn quotient; обычный профиль сохраняет
-      стандартные задержки и churn.
-- [x] Есть TypeScript API, CLI `up/down/reset/diagnose`, примеры e2e и отдельный тестовый
-      индексатор.
-- [x] Проверены повторные команды, воспроизводимый genesis, защита от второго владельца, откат
-      неудачного запуска и очистка только ресурсов выбранного стенда.
-- [x] Созданы и применены пять agent skills и `AGENTS.md`; выполнено ревью с отдельной проверкой
-      исправлений. Сборка Lighthouse отделена от запуска сети.
-- [x] Первоначальный opt-in набор Pectra: 14 тестов прошли за 6 мин 10 с, включая время, exit →
-      withdrawal, deposit/activation/consolidation и последовательный деплой. Отдельно прошли Rust
-      clock regression и CLI lifecycle.
-- [x] Измерены обычная сеть и два запуска управляемой сети, CPU/RAM по компонентам, диск, скорость
-      слотов и стоимость сборки.
+- [x] Real Pectra network: unmodified Geth, a Lighthouse BN/VC fork, 64 genesis validators and a
+      one-shot ethereum-genesis-generator. Source versions and images are pinned.
+- [x] One TypeScript/Deno controller, with Docker managed through dockerode, without Compose or
+      Kurtosis.
+- [x] Protocol time is separate from real network deadlines and JWT time. The head remains unchanged
+      while paused.
+- [x] Forward time controls by duration and date: `advanceTime` and `advanceTo`. The API also
+      includes `stepSlot`, `advanceSlots`, `advanceEpochs`, bounded `advanceUntil` and explicit
+      `skipSlots`.
+- [x] Ordinary advancement performs real blocks, signatures and attestations. Finalization was
+      checked by comparing the execution hashes of the Beacon finalized checkpoint and Geth's
+      finalized block.
+- [x] Automine handles concurrent sends, nonce gaps and low fees. HTTP JSON-RPC preserves responses,
+      errors, batch and notification semantics.
+- [x] Twenty dependent deployments through raw RPC and `ethers.ContractFactory` were checked. Each
+      enters the next block without manual time commands. The checks cover constructors, runtime
+      code, timestamps and receipt latency; fast ethers settings are documented in the usage guide.
+- [x] Deposit, activation of a new key, signed exit, actual withdrawal and consolidation scenarios
+      passed. Consolidation explicitly overrides the churn quotient; ordinary profiles retain
+      standard delays and churn.
+- [x] TypeScript API, CLI `up/down/reset/diagnose`, e2e examples and a separate test indexer.
+- [x] Repeated commands, reproducible genesis, protection against a second owner, startup rollback
+      and cleanup limited to the selected instance were checked.
+- [x] Five initial agent skills and `AGENTS.md` were created and used. Review fixes received a
+      separate verification pass. Lighthouse compilation is separate from network startup.
+- [x] The initial opt-in Pectra suite passed 14 tests in 6 minutes 10 seconds, covering time, exit
+      to withdrawal, deposit/activation/consolidation and sequential deployment. Rust clock
+      regression and CLI lifecycle checks also passed separately.
+- [x] An ordinary network and two controlled-network runs were measured, including component
+      CPU/RAM, disk, slot advancement speed and build cost.
 
-Первоначальный замер Pectra: 10–11 с до готовности с пустыми базами и готовыми образами, около 2,86
-слота/с, около 545 МиБ на паузе вместе с контроллером. Полный exit → withdrawal с пропусками длинных
-периодов — 99,9 с. Это замеры конкретного стенда, а не обещание производительности на другой машине.
+The initial Pectra measurements were 10–11 seconds to readiness with empty databases and cached
+images, about 2.86 slots/second, and about 545 MiB while paused including the controller. The full
+exit-to-withdrawal scenario with long skipped periods took 99.9 seconds. These are measurements of
+one host, not a performance promise for another machine.
 
-## Bake-профили
+## Bake profiles
 
-- [x] Профили по имени хардфорка: `pectra` и `gloas`, отдельные теги внутри каждого профиля.
-- [x] Baker закрепляет source commits, clock-патч, toolchain, Docker image IDs и платформу.
-- [x] Поддержаны готовый EL-образ и сборка Geth из исходников; Lighthouse собирается с патчем
-      выбранного профиля. Теги публикуются атомарно, одинаковые входы используют кеш артефактов.
-- [x] API/CLI выбирают готовый bake без компиляции при запуске. Runtime использует профильные
-      genesis, Engine API, Beacon API и расписание обязанностей валидаторов.
-- [x] Для каждого профиля задан полный список сценариев; Gloas дополнительно проверяет отдельный
-      execution envelope, bid и настоящие PTC-голоса.
-- [x] Отчёт проверки связан с bake key и fingerprint кода; старые или смешанные результаты не
-      получают статус `verified`.
-- [x] Проверки профилей независимы: выбранные сценарии и их runtime имеют собственный fingerprint;
-      новые исходники клиента не отменяют проверку уже собранного образа. Общий `test:baker`
-      запускается отдельно. Native-тесты используют архив исходников своего bake key.
-- [x] Добавлен `e2e:warp`: два скачка по 8192 слота, реальные транзакции после каждого скачка,
-      восстановление финализации, проверка всего реестра и истории подписей валидаторов.
-- [x] По просьбе пользователя выбран более простой v3 и закреплён `gloas/stable`; эксперименты v4/v5
-      исключены из текущего патча. Дальнейшая оптимизация остановлена. Ранее получено 9,7 / 11,9 с
-      на скачок с транзакцией; регрессионный порог принят 20 с.
-- [x] Полный набор `gloas/stable`: 8/8 passed, `verified: true`; два скачка с транзакцией — 10,8 /
-      11,6 с. Отдельная перемотка `pectra/default` на итоговом runtime прошла: 17,6 / 18,3 с. В
-      обоих профилях после двух скачков восстановилась финализация, все 64 валидатора продолжили
-      подписывать без слэшинга и конфликтов. Полный набор Pectra повторно не запускался.
+- [x] Hardfork-named profiles: `pectra` and `gloas`, with separate tags within each profile.
+- [x] The baker pins source commits, clock patches, toolchains, Docker image IDs and platform.
+- [x] Prebuilt EL images and Geth source builds are supported. Lighthouse uses the selected
+      profile's patch. Tags are published atomically; identical inputs reuse cached artifacts.
+- [x] API/CLI startup selects an existing bake without compiling. Runtime uses profile-specific
+      genesis, Engine API, Beacon API and validator duty schedules.
+- [x] Each profile defines its complete scenario list. Gloas also checks its separate execution
+      envelope, bid and real PTC votes.
+- [x] Verification binds the bake key and suite fingerprint. Old or mixed results do not receive
+      `verified` status.
+- [x] Profile checks are independent. Selected scenarios and their runtime have their own
+      fingerprint; new client sources do not invalidate verification of an already built image.
+      Shared `test:baker` runs separately. Native tests use their bake key's source archive.
+- [x] `e2e:warp` covers two 8192-slot jumps, real transactions after each jump, resumed finality,
+      the entire validator registry and signing history.
+- [x] The simpler v3 was selected at the user's request and pinned as `gloas/stable`. The v4/v5
+      experiments were excluded from the current patch and further optimization was paused. Earlier
+      jumps including a transaction took 9.7 / 11.9 seconds; the regression threshold is 20 seconds.
+- [x] The full `gloas/stable` suite passed 8/8 checks with `verified: true`; the two jumps including
+      transactions took 10.8 / 11.6 seconds. A separate `pectra/default` warp check passed on the
+      final runtime: 17.6 / 18.3 seconds. Both profiles resumed finality after two jumps; all 64
+      validators continued signing without slashing or conflicts. The full Pectra suite was not
+      rerun.
 
-Команды, ограничения импорта и добавление других версий описаны в [bakes.md](bakes.md). Результаты
-текущей проверки находятся в `reports/profiles/<hardfork>/<tag>/verification.json`. Это проверки
-корректности; их длительность при одновременной компиляции не является benchmark.
+Commands, import restrictions and adding client versions are described in [bakes.md](bakes.md).
+Current verification results are stored in `reports/profiles/<hardfork>/<tag>/verification.json`.
+These are correctness checks; their duration while compilation is running is not a benchmark.
 
-## Что ещё не закрыто из первоначальных измерений
+## Remaining measurement work
 
-- [ ] Полный холодный запуск на чистом окружении без кэша образов: отдельно измерить скачивание,
-      сборку, genesis, готовность и первый блок. Текущие замеры относятся к пустым базам с кэшем
-      образов.
-- [ ] Сравнить несколько значений Geth cache и CPU limits при одинаковой нагрузке, измерить пиковую
-      память и рост диска на более длинном прогоне. Текущие настройки измерены, но их оптимальность
-      не доказана.
+- [ ] Measure a complete cold start on a clean environment without cached images: downloads, build,
+      genesis, readiness and the first block separately. Existing measurements use empty databases
+      with cached images.
+- [ ] Compare Geth cache sizes and CPU limits under the same load. Measure peak memory and disk
+      growth over a longer run. Current settings have measurements but are not proven optimal.
 
-## Следующий этап в порядке приоритета
+## Next priorities
 
-1. **Усилить проверки времени и отказов.** Добавить реальные e2e для дробных дат и длинного
-   продвижения через границы эпох, конкурентных команд времени, длительной паузы и отказа EL/BN/VC
-   посередине фазы. Критерий: согласованность EL/CL, отсутствие самопроизвольных блоков и понятная
-   ограниченная по времени ошибка при незавершённом продвижении.
-2. **Закрепить совместимость EngineGate.** Автоматизировать проверки отсутствующего/изменённого
-   события готовности payload, истёкшего JWT и несовместимого образа Geth. Сейчас прокси зависит от
-   JSON-лога конкретной версии Geth; при обновлении требуется повторная проверка исходников.
-3. **Проверить установку с нуля и другие платформы.** Запустить bootstrap, сборку и e2e на чистом
-   окружении; затем на Linux arm64/amd64. Добавить CI с быстрыми проверками и отдельными Docker/Rust
-   заданиями. На этом этапе закрыть полный холодный замер и проверить соответствие собранного образа
-   исходникам и патчу. Сейчас подтверждена только macOS arm64 с Docker Desktop.
+1. **Strengthen time and failure checks.** Add real e2e coverage for fractional timestamps, long
+   advancement across epoch boundaries, concurrent time commands, extended pauses and EL/BN/VC
+   failure during a phase. Acceptance requires EL/CL agreement, no spontaneous blocks and a clear,
+   bounded error when advancement cannot complete.
+2. **Protect EngineGate compatibility.** Automate checks for missing or changed payload-readiness
+   events, expired JWTs and incompatible Geth images. The proxy currently depends on a particular
+   Geth version's JSON log; upgrades require another source review.
+3. **Verify installation from scratch and other platforms.** Run bootstrap, build and e2e checks in
+   a clean environment, then on Linux arm64/amd64. Add CI with fast checks and separate Docker/Rust
+   jobs. Complete the cold-start measurement and verify that built images match their sources and
+   patches. Only macOS arm64 with Docker Desktop has been confirmed so far.
 
-## Возможные расширения после основного этапа
+## Possible later extensions
 
-- Продолжение существующего состояния после перезапуска контроллера. Сейчас восстановление — `down`
-  и новый запуск/reset; синхронизацию часов и незавершённых фаз нужно спроектировать отдельно.
-- WebSocket JSON-RPC и длительный Beacon SSE для сервисов, которым недостаточно HTTP.
-- Несколько BN, внешние валидаторы и переходы между Ethereum forks — отдельное расширение
-  планировщиков и e2e-покрытия.
+- Resume existing state after a controller restart. Recovery currently uses `down` and a fresh
+  startup/reset; clock synchronization and incomplete phases need a separate design.
+- WebSocket JSON-RPC and long-lived Beacon SSE for services that need more than HTTP.
+- Multiple beacon nodes, external validators and transitions between Ethereum forks, with separate
+  scheduler changes and e2e coverage.
 
-Эти расширения ещё не реализованы и не входят в подтверждённые возможности первой версии. Baker
-намеренно сохраняет образы и compiler-cache volumes. Сценарии удаляют только контейнеры, сети и
-данные своего тестового стенда; глобальная очистка Docker не выполняется.
+These extensions are not implemented or included in the first version's verified capabilities. The
+baker deliberately retains images and compiler-cache volumes. Scenarios remove only their own
+instance's containers, networks and data; global Docker cleanup is never performed.
 
-Подробности: [архитектура](architecture.md), [замеры и границы проверки](measurements.md),
-[результаты ревью](review.md), [исходные отчёты](../reports).
+Details: [architecture](architecture.md), [measurements and verification limits](measurements.md),
+[review results](review.md), [raw reports](../reports).

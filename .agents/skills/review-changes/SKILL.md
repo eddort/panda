@@ -1,6 +1,6 @@
 ---
 name: review-changes
-description: Review zap-net correctness, protocol time, EL/CL consistency, Docker ownership, and regression risk.
+description: Review Panda correctness, protocol time, EL/CL consistency, Docker ownership, and regression risk.
 ---
 
 Read git diff and untracked source in this initially empty repository. Trace startup, partial

@@ -1,17 +1,19 @@
-# Using zap-net
+# Using Panda
 
-A local Ethereum devnet with Pectra/Gloas profiles: Geth, a Lighthouse beacon node and validator
-client, one Deno/TypeScript controller, and Docker managed through dockerode. A one-shot
-ethereum-genesis-generator creates genesis. See [measurements](measurements.md) for validation
-results and benchmarks, and the [project plan](plan.md) for completed work and next steps.
+Panda is a local Ethereum development environment with Pectra/Gloas profiles: Geth, a Lighthouse
+beacon node and real validators, one Deno/TypeScript controller, and Docker managed through
+dockerode. A one-shot ethereum-genesis-generator creates genesis. See
+[measurements](measurements.md) for validation results and benchmarks, and the
+[project plan](plan.md) for completed work and next steps.
 
 ## Setup and startup
 
 ```sh
 sh scripts/bootstrap.sh
-deno task bake pectra --replace # Build local artifacts from the pinned recipe on this machine.
 deno task smoke:docker
-deno task up                   # Foreground; Ctrl-C cleans up this instance's resources.
+deno task bake pectra --tag local # Build local artifacts from the pinned recipe on this machine.
+deno task test:profile pectra --bake local
+deno task up --profile pectra --bake local # Foreground; Ctrl-C cleans up this instance's resources.
 ```
 
 Tasks use the local Deno 2.9.7 runtime in `.tools`; a system Deno is only needed to invoke
@@ -23,17 +25,22 @@ run `deno task up --profile gloas --bake trial` after building and verifying `gl
 
 ## Connections and configuration
 
-In another terminal, run `deno task down` or `deno task reset`. `ZAP_ID` selects the instance
-(default: `local`), and `ZAP_PORT` sets the controller port (8545). To select a Docker socket, use
-`ZAP_DOCKER_SOCKET=/path/to/docker.sock` or `DOCKER_HOST=unix:///path/to/docker.sock`. Docker
-Desktop on macOS is detected automatically. Remote Docker daemons are not supported because the
-network uses local bind mounts. Public RPC and Beacon API bind to 127.0.0.1. The internal Engine
-proxy accepts container connections through the host gateway and verifies JWTs; see the
-[architecture](architecture.md).
+In another terminal, run `deno task down` or `deno task reset --profile pectra --bake local`.
+`ZAP_ID` selects the instance (default: `local`), and `ZAP_PORT` sets the controller port (8545). To
+select a Docker socket, use `ZAP_DOCKER_SOCKET=/path/to/docker.sock` or
+`DOCKER_HOST=unix:///path/to/docker.sock`. Docker Desktop on macOS is detected automatically. Remote
+Docker daemons are not supported because the network uses local bind mounts. Public RPC and Beacon
+API bind to 127.0.0.1. The internal Engine proxy accepts container connections through the host
+gateway and verifies JWTs; see the [architecture](architecture.md).
 
 JSON-RPC is available at the root of the controller URL. Standard Beacon API paths `/eth/v1/...` and
 `/eth/v2/...` use the same address. Automine is off by default. Keys and the mnemonic are public and
 intended only for this local environment.
+
+Panda retains the previous `ZAP_*` configuration names, `.zap/` state paths and `io.zap-net.*`
+Docker labels so existing instances and build artifacts remain compatible. `ZAP_PROFILE` and
+`ZAP_BAKE` select the default profile and bake when command-line options or API configuration do not
+specify them. Commands currently run through `deno task`.
 
 ## TypeScript API
 
@@ -42,7 +49,7 @@ The examples below use paths relative to the repository root.
 ```ts
 import { Devnet } from "./src/api.ts";
 
-await using net = await Devnet.start({ id: "my-e2e" });
+await using net = await Devnet.start({ id: "my-e2e", profile: "pectra", bake: "local" });
 const initial = await net.status();
 await net.stepSlot();
 await net.advanceEpochs(2);
@@ -156,10 +163,11 @@ skipped slots.
 
 ## Engine API
 
-Geth runs without a fork. To control block production, the same Deno process hosts an Engine proxy.
-It defers preparation of future payloads and waits for the current payload build to finish, using
-the pinned Geth version's JSON log. This dependency must be checked again when upgrading Geth. The
-[review results](review.md) describe defects found and the checks used to verify their fixes.
+Geth provides the execution layer. To control block production, the same Deno process hosts an
+Engine proxy. It defers preparation of future payloads and waits for the current payload build to
+finish, using the pinned Geth version's JSON log. This dependency must be checked again when
+upgrading Geth. The [review results](review.md) describe defects found and the checks used to verify
+their fixes.
 
 ## Limitations
 

@@ -1,4 +1,6 @@
-# zap-net
+# Panda
+
+Branding and mascot notes: [docs/branding.md](docs/branding.md).
 
 One Deno controller drives dockerode, Geth, Lighthouse BN/VC and a one-shot genesis container. The
 profiles are named by hardfork: Pectra (Prague/Electra) and Gloas (Amsterdam/Gloas), mainnet preset,

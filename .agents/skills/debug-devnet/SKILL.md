@@ -1,6 +1,6 @@
 ---
 name: debug-devnet
-description: Diagnose stopped zap-net chains, missing finality, txpool gaps, and EL/CL or external-service failures.
+description: Diagnose stopped Panda chains, missing finality, txpool gaps, and EL/CL or external-service failures.
 ---
 
 Run deno task diagnose and inspect .zap/<id>/*.log plus manifest.json. Compare Beacon head
