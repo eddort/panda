@@ -1,9 +1,9 @@
 # Architecture and verification boundaries
 
-Hardfork recipes live in `profiles/pectra.json` and `profiles/gloas.json`. Pectra targets
+Hardfork recipes live in `bakes/pectra/recipe.json` and `bakes/gloas/recipe.json`. Pectra targets
 Prague/Electra with unmodified Geth v1.15.11 and Lighthouse v7.1.0. Gloas targets the pinned
 experimental Amsterdam/Gloas implementations. A bake records the actual source commits, clock patch
-hashes, toolchains, immutable image IDs and platform in `bakes/<hardfork>/<tag>.json`.
+hashes, toolchains, immutable image IDs and platform in `bakes/<hardfork>/tags/<tag>.json`.
 `src/baker.ts` builds or imports artifacts; runtime startup reads the selected bake without
 compiling. See [bake commands and provenance](bakes.md). Deno 2.9.7 passed the dockerode 4.0.7
 socket/logs/exec/events lifecycle smoke test. Earlier attempted Deno 2.2.12 and 2.5.6 exposed Unix
@@ -37,10 +37,10 @@ completion watermarks and EL/CL head agreement establish completion of the proto
 mocked execution. It is a useful reference, but is not used as the runtime client. The fork keeps
 production clients and HTTP validation paths.
 
-`clients/controlled_clock.rs` adds an opt-in process-local watch clock. Tokio watch notifications
-wake protocol sleeps without polling while paused. Only the reviewed schedulers import the new sleep
-functions. Ordinary Tokio timers, network request deadlines, JWT generation, networking and
-watchdogs keep real time.
+`bakes/shared/controlled_clock.rs` adds an opt-in process-local watch clock. Tokio watch
+notifications wake protocol sleeps without polling while paused. Only the reviewed schedulers import
+the new sleep functions. Ordinary Tokio timers, network request deadlines, JWT generation,
+networking and watchdogs keep real time.
 
 The maintained patch changes:
 
@@ -99,10 +99,9 @@ the controller's advertised RPC endpoint.
 
 For an upstream update: pin new commits and images, inspect every patch hunk and protocol sleep call
 site, regenerate the appropriate maintained patch against a clean pinned checkout
-(`scripts/patch_lighthouse.py` or `scripts/patch_gloas.py`), run the Rust clock test and
-`test:profile` for that hardfork/tag. The profile suite includes ordinary baseline and all real e2e
-checks. Preserve original signature/state checks. Build cost is independent of ordinary devnet
-startup.
+(`bakes/pectra/patch.py` or `bakes/gloas/patch.py`), run the Rust clock test and `test:profile` for
+that hardfork/tag. The profile suite includes ordinary baseline and all real e2e checks. Preserve
+original signature/state checks. Build cost is independent of ordinary devnet startup.
 
 `advanceSlots`/`advanceEpochs` execute every intervening proposal, vote and state transition.
 `advanceTime`/`advanceTo` use skipped slots for jumps larger than one epoch and produce a real
@@ -119,10 +118,10 @@ change; the manifest is updated. No fake votes fill the gap.
 
 The default mainnet churn quotient is 65536 for Pectra and 32768 for Gloas. With 64 validators,
 Electra has no consolidation churn capacity: its activation/exit allocation consumes the available
-churn. `examples/protocol.ts` explicitly sets `churnLimitQuotient: 4` (512 ETH total balance churn,
-256 ETH consolidation capacity before balance changes) to test consolidation without thousands of
-keys. All ordinary timing delays, including 256-epoch exit eligibility and withdrawal delay, remain
-intact. See
+churn. `bakes/shared/tests/protocol.ts` explicitly sets `churnLimitQuotient: 4` (512 ETH total
+balance churn, 256 ETH consolidation capacity before balance changes) to test consolidation without
+thousands of keys. All ordinary timing delays, including 256-epoch exit eligibility and withdrawal
+delay, remain intact. See
 [Electra churn rules](https://github.com/ethereum/consensus-specs/blob/v1.5.0/specs/electra/beacon-chain.md).
 
 Gloas separates consolidation churn from activation/exit churn. Its default

@@ -129,8 +129,8 @@ const signer = new NonceManager(new Wallet(privateKey, provider));
 Polling and batching are client settings; they do not change the protocol slot length. Request
 caching is disabled so sequential operations do not see stale nonces or block numbers. See the
 [ethers options](https://docs.ethers.org/v6/api/providers/jsonrpc/#JsonRpcApiProviderOptions). The
-[deployment example](../examples/deploy.ts) checks constructors, runtime code and a continuous block
-sequence. Individual latency measurements are saved in `reports/deploy.json`.
+[deployment example](../bakes/shared/tests/deploy.ts) checks constructors, runtime code and a
+continuous block sequence. Individual latency measurements are saved in `reports/deploy.json`.
 
 ## Errors, timeouts and external services
 

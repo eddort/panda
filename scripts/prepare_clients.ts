@@ -1,7 +1,9 @@
 import { dirname } from "node:path";
+import { profiles } from "../src/profiles.ts";
 
 const root = `${Deno.cwd()}/.cache/upstream/lighthouse`;
-const commit = "cfb1f7331064b758c6786e4e1dc15507af5ff5d1";
+const recipe = profiles.pectra;
+const commit = recipe.clRef;
 async function git(args: string[], cwd = Deno.cwd()): Promise<string> {
   const result = await new Deno.Command("git", { args, cwd, stdout: "piped", stderr: "piped" })
     .output();
@@ -26,17 +28,17 @@ try {
 if (await git(["rev-parse", "HEAD"], root) !== commit) {
   throw new Error("Unexpected Lighthouse source commit");
 }
-const patch = `${Deno.cwd()}/clients/lighthouse.patch`;
+const patch = `${Deno.cwd()}/${recipe.patch}`;
 try {
   await git(["apply", "--reverse", "--check", patch], root);
 } catch {
   await git(["apply", "--check", patch], root);
   await git(["apply", patch], root);
 }
-await Deno.copyFile("clients/controlled_clock.rs", `${root}/common/slot_clock/src/controlled.rs`);
+await Deno.copyFile(recipe.clockSource, `${root}/common/slot_clock/src/controlled.rs`);
 await Deno.mkdir(`${root}/common/slot_clock/tests`, { recursive: true });
 await Deno.copyFile(
-  "clients/controlled_clock_test.rs",
+  recipe.clockTest,
   `${root}/common/slot_clock/tests/controlled.rs`,
 );
 console.log(JSON.stringify({ event: "sources-ready", commit, root }));

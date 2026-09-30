@@ -17,10 +17,18 @@ validation, `review-changes/SKILL.md` for review, `debug-devnet/SKILL.md` for st
 `profile-resources/SKILL.md` for measurements. Read the selected skill, execute its relevant
 commands, and record actual results. Never report an unexecuted integration scenario as passing.
 
+TDD is mandatory: define observable acceptance criteria and add a failing regression before
+implementing or optimizing the affected behavior, then make it pass and refactor with the same
+checks. For honest fast-forward use `docs/warp-tdd-acceptance.md`. Validator economics, full duty
+coverage, real finality, EL/CL agreement, failure safety and post-warp operations are release gates;
+speed or `slashed == false` alone is insufficient. Preserve red/green evidence for the selected
+bake. A requirement without an implemented, executed check remains unverified. Profile builds and
+tests stay independent; shared changes require validation for each profile released with them.
+
 Sources: `src/network.ts` owns lifecycle; `src/docker.ts` owns Docker operations; `src/config.ts`
-owns runtime configuration; `profiles/*.json` pins recipes; `src/baker.ts` builds immutable
-`bakes/<hardfork>/<tag>.json` manifests; `src/engine.ts` gates payload preparation using pinned Geth
-JSON logs; `clients/controlled_clock.rs` and the Lighthouse patch change only protocol
+owns runtime configuration; `bakes/*/recipe.json` pins recipes; `src/baker.ts` builds immutable
+`bakes/<hardfork>/tags/<tag>.json` manifests; `src/engine.ts` gates payload preparation using pinned
+Geth JSON logs; `bakes/shared/controlled_clock.rs` and the Lighthouse patch change only protocol
 clocks/schedules. `src/http.ts` contains real bounded waits. Keep third-party source/build artifacts
 under ignored `.cache/`. All Docker mutations must be scoped by the exact `io.zap-net.id` label.
 Never prune Docker globally: this machine may have unrelated running workloads.

@@ -9,8 +9,7 @@ Deno.test("immutable bake verification ignores other profiles, new build recipes
       const path of [
         "src",
         "scripts",
-        "examples",
-        "profiles",
+        "bakes",
         "tests",
         "deno.runtime.json",
         "deno.lock",
@@ -21,26 +20,33 @@ Deno.test("immutable bake verification ignores other profiles, new build recipes
     const pectra = () => suiteHash({ profile: "pectra" }, root);
     const gloas = () => suiteHash({ profile: "gloas" }, root);
     const before = { pectra: await pectra(), gloas: await gloas() };
-    await Deno.writeTextFile(`${root}/examples/gloas.ts`, "\n// new Gloas assertion\n", {
+    const selectedPath = `${root}/bakes/pectra/recipe.json`;
+    const original = await Deno.readTextFile(selectedPath);
+    const remapped = JSON.parse(original);
+    [remapped.tests.baseline, remapped.tests.e2e] = [remapped.tests.e2e, remapped.tests.baseline];
+    await Deno.writeTextFile(selectedPath, JSON.stringify(remapped));
+    assert.notEqual(await pectra(), before.pectra, "Changing scenario routing changes the suite");
+    assert.equal(await gloas(), before.gloas);
+    await Deno.writeTextFile(selectedPath, original);
+    await Deno.writeTextFile(`${root}/bakes/gloas/tests/gloas.ts`, "\n// new Gloas assertion\n", {
       append: true,
     });
     assert.equal(await pectra(), before.pectra);
     assert.notEqual(await gloas(), before.gloas);
     const changedGloas = await gloas();
     for (const profile of ["pectra", "gloas"]) {
-      const path = `${root}/profiles/${profile}.json`;
+      const path = `${root}/bakes/${profile}/recipe.json`;
       const recipe = JSON.parse(await Deno.readTextFile(path));
       recipe.clRef = "a-different-client-for-a-future-bake";
-      recipe.patch = "clients/a-new-patch.patch";
+      recipe.patch = `bakes/${profile}/a-new-patch.patch`;
       await Deno.writeTextFile(path, JSON.stringify(recipe));
     }
-    await Deno.mkdir(`${root}/clients`);
-    await Deno.writeTextFile(`${root}/clients/controlled_clock.rs`, "new clock source");
+    await Deno.writeTextFile(`${root}/bakes/shared/controlled_clock.rs`, "new clock source");
     await Deno.writeTextFile(`${root}/tests/profiles_test.ts`, "new baker unit test");
     await Deno.writeTextFile(`${root}/src/baker.ts`, "new build implementation");
     assert.equal(await pectra(), before.pectra);
     assert.equal(await gloas(), changedGloas);
-    const defaultsPath = `${root}/profiles/pectra.json`;
+    const defaultsPath = `${root}/bakes/pectra/recipe.json`;
     const defaults = JSON.parse(await Deno.readTextFile(defaultsPath));
     defaults.churnLimitQuotient = 4;
     await Deno.writeTextFile(defaultsPath, JSON.stringify(defaults));
@@ -50,7 +56,7 @@ Deno.test("immutable bake verification ignores other profiles, new build recipes
     await Deno.writeTextFile(defaultsPath, JSON.stringify(defaults));
     assert.equal(await pectra(), before.pectra);
     await Deno.writeTextFile(
-      `${root}/examples/validators.ts`,
+      `${root}/bakes/shared/tests/validators.ts`,
       "\n// shared validator assertion\n",
       { append: true },
     );

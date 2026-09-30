@@ -1,6 +1,6 @@
 import { report as writeReport } from "./report.ts";
 import assert from "node:assert/strict";
-import { Devnet } from "../src/api.ts";
+import { Devnet } from "../../../src/api.ts";
 import { depositValidator, send } from "./deposit_fixture.ts";
 import { validator } from "./validators.ts";
 

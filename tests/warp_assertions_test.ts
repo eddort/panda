@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
-import { assertSigningHistory, type SigningHistory } from "../examples/warp_assertions.ts";
+import {
+  assertSigningHistory,
+  type SigningHistory,
+} from "../bakes/shared/tests/warp_assertions.ts";
 Deno.test("warp history checks reject double proposals, double votes, surround votes and lost keys", () => {
   const clean = (): SigningHistory => ({
     metadata: { genesis_validators_root: "root" },

@@ -7,6 +7,10 @@ arm64 containers, Docker Desktop 4.59.1 / Engine 29.2.0, VM with 6 CPUs and 8,32
 There were 3 unrelated running containers during measurement. No other zap-net tests ran
 concurrently with `deno task measure` or the baseline.
 
+The numbers below retain the 2026-09-29 measurements. Profile JSON reports are replaced by each
+verification run; the 2026-09-30 directory migration and its new run IDs/results are recorded in
+[bake layout verification](bake-layout-verification.md).
+
 ## Stabilized Gloas bake
 
 `gloas/stable` reuses the exact v3 artifact

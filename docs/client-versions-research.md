@@ -26,7 +26,7 @@
 | [network.ts](../src/network.ts)                                | Общие images, Electra с genesis, фиксированные аргументы | Запуск из resolved profile; client/genesis adapters     |
 | [engine.ts](../src/engine.ts)                                  | Готовность payload по JSON-логу Geth 1.15.11             | Версионируемая стратегия и проверка Engine capabilities |
 | [time.ts](../src/time.ts), [consensus.ts](../src/consensus.ts) | Одна сетка фаз; payload внутри BeaconBlock               | Fork-aware фазы, barriers и чтение execution-состояния  |
-| [e2e](../examples/e2e.ts) и validator tests                    | Pectra API/структуры и правила                           | Общие сценарии плюс утверждения выбранного fork         |
+| [e2e](../bakes/shared/tests/e2e.ts) и validator tests          | Pectra API/структуры и правила                           | Общие сценарии плюс утверждения выбранного fork         |
 
 **Что означает Gloas для этого проекта.** Gloas — consensus-часть Glamsterdam; в EL ему
 соответствует Amsterdam. В проверенном genesis-generator `GLOAS_FORK_EPOCH` преобразуется в

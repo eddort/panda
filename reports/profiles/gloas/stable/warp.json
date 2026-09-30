@@ -1,7 +1,7 @@
 {
   "event": "warp-measured",
   "passed": true,
-  "budgetMs": 20000,
+  "budgetMs": 25000,
   "environment": {
     "architecture": "aarch64",
     "dockerVersion": "29.2.0",
@@ -12,12 +12,12 @@
     "validators": 64,
     "otherContainers": 2
   },
-  "elapsedMs": 126716.276208,
+  "elapsedMs": 138804.60624999998,
   "samples": [
     {
-      "advanceMs": 10277.201291999998,
+      "advanceMs": 11366.06745799999,
       "slots": 8192,
-      "readyMs": 10782.523167000007,
+      "readyMs": 11860.687166000003,
       "targetSlot": 8320,
       "receipt": {
         "blockHash": "0x7e98bace15828657961e90257c60d91ee8894f5a4d2b5bb687d987c506282d4c",
@@ -41,9 +41,9 @@
       }
     },
     {
-      "advanceMs": 11093.08200000001,
+      "advanceMs": 10244.728082999995,
       "slots": 8192,
-      "readyMs": 11616.455083000008,
+      "readyMs": 10684.595291999998,
       "targetSlot": 16576,
       "receipt": {
         "blockHash": "0xeb7c76f6adf6b0e68ba81f3af06d52a4f56257b877e9baea7a99d1a7c5da5255",
@@ -455,7 +455,7 @@
   ],
   "signedValidators": 64,
   "status": {
-    "id": "warp-5400a92c",
+    "id": "warp-463bd8cf",
     "profile": "gloas",
     "bake": "stable",
     "bakeKey": "8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9",
@@ -514,6 +514,6 @@
   "profile": "gloas",
   "bake": "stable",
   "bakeKey": "8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9",
-  "runId": "35677405-28f8-4382-ba62-a1ed1200880d",
-  "recordedAt": "2026-09-29T17:34:25.648Z"
+  "runId": "warp-budget-25-gloas",
+  "recordedAt": "2026-09-30T06:11:37.714Z"
 }

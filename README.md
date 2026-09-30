@@ -94,7 +94,7 @@ real-time deadline. Time only moves forward.
 
 Automine is off by default. Enable it with `await net.setAutomine(true)` to produce blocks for
 eligible pending transactions, then wait for receipts as usual. See the
-[deployment example](examples/deploy.ts) for sequential contract deployment with ethers.
+[deployment example](bakes/shared/tests/deploy.ts) for sequential contract deployment with ethers.
 
 Large `advanceTime`/`advanceTo` jumps skip intermediate blocks and votes, then produce a destination
 block. `skipSlots(n)` also skips the destination block. Skipping can delay finality and incur
@@ -110,6 +110,12 @@ HTTP JSON-RPC is supported. WebSocket, long-lived Beacon SSE, multiple beacon no
 external validators are outside the current verified scope. Resuming an existing chain after a
 controller restart is not implemented; use `down` followed by `up` to start fresh. Geth's real-time
 transaction-pool expiry continues during a protocol pause.
+
+## Bake profiles
+
+Recipes, patches and profile tests live together under `bakes/<hardfork>/`; reusable parts live in
+`bakes/shared/`. See [the bake layout and extension guide](bakes/README.md) to add another hardfork
+or build a client version under a new tag.
 
 ## Validation
 

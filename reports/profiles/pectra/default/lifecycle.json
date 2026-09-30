@@ -1,6 +1,6 @@
 {
   "event": "lifecycle-passed",
-  "elapsedMs": 35812.399291,
+  "elapsedMs": 35813.80775,
   "repeatedUp": true,
   "repeatedDown": true,
   "resetGenesis": "0x3fdcb0a7bf00d151bd1dc945be5a3215c17c15e73c6a3eb1fbbe245154758b68",
@@ -9,6 +9,6 @@
   "profile": "pectra",
   "bake": "default",
   "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
-  "runId": "12be81b7-cab6-46e3-bd28-ca7e20817302",
-  "recordedAt": "2026-09-29T14:25:16.934Z"
+  "runId": "3280f20f-4dd3-42d0-82cd-6138671fceea",
+  "recordedAt": "2026-09-30T05:47:03.635Z"
 }

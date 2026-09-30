@@ -1,7 +1,7 @@
 {
   "event": "warp-measured",
   "passed": true,
-  "budgetMs": 20000,
+  "budgetMs": 25000,
   "environment": {
     "architecture": "aarch64",
     "dockerVersion": "29.2.0",
@@ -12,12 +12,12 @@
     "validators": 64,
     "otherContainers": 2
   },
-  "elapsedMs": 146568.473417,
+  "elapsedMs": 155085.011583,
   "samples": [
     {
-      "advanceMs": 17236.854583,
+      "advanceMs": 18036.821708000003,
       "slots": 8192,
-      "readyMs": 17593.760333000006,
+      "readyMs": 18384.635500000004,
       "targetSlot": 8320,
       "receipt": {
         "blockHash": "0xcb2431247d4f2d9f391fd5644907494ba0fe4a3e3b85fbf005d8161a9d7632db",
@@ -41,9 +41,9 @@
       }
     },
     {
-      "advanceMs": 17938.067291,
+      "advanceMs": 17254.371916000004,
       "slots": 8192,
-      "readyMs": 18301.917540999988,
+      "readyMs": 17613.07583300001,
       "targetSlot": 16576,
       "receipt": {
         "blockHash": "0xe22fc40148c9c7d6658608a66a6e4dfdc61876f61d08d649a75414db2ac5b82a",
@@ -455,7 +455,7 @@
   ],
   "signedValidators": 64,
   "status": {
-    "id": "warp-158c7f24",
+    "id": "warp-ca9d9dff",
     "profile": "pectra",
     "bake": "default",
     "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
@@ -512,5 +512,6 @@
   "profile": "pectra",
   "bake": "default",
   "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
-  "recordedAt": "2026-09-29T17:42:05.973Z"
+  "runId": "warp-budget-25-pectra",
+  "recordedAt": "2026-09-30T06:08:29.825Z"
 }

@@ -5,6 +5,7 @@ import { Infrastructure } from "./docker.ts";
 import {
   type Bake,
   type BakedImage,
+  bakeLocation,
   bakePath,
   bakeTag,
   canonical,
@@ -143,8 +144,18 @@ export async function snapshotSources(
     if (!(error instanceof Deno.errors.NotFound)) throw error;
   }
   const inputs: Record<string, string> = {};
+  // Legacy manifests keep their original hash keys; migration changes only where bytes live.
+  const relocated: Record<string, string> = {
+    "clients/controlled_clock.rs": "bakes/shared/controlled_clock.rs",
+    "clients/controlled_clock_test.rs": "bakes/shared/controlled_clock_test.rs",
+    "clients/lighthouse.patch": "bakes/pectra/lighthouse.patch",
+    "clients/lighthouse-gloas.patch": "bakes/gloas/lighthouse.patch",
+    "clients/gloas_prepare_skip.rs": "bakes/gloas/native/prepare_skip.rs",
+    "clients/gloas_weighted_selection.rs": "bakes/gloas/native/weighted_selection.rs",
+  };
   for (const [file, expected] of Object.entries(hashes)) {
     const candidates: (() => Promise<string>)[] = [() => Deno.readTextFile(file)];
+    if (relocated[file]) candidates.push(() => Deno.readTextFile(relocated[file]));
     // Older manifests may predate source snapshots. Recover only an exact hash
     // match from the checkout/index; never silently test newer client code.
     if (!file.startsWith("/")) {
@@ -283,7 +294,7 @@ export interface BakeOptions {
 export async function bake(profile: ProfileName, options: BakeOptions = {}): Promise<Bake> {
   const tag = bakeTag(options.tag ?? "default");
   await using _tagLock = await BuildLock.acquire(`.cache/baker/locks/${profile}-${tag}.lock`);
-  const path = bakePath(profile, tag);
+  const path = await bakeLocation(profile, tag);
   try {
     const old = await readBake(profile, tag);
     if (!options.replace) {
@@ -302,6 +313,18 @@ export async function bake(profile: ProfileName, options: BakeOptions = {}): Pro
       return old;
     }
     // Keep the previous manifest until the complete replacement is ready.
+    if (path === bakePath(profile, tag)) {
+      // Equal duplicate copies are readable, but replacing only one would create a conflict.
+      const legacy = `bakes/${profile}/${tag}.json`;
+      try {
+        const duplicate = JSON.parse(await Deno.readTextFile(legacy));
+        if (duplicate.key === old.key) {
+          throw new Error(`Remove duplicate legacy manifest before replacing this tag: ${legacy}`);
+        }
+      } catch (error) {
+        if (!(error instanceof Deno.errors.NotFound)) throw error;
+      }
+    }
     console.log(JSON.stringify({ event: "replacing-bake", previous: old.key }));
   } catch (error) {
     if (!String(error).includes("is missing. Run:")) throw error;

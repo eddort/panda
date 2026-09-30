@@ -8,7 +8,7 @@ import { Timeline } from "../src/time.ts";
 Deno.test("hardfork profiles reject unknown names and unsafe bake paths", () => {
   for (const name of ["main", "../gloas", "toString"]) assert.throws(() => profileName(name));
   for (const tag of ["../x", "", "a/b", "A", "x".repeat(65)]) assert.throws(() => bakeTag(tag));
-  assert.equal(bakePath("gloas", "my-build.2"), "bakes/gloas/my-build.2.json");
+  assert.equal(bakePath("gloas", "my-build.2"), "bakes/gloas/tags/my-build.2.json");
   assert.equal(configuration({ profile: "gloas" }).churnLimitQuotient, 32768);
   assert.equal(configuration({ profile: "pectra" }).churnLimitQuotient, 65536);
   assert.equal(
@@ -37,10 +37,10 @@ Deno.test("each hardfork's timeline executes its declared phases and completes a
     assert.equal(time.slot, 1);
     assert.equal(time.timestamp, 23.5);
   }
-  assert(profiles.gloas.tests.includes("gloas"));
+  assert(Object.hasOwn(profiles.gloas.tests, "gloas"));
   for (const profile of Object.values(profiles)) {
     for (const scenario of ["e2e", "protocol", "withdrawal", "deploy"]) {
-      assert(profile.tests.includes(scenario));
+      assert(Object.hasOwn(profile.tests, scenario));
     }
   }
 });

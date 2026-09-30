@@ -1,6 +1,6 @@
 {
   "event": "withdrawal-passed",
-  "elapsedMs": 126388.80537500001,
+  "elapsedMs": 125486.35858300001,
   "exiting": {
     "index": "0",
     "balance": "31719676731",
@@ -53,7 +53,7 @@
     "amount": "0x762289be3"
   },
   "status": {
-    "id": "withdrawal-2cb2a97d",
+    "id": "withdrawal-ba5fb0e4",
     "profile": "pectra",
     "bake": "default",
     "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
@@ -110,6 +110,6 @@
   "profile": "pectra",
   "bake": "default",
   "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
-  "runId": "12be81b7-cab6-46e3-bd28-ca7e20817302",
-  "recordedAt": "2026-09-29T14:32:33.520Z"
+  "runId": "3280f20f-4dd3-42d0-82cd-6138671fceea",
+  "recordedAt": "2026-09-30T05:55:55.089Z"
 }

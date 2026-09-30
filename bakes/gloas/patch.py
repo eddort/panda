@@ -24,7 +24,7 @@ def finish(path, fn, marker, expr):
 
 edit('common/slot_clock/Cargo.toml', '[dependencies]', '[dependencies]\ntokio = { workspace = true, features = ["time"] }')
 edit('common/slot_clock/src/lib.rs', 'pub use crate::system_time_slot_clock::SystemTimeSlotClock;', 'pub use crate::system_time_slot_clock::SystemTimeSlotClock;\npub mod controlled;')
-shutil.copyfile('clients/controlled_clock.rs', root / 'common/slot_clock/src/controlled.rs')
+shutil.copyfile('bakes/shared/controlled_clock.rs', root / 'common/slot_clock/src/controlled.rs')
 p = 'common/slot_clock/src/system_time_slot_clock.rs'
 edit(p, 'use std::time::{Duration, SystemTime, UNIX_EPOCH};', 'use std::time::Duration;\n#[cfg(test)]\nuse std::time::{SystemTime, UNIX_EPOCH};')
 edit(p, 'SystemTime::now().duration_since(UNIX_EPOCH).ok()', 'crate::controlled::now()', 6)
@@ -65,7 +65,7 @@ section = s[start:end].replace(' "types",', ' "tokio",\n "types",')
 p.write_text(s[:start] + section + s[end:])
 
 # PTC sampling keeps identical candidates, random bytes and acceptance thresholds.
-shutil.copyfile('clients/gloas_weighted_selection.rs', root / 'consensus/types/src/state/zap_weighted_selection.rs')
+shutil.copyfile('bakes/gloas/native/weighted_selection.rs', root / 'consensus/types/src/state/zap_weighted_selection.rs')
 edit('consensus/types/src/state/mod.rs', 'mod beacon_state;', 'mod beacon_state;\nmod zap_weighted_selection;')
 edit('consensus/types/src/state/beacon_state.rs',
      '        let mut selected = Vec::with_capacity(size);\n        let mut i = 0usize;',
@@ -87,7 +87,7 @@ edit('consensus/types/src/state/beacon_state.rs',
 (root / 'consensus/types/tests/zap_weighted_selection.rs').write_text(
     '#[path = "../src/state/zap_weighted_selection.rs"]\nmod selection;\n')
 
-shutil.copyfile('clients/gloas_prepare_skip.rs', root / 'beacon_node/beacon_chain/src/zap_controlled_skip.rs')
+shutil.copyfile('bakes/gloas/native/prepare_skip.rs', root / 'beacon_node/beacon_chain/src/zap_controlled_skip.rs')
 edit('beacon_node/beacon_chain/src/lib.rs', 'mod beacon_chain;', 'mod beacon_chain;\nmod zap_controlled_skip;')
 edit('beacon_node/timer/src/lib.rs', '            beacon_chain.per_slot_task().await;', '''            if let Err(error) = beacon_chain.prepare_controlled_skip().await {
                 warn!(%error, "Controlled skip preparation failed");

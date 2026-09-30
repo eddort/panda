@@ -1,9 +1,9 @@
 import { Interface, Wallet } from "ethers";
-import { type Devnet } from "../src/api.ts";
-import { account, mnemonic, privateKey } from "../src/config.ts";
-import { Infrastructure } from "../src/docker.ts";
-import { deadline, json } from "../src/http.ts";
-import { Network } from "../src/network.ts";
+import { type Devnet } from "../../../src/api.ts";
+import { account, mnemonic, privateKey } from "../../../src/config.ts";
+import { Infrastructure } from "../../../src/docker.ts";
+import { deadline, json } from "../../../src/http.ts";
+import { Network } from "../../../src/network.ts";
 
 export async function send(net: Devnet, to: string, data: string, value: bigint): Promise<string> {
   const receiptTimeout = (await net.status()).profile === "gloas" ? 900_000 : 90_000;

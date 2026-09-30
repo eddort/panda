@@ -3,30 +3,38 @@
   "slotMs": 12000,
   "slotsPerEpoch": 32,
   "tailMs": 11500,
-  "clockSource": "clients/controlled_clock.rs",
-  "clockTest": "clients/controlled_clock_test.rs",
-  "sourceFiles": ["clients/gloas_weighted_selection.rs", "clients/gloas_prepare_skip.rs"],
+  "clockSource": "bakes/shared/controlled_clock.rs",
+  "clockTest": "bakes/shared/controlled_clock_test.rs",
+  "sourceFiles": [
+    "bakes/gloas/native/weighted_selection.rs",
+    "bakes/gloas/native/prepare_skip.rs"
+  ],
   "preparedSkip": true,
-  "nativeTests": [{ "package": "types", "target": "zap_weighted_selection" }],
+  "nativeTests": [
+    {
+      "package": "types",
+      "target": "zap_weighted_selection"
+    }
+  ],
   "runtime": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
   "clRepository": "https://github.com/sigp/lighthouse.git",
   "elRepository": "https://github.com/ethereum/go-ethereum.git",
   "goBuilder": "golang:1.25-bookworm",
-  "tests": [
-    "baseline",
-    "lifecycle",
-    "e2e",
-    "warp",
-    "protocol",
-    "withdrawal",
-    "deploy",
-    "gloas"
-  ],
+  "tests": {
+    "baseline": "bakes/shared/tests/baseline.ts",
+    "lifecycle": "bakes/shared/tests/lifecycle.ts",
+    "e2e": "bakes/shared/tests/e2e.ts",
+    "warp": "bakes/shared/tests/warp.ts",
+    "protocol": "bakes/shared/tests/protocol.ts",
+    "withdrawal": "bakes/shared/tests/withdrawal.ts",
+    "deploy": "bakes/shared/tests/deploy.ts",
+    "gloas": "bakes/gloas/tests/gloas.ts"
+  },
   "name": "gloas",
   "elFork": "amsterdam",
   "clFork": "gloas",
   "clRef": "2d281dfa1b407f7c81cd123954a9fd18ee8f02d2",
-  "patch": "clients/lighthouse-gloas.patch",
+  "patch": "bakes/gloas/lighthouse.patch",
   "rust": "rust:1.88.0-bookworm",
   "elImage": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
   "genesisImage": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",

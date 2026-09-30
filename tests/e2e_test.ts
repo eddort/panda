@@ -11,9 +11,9 @@ const descriptions: Record<string, string> = {
   baseline: "ordinary unmodified clients produce an agreed execution payload",
   lifecycle: "CLI up/down/reset, ownership and profile mismatch rejection",
 };
-for (const file of profiles[profile].tests) {
+for (const [scenario, file] of Object.entries(profiles[profile].tests)) {
   Deno.test({
-    name: `real ${profile}: ${descriptions[file]}`,
+    name: `real ${profile}: ${descriptions[scenario] ?? scenario}`,
     ignore: Deno.env.get("ZAP_E2E") !== "1",
     sanitizeResources: false,
     sanitizeOps: false,
@@ -23,7 +23,7 @@ for (const file of profiles[profile].tests) {
           "run",
           "--config=deno.runtime.json",
           "-A",
-          file === "lifecycle" ? "scripts/lifecycle_test.ts" : `examples/${file}.ts`,
+          file,
         ],
         stdout: "inherit",
         stderr: "inherit",

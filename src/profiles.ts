@@ -1,13 +1,40 @@
-import pectra from "../profiles/pectra.json" with { type: "json" };
-import gloas from "../profiles/gloas.json" with { type: "json" };
+import pectra from "../bakes/pectra/recipe.json" with { type: "json" };
+import gloas from "../bakes/gloas/recipe.json" with { type: "json" };
 
-export const profiles = { pectra, gloas };
+export const profiles = { pectra, gloas } satisfies Record<string, Recipe>;
 export type ProfileName = keyof typeof profiles;
-export type Recipe = typeof pectra & {
+export interface Recipe {
+  schema: number;
+  name: string;
+  elFork: string;
+  clFork: string;
+  slotMs: number;
+  slotsPerEpoch: number;
+  tailMs: number;
+  clockSource: string;
+  clockTest: string;
+  patch: string;
   sourceFiles?: string[];
   nativeTests?: { package: string; target: string }[];
   preparedSkip?: boolean;
-};
+  runtime: string;
+  clRepository: string;
+  elRepository: string;
+  clRef: string;
+  rust: string;
+  goBuilder: string;
+  elImage: string;
+  genesisImage: string;
+  baselineImage: string;
+  phases: number[];
+  attestationMs: number;
+  aggregateMs: number;
+  churnLimitQuotient: number;
+  engineMethods: string[];
+  genesisEnv: Record<string, string>;
+  /** Arrays occur only in immutable manifests created before suite paths were explicit. */
+  tests: Record<string, string> | string[];
+}
 export function profileName(value: string): ProfileName {
   if (!Object.hasOwn(profiles, value)) throw new Error(`Unknown hardfork profile: ${value}`);
   return value as ProfileName;
@@ -35,12 +62,52 @@ export interface Bake {
   builders: Record<string, BakedImage>;
 }
 export function bakePath(profile: ProfileName, tag: string): string {
+  return `bakes/${profileName(profile)}/tags/${bakeTag(tag)}.json`;
+}
+export function legacyBakePath(profile: ProfileName, tag: string): string {
   return `bakes/${profileName(profile)}/${bakeTag(tag)}.json`;
+}
+async function manifestAt(path: string): Promise<Bake | undefined> {
+  try {
+    const value = JSON.parse(await Deno.readTextFile(path));
+    // The new profile definition occupies the former location of a possible "recipe" tag.
+    if (path.endsWith("/recipe.json") && "clRef" in value && !("images" in value)) return;
+    return value;
+  } catch (error) {
+    if (!(error instanceof Deno.errors.NotFound)) throw error;
+  }
+}
+/** Read legacy locations during migration, but never choose between conflicting artifacts. */
+export async function bakeLocation(profile: ProfileName, tag: string): Promise<string> {
+  const current = bakePath(profile, tag);
+  const legacy = legacyBakePath(profile, tag);
+  const [a, b] = await Promise.all([manifestAt(current), manifestAt(legacy)]);
+  if (a && b && canonical(a) !== canonical(b)) {
+    throw new Error(`Conflicting bake manifests: ${current} and ${legacy}`);
+  }
+  return a || !b ? current : legacy;
+}
+export async function bakeTags(profile: ProfileName): Promise<string[]> {
+  const tags = new Set<string>();
+  for (const directory of [`bakes/${profileName(profile)}/tags`, `bakes/${profile}`]) {
+    try {
+      for await (const entry of Deno.readDir(directory)) {
+        if (!entry.isFile || !entry.name.endsWith(".json")) continue;
+        if (entry.name === "recipe.json" && !await manifestAt(`${directory}/${entry.name}`)) {
+          continue;
+        }
+        tags.add(bakeTag(entry.name.slice(0, -5)));
+      }
+    } catch (error) {
+      if (!(error instanceof Deno.errors.NotFound)) throw error;
+    }
+  }
+  return [...tags].sort();
 }
 export async function readBake(profile: ProfileName, tag = "default"): Promise<Bake> {
   let bake: Bake;
   try {
-    bake = JSON.parse(await Deno.readTextFile(bakePath(profile, tag)));
+    bake = JSON.parse(await Deno.readTextFile(await bakeLocation(profile, tag)));
   } catch (error) {
     if (error instanceof Deno.errors.NotFound) {
       throw new Error(

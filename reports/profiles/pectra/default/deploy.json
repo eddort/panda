@@ -1,14 +1,14 @@
 {
   "event": "sequential-deploy-passed",
-  "recordedAt": "2026-09-29T14:33:03.581Z",
-  "elapsedMs": 27202.998375,
-  "readyMs": 18084.642416,
+  "recordedAt": "2026-09-30T05:56:20.046Z",
+  "elapsedMs": 22994.986042,
+  "readyMs": 14743.386333999999,
   "environment": {
     "host": "aarch64-apple-darwin",
     "engine": "29.2.0",
     "dockerCpus": 6,
     "dockerMemoryBytes": 8322592768,
-    "otherRunningContainers": 6
+    "otherRunningContainers": 2
   },
   "provider": {
     "pollingInterval": 25,
@@ -20,18 +20,18 @@
     {
       "mode": "raw-rpc",
       "count": 10,
-      "elapsedMs": 4589.820334
+      "elapsedMs": 4420.113874999999
     },
     {
       "mode": "ethers-factory",
       "count": 10,
-      "elapsedMs": 4147.143625000001
+      "elapsedMs": 3342.0841249999976
     }
   ],
-  "medianReceiptMs": 413.369999999999,
-  "p95ReceiptMs": 775.7250830000012,
-  "maxReceiptMs": 805.1781670000018,
-  "maxReceiptGapMs": 809.1835840000022,
+  "medianReceiptMs": 350.0808960000013,
+  "p95ReceiptMs": 535.2618750000001,
+  "maxReceiptMs": 539.5213750000003,
+  "maxReceiptGapMs": 549.6638749999984,
   "protocolSeconds": 240,
   "manualAdvanceCalls": 0,
   "deployments": [
@@ -44,7 +44,7 @@
       "hash": "0x157c6ffd2333505383f59f2e33e407603561d81fba4e35695b513e33b0d9e862",
       "block": 1,
       "timestamp": 2000000012,
-      "sendToReceiptMs": 166.0124590000014
+      "sendToReceiptMs": 104.36654199999975
     },
     {
       "mode": "raw-rpc",
@@ -55,8 +55,8 @@
       "hash": "0x1eecfbbe198aa60ec557a2b54c8d56c70584a8a886ef16b583e958b061b9d52a",
       "block": 2,
       "timestamp": 2000000024,
-      "sendToReceiptMs": 531.596375000001,
-      "receiptGapMs": 537.7371249999997
+      "sendToReceiptMs": 533.3515829999997,
+      "receiptGapMs": 541.1414580000001
     },
     {
       "mode": "raw-rpc",
@@ -67,8 +67,8 @@
       "hash": "0x89c443c27306a4a72570a6b263644a54605384248d7a2b7b2736be4280b93222",
       "block": 3,
       "timestamp": 2000000036,
-      "sendToReceiptMs": 525.7353329999969,
-      "receiptGapMs": 532.7439579999991
+      "sendToReceiptMs": 527.7050409999993,
+      "receiptGapMs": 532.4986250000002
     },
     {
       "mode": "raw-rpc",
@@ -79,8 +79,8 @@
       "hash": "0x17989e413e30ccb9efc21886c651e6a519fa2c231a43569a4bbe04567a32c751",
       "block": 4,
       "timestamp": 2000000048,
-      "sendToReceiptMs": 372.5820420000018,
-      "receiptGapMs": 378.56366700000217
+      "sendToReceiptMs": 353.71658300000126,
+      "receiptGapMs": 359.13175000000047
     },
     {
       "mode": "raw-rpc",
@@ -91,8 +91,8 @@
       "hash": "0xc71d707dca5bf713abb91ee070736e975f5b76c1edf857f7ef5257bd792ba939",
       "block": 5,
       "timestamp": 2000000060,
-      "sendToReceiptMs": 775.7250830000012,
-      "receiptGapMs": 782.8000409999986
+      "sendToReceiptMs": 533.4681659999987,
+      "receiptGapMs": 538.4736249999987
     },
     {
       "mode": "raw-rpc",
@@ -103,8 +103,8 @@
       "hash": "0x88104c261100ba2384af621ebad08f2ec957af6c5b160bcfcadc03b0ad787da0",
       "block": 6,
       "timestamp": 2000000072,
-      "sendToReceiptMs": 234.33345799999734,
-      "receiptGapMs": 242.09379199999967
+      "sendToReceiptMs": 521.9469580000004,
+      "receiptGapMs": 528.6314999999995
     },
     {
       "mode": "raw-rpc",
@@ -115,8 +115,8 @@
       "hash": "0xf5722aef9c4f0b2cf0bd3d20ee03d924efe114a3f469b8f59f12aea5d5af5f95",
       "block": 7,
       "timestamp": 2000000084,
-      "sendToReceiptMs": 522.7388329999994,
-      "receiptGapMs": 529.5064579999998
+      "sendToReceiptMs": 535.2618750000001,
+      "receiptGapMs": 539.0786670000016
     },
     {
       "mode": "raw-rpc",
@@ -127,8 +127,8 @@
       "hash": "0x0b163eb5c8609f6cbf1945d004028dab7e0e26eb260eeb727cf60ac653d263a9",
       "block": 8,
       "timestamp": 2000000096,
-      "sendToReceiptMs": 355.87975000000006,
-      "receiptGapMs": 361.64862500000163
+      "sendToReceiptMs": 539.5213750000003,
+      "receiptGapMs": 549.6638749999984
     },
     {
       "mode": "raw-rpc",
@@ -139,8 +139,8 @@
       "hash": "0xb01889888d778575e421c3989bf65a156b185f1e158585a0c93997468a0d8944",
       "block": 9,
       "timestamp": 2000000108,
-      "sendToReceiptMs": 521.8450000000012,
-      "receiptGapMs": 528.2024999999994
+      "sendToReceiptMs": 351.9750000000022,
+      "receiptGapMs": 357.20862500000294
     },
     {
       "mode": "raw-rpc",
@@ -151,8 +151,8 @@
       "hash": "0xa7f592032377eb1111043ddfeed3f596feb3cb420ff96cec4a2bf9f5a3cc9999",
       "block": 10,
       "timestamp": 2000000120,
-      "sendToReceiptMs": 521.1207080000022,
-      "receiptGapMs": 526.198292000001
+      "sendToReceiptMs": 358.14550000000236,
+      "receiptGapMs": 363.8094579999997
     },
     {
       "mode": "ethers-factory",
@@ -163,8 +163,8 @@
       "hash": "0x46493d1dab9c64298f1fdcc583b16b9cab9de8d7a8ba35f0472ba0f8cd60b8ab",
       "block": 11,
       "timestamp": 2000000132,
-      "sendToReceiptMs": 326.4488339999989,
-      "receiptGapMs": 330.62491699999737
+      "sendToReceiptMs": 262.1885000000002,
+      "receiptGapMs": 268.2185839999984
     },
     {
       "mode": "ethers-factory",
@@ -175,8 +175,8 @@
       "hash": "0xd730a6975cb7c23e7900d04dd0b36b5c19799fdf468b620863eee64482c82138",
       "block": 12,
       "timestamp": 2000000144,
-      "sendToReceiptMs": 448.8037499999991,
-      "receiptGapMs": 452.5699160000004
+      "sendToReceiptMs": 326.3557499999988,
+      "receiptGapMs": 332.23412499999904
     },
     {
       "mode": "ethers-factory",
@@ -187,8 +187,8 @@
       "hash": "0x54ff4d54d172d09c6c2b042e85b3f0708980c016218e2a6f6b990691c7db2ac0",
       "block": 13,
       "timestamp": 2000000156,
-      "sendToReceiptMs": 805.1781670000018,
-      "receiptGapMs": 809.1835840000022
+      "sendToReceiptMs": 343.3288330000032,
+      "receiptGapMs": 347.3451660000028
     },
     {
       "mode": "ethers-factory",
@@ -199,8 +199,8 @@
       "hash": "0xd7d6068262c41d62299ce950184d13d4c3d1ca4f5cc3be9150682a060db7fe2c",
       "block": 14,
       "timestamp": 2000000168,
-      "sendToReceiptMs": 408.35387499999706,
-      "receiptGapMs": 412.62724999999773
+      "sendToReceiptMs": 348.1867920000004,
+      "receiptGapMs": 351.92183399999703
     },
     {
       "mode": "ethers-factory",
@@ -211,8 +211,8 @@
       "hash": "0x0b3f16eb597178766beb0d86c143976a8b81c0ac4b4ad598dfaef3062c4d6fd2",
       "block": 15,
       "timestamp": 2000000180,
-      "sendToReceiptMs": 318.24633299999914,
-      "receiptGapMs": 322.2876660000002
+      "sendToReceiptMs": 417.2285000000011,
+      "receiptGapMs": 422.8662910000021
     },
     {
       "mode": "ethers-factory",
@@ -223,8 +223,8 @@
       "hash": "0xd6d5c92d6cbffd5493afbf78ad01fcac5a435aa64ea52bb9963c617b8f549c13",
       "block": 16,
       "timestamp": 2000000192,
-      "sendToReceiptMs": 469.36358299999847,
-      "receiptGapMs": 475.2190420000006
+      "sendToReceiptMs": 326.6034580000014,
+      "receiptGapMs": 331.7419169999994
     },
     {
       "mode": "ethers-factory",
@@ -235,8 +235,8 @@
       "hash": "0x07a1a462627c989e02a2f2bd5b8a87b144ede41647dec725752a81cc9ba8f61d",
       "block": 17,
       "timestamp": 2000000204,
-      "sendToReceiptMs": 418.3861250000009,
-      "receiptGapMs": 421.85020799999984
+      "sendToReceiptMs": 328.85770799999955,
+      "receiptGapMs": 332.36120799999844
     },
     {
       "mode": "ethers-factory",
@@ -247,8 +247,8 @@
       "hash": "0xe37b44b0235846b31463c1b0b44799fe48eaf0311bb51fe85e1d088beac190d0",
       "block": 18,
       "timestamp": 2000000216,
-      "sendToReceiptMs": 321.92662500000006,
-      "receiptGapMs": 326.01912500000253
+      "sendToReceiptMs": 331.55083399999785,
+      "receiptGapMs": 335.62295900000026
     },
     {
       "mode": "ethers-factory",
@@ -259,8 +259,8 @@
       "hash": "0xeeb522a336df3e58a81305fb63f7fbd9fa828195f45961f52c04361f6a56a3c3",
       "block": 19,
       "timestamp": 2000000228,
-      "sendToReceiptMs": 312.2587500000009,
-      "receiptGapMs": 317.72699999999895
+      "sendToReceiptMs": 282.9786669999994,
+      "receiptGapMs": 287.9250830000019
     },
     {
       "mode": "ethers-factory",
@@ -271,12 +271,12 @@
       "hash": "0x4ba033a1a7d2a620d6bf54e95ef12c6faa2a3edc90ad4672981a0f51646fb701",
       "block": 20,
       "timestamp": 2000000240,
-      "sendToReceiptMs": 276.8699579999993,
-      "receiptGapMs": 280.5866249999999
+      "sendToReceiptMs": 326.7006250000013,
+      "receiptGapMs": 333.10504199999923
     }
   ],
   "profile": "pectra",
   "bake": "default",
   "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
-  "runId": "12be81b7-cab6-46e3-bd28-ca7e20817302"
+  "runId": "3280f20f-4dd3-42d0-82cd-6138671fceea"
 }

@@ -1,6 +1,6 @@
-import { Devnet } from "../src/api.ts";
-import { json } from "../src/http.ts";
-import { Network } from "../src/network.ts";
+import { Devnet } from "../../../src/api.ts";
+import { json } from "../../../src/http.ts";
+import { Network } from "../../../src/network.ts";
 
 export interface ValidatorRecord {
   index: string;

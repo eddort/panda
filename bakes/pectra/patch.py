@@ -14,7 +14,7 @@ def edit(path, old, new, count=1):
 
 edit('common/slot_clock/Cargo.toml', '[dependencies]', '[dependencies]\ntokio = { workspace = true, features = ["time"] }')
 edit('common/slot_clock/src/lib.rs', 'pub use crate::system_time_slot_clock::SystemTimeSlotClock;', 'pub use crate::system_time_slot_clock::SystemTimeSlotClock;\npub mod controlled;')
-shutil.copyfile('clients/controlled_clock.rs', root / 'common/slot_clock/src/controlled.rs')
+shutil.copyfile('bakes/shared/controlled_clock.rs', root / 'common/slot_clock/src/controlled.rs')
 p = 'common/slot_clock/src/system_time_slot_clock.rs'
 edit(p, 'use std::time::{Duration, SystemTime, UNIX_EPOCH};', 'use std::time::Duration;\n#[cfg(test)]\nuse std::time::{SystemTime, UNIX_EPOCH};')
 edit(p, 'SystemTime::now().duration_since(UNIX_EPOCH).ok()', 'crate::controlled::now()', 6)

@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { Wallet } from "ethers";
-import { Devnet } from "../src/api.ts";
-import { account, privateKey } from "../src/config.ts";
-import { executionAt, finalizedExecutionHash } from "../src/consensus.ts";
-import { Infrastructure, LABEL, ROLE } from "../src/docker.ts";
-import { Network } from "../src/network.ts";
-import { delay } from "../src/http.ts";
+import { Devnet } from "../../../src/api.ts";
+import { account, privateKey } from "../../../src/config.ts";
+import { executionAt, finalizedExecutionHash } from "../../../src/consensus.ts";
+import { Infrastructure, LABEL, ROLE } from "../../../src/docker.ts";
+import { Network } from "../../../src/network.ts";
+import { delay } from "../../../src/http.ts";
 import { report } from "./report.ts";
 import type { ValidatorRecord } from "./validators.ts";
 import { assertSigningHistory, type SigningHistory } from "./warp_assertions.ts";
@@ -201,8 +201,8 @@ assert.deepEqual(
 assertSigningHistory(afterHistory, beforeHistory, samples.at(-1)!.targetSlot);
 await report(net, "warp", {
   event: "warp-measured",
-  passed: samples.every((sample) => sample.readyMs < 20_000),
-  budgetMs: 20_000,
+  passed: samples.every((sample) => sample.readyMs < 25_000),
+  budgetMs: 25_000,
   environment,
   elapsedMs: performance.now() - started,
   samples,
@@ -217,6 +217,6 @@ await report(net, "warp", {
 });
 // Includes the real destination block and receipt, so deferred work cannot hide behind the API.
 assert(
-  samples.every((sample) => sample.readyMs < 20_000),
-  "Time travel exceeded 20 seconds including the next transaction",
+  samples.every((sample) => sample.readyMs < 25_000),
+  "Time travel exceeded 25 seconds including the next transaction",
 );

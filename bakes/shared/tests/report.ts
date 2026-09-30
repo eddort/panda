@@ -1,6 +1,6 @@
-import type { Devnet } from "../src/api.ts";
-import { atomicJson } from "../src/artifacts.ts";
-import type { ProfileName } from "../src/profiles.ts";
+import type { Devnet } from "../../../src/api.ts";
+import { atomicJson } from "../../../src/artifacts.ts";
+import type { ProfileName } from "../../../src/profiles.ts";
 export async function report(net: Devnet, name: string, value: Record<string, unknown>) {
   const status = await net.status();
   await profileReport(status, name, value);

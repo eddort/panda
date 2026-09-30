@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
-import { configuration } from "../src/config.ts";
-import { executionAt } from "../src/consensus.ts";
-import { rpc, waitFor } from "../src/http.ts";
-import { Network } from "../src/network.ts";
+import { configuration } from "../../../src/config.ts";
+import { executionAt } from "../../../src/consensus.ts";
+import { rpc, waitFor } from "../../../src/http.ts";
+import { Network } from "../../../src/network.ts";
 import { profileReport } from "./report.ts";
 const config = configuration({
   id: `baseline-${crypto.randomUUID().slice(0, 8)}`,

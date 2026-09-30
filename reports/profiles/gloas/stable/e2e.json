@@ -1,8 +1,8 @@
 {
   "event": "e2e-passed",
-  "elapsedMs": 71102.039417,
+  "elapsedMs": 74407.735459,
   "status": {
-    "id": "e2e-68b6372d",
+    "id": "e2e-a2f03c9d",
     "profile": "gloas",
     "bake": "stable",
     "bakeKey": "8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9",
@@ -158,6 +158,6 @@
   "profile": "gloas",
   "bake": "stable",
   "bakeKey": "8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9",
-  "runId": "35677405-28f8-4382-ba62-a1ed1200880d",
-  "recordedAt": "2026-09-29T17:32:17.109Z"
+  "runId": "1a37152e-768e-4ae9-a748-4afca8b3f2ae",
+  "recordedAt": "2026-09-30T05:37:35.202Z"
 }

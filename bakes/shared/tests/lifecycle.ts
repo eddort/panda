@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
-import { Devnet } from "../src/api.ts";
-import { configuration } from "../src/config.ts";
-import { Infrastructure, LABEL } from "../src/docker.ts";
-import { waitFor } from "../src/http.ts";
-import { Network } from "../src/network.ts";
-import { profileReport } from "../examples/report.ts";
-import { readBake } from "../src/profiles.ts";
+import { Devnet } from "../../../src/api.ts";
+import { configuration } from "../../../src/config.ts";
+import { Infrastructure, LABEL } from "../../../src/docker.ts";
+import { waitFor } from "../../../src/http.ts";
+import { Network } from "../../../src/network.ts";
+import { profileReport } from "./report.ts";
+import { readBake } from "../../../src/profiles.ts";
 
 const id = `lifecycle-${crypto.randomUUID().slice(0, 8)}`;
 const env = { ZAP_ID: id, ZAP_PORT: "0" };

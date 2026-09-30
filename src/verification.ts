@@ -2,7 +2,7 @@ import { dirname, join, normalize } from "node:path";
 import { type Bake, canonical, profiles, sha256 } from "./profiles.ts";
 
 export function scenariosFor(bake: Pick<Bake, "profile">): string[] {
-  return profiles[bake.profile].tests;
+  return Object.keys(profiles[bake.profile].tests);
 }
 
 /** Fingerprint only this profile's runtime and executable suite. Client source
@@ -18,12 +18,15 @@ export async function suiteHash(bake: Pick<Bake, "profile">, root = "."): Promis
     for (const match of source.matchAll(/(?:from\s*|import\s*\(?\s*)["'](\.[^"']+)["']/g)) {
       const dependency = normalize(join(dirname(path), match[1]));
       // Recipes pin future builds. Only consumed runtime defaults are relevant below.
-      if (dependency.startsWith("profiles/")) continue;
+      if (/^bakes\/[^/]+\/recipe\.json$/.test(dependency)) continue;
       await visit(dependency);
     }
   }
-  const recipe = JSON.parse(await Deno.readTextFile(join(root, `profiles/${bake.profile}.json`)));
-  const scenarios: string[] = recipe.tests;
+  const recipe = JSON.parse(
+    await Deno.readTextFile(join(root, `bakes/${bake.profile}/recipe.json`)),
+  );
+  const tests: Record<string, string> = recipe.tests;
+  const scenarios = Object.keys(tests);
   for (
     const path of [
       "scripts/test_profile.ts",
@@ -34,16 +37,15 @@ export async function suiteHash(bake: Pick<Bake, "profile">, root = "."): Promis
       "scripts/deno",
       "deno.runtime.json",
       "deno.lock",
-      ...scenarios.map((name) =>
-        name === "lifecycle" ? "scripts/lifecycle_test.ts" : `examples/${name}.ts`
-      ),
-      ...(scenarios.includes("e2e") ? ["examples/indexer.ts"] : []),
+      ...Object.values(tests),
+      ...(scenarios.includes("e2e") ? ["bakes/shared/tests/indexer.ts"] : []),
     ]
   ) await visit(path);
   return await sha256(canonical({
-    version: 2,
+    version: 3,
     profile: bake.profile,
     scenarios,
+    tests,
     defaults: { churnLimitQuotient: recipe.churnLimitQuotient },
     files,
   }));

@@ -8,10 +8,10 @@ import {
   Wallet,
   ZeroAddress,
 } from "ethers";
-import { Devnet } from "../src/api.ts";
-import { privateKey } from "../src/config.ts";
-import { Infrastructure, LABEL } from "../src/docker.ts";
-import { deadline } from "../src/http.ts";
+import { Devnet } from "../../../src/api.ts";
+import { privateKey } from "../../../src/config.ts";
+import { Infrastructure, LABEL } from "../../../src/docker.ts";
+import { deadline } from "../../../src/http.ts";
 
 const abi = new Interface([
   "constructor(address predecessor)",

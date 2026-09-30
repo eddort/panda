@@ -1,11 +1,11 @@
 import { report as writeReport } from "./report.ts";
-import { finalizedExecutionHash } from "../src/consensus.ts";
+import { finalizedExecutionHash } from "../../../src/consensus.ts";
 import assert from "node:assert/strict";
 import { Wallet } from "ethers";
-import { Devnet } from "../src/api.ts";
-import { account, privateKey } from "../src/config.ts";
-import { delay, json } from "../src/http.ts";
-import { Network } from "../src/network.ts";
+import { Devnet } from "../../../src/api.ts";
+import { account, privateKey } from "../../../src/config.ts";
+import { delay, json } from "../../../src/http.ts";
+import { Network } from "../../../src/network.ts";
 
 const started = performance.now();
 await using net = await Devnet.start({ id: `e2e-${crypto.randomUUID().slice(0, 8)}` });
@@ -109,7 +109,7 @@ const el = await net.rpc<{ hash: string }>("eth_getBlockByNumber", ["finalized",
 assert.equal(el.hash, cl);
 
 const service = new Deno.Command(Deno.execPath(), {
-  args: ["run", "--allow-net", "examples/indexer.ts", net.url],
+  args: ["run", "--allow-net", "bakes/shared/tests/indexer.ts", net.url],
   stdout: "piped",
   stderr: "inherit",
 }).spawn();

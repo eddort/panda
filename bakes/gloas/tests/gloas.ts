@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
-import { Devnet } from "../src/api.ts";
-import { type ClockState, executionAt } from "../src/consensus.ts";
-import { Network } from "../src/network.ts";
-import { delay, json } from "../src/http.ts";
-import { report } from "./report.ts";
+import { Devnet } from "../../../src/api.ts";
+import { type ClockState, executionAt } from "../../../src/consensus.ts";
+import { Network } from "../../../src/network.ts";
+import { delay, json } from "../../../src/http.ts";
+import { report } from "../../shared/tests/report.ts";
 const start = performance.now();
 await using net = await Devnet.start({
   profile: "gloas",

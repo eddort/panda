@@ -12,7 +12,7 @@ io.zap-net.id label. Startup failure and repeated down must clean up only that i
 dependencies when Deno or existing dockerode suffices; pin direct versions in deno.json and retain
 deno.lock.
 
-For Rust changes inspect the pinned upstream files, update clients/controlled_clock.rs and the
+For Rust changes inspect the pinned upstream files, update bakes/shared/controlled_clock.rs and the
 maintained patch, and build with ./scripts/deno run -A scripts/build.ts. Check all protocol
 schedulers touched; never replace networking or JWT clocks globally.
 

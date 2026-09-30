@@ -1,16 +1,8 @@
-import { profiles, readBake } from "../src/profiles.ts";
+import { bakeTags, profiles, readBake } from "../src/profiles.ts";
 import { suiteHash } from "../src/verification.ts";
 for (const profile of Object.keys(profiles) as (keyof typeof profiles)[]) {
-  let entries;
-  try {
-    entries = Array.from(Deno.readDirSync(`bakes/${profile}`));
-  } catch (error) {
-    if (error instanceof Deno.errors.NotFound) continue;
-    throw error;
-  }
-  for (const entry of entries.sort((a, b) => a.name.localeCompare(b.name))) {
-    if (!entry.isFile || !entry.name.endsWith(".json")) continue;
-    const bake = await readBake(profile, entry.name.slice(0, -5));
+  for (const tag of await bakeTags(profile)) {
+    const bake = await readBake(profile, tag);
     let verifiedAt: string | undefined;
     let verified = false;
     try {
