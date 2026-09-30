@@ -1,5 +1,6 @@
 .cache/
 .tools/
+.panda/
 .zap/
 node_modules/
 reports/*.jsonl

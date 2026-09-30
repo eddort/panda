@@ -7,9 +7,9 @@ if [ ! -x .tools/deno ]; then
 fi
 case "${1-}" in
   run|test|check|lint|fmt|eval|bench|compile|repl|info)
-    zap_command="$1"
+    panda_command="$1"
     shift
-    exec .tools/deno "$zap_command" --config deno.runtime.json "$@"
+    exec .tools/deno "$panda_command" --config deno.runtime.json "$@"
     ;;
   *) exec .tools/deno "$@" ;;
 esac

@@ -1,0 +1,23 @@
+{
+  "profile": "gloas",
+  "tag": "panda",
+  "bakeKey": "8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf",
+  "runId": "b4b29db2-0945-4189-ba99-73fe0d12af51",
+  "suiteHash": "4cefb3effbf03ad7777d66c9619004c8325317ad8da60e95a143fa4d8a569e67",
+  "startedAt": "2026-09-30T10:26:35.742Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "protocol",
+    "withdrawal",
+    "deploy",
+    "gloas"
+  ],
+  "passed": false,
+  "status": "cancelled",
+  "finishedAt": "2026-09-30T10:28:50.893Z",
+  "elapsedMs": 135151,
+  "error": "Integration verification stopped at user request; this run is incomplete."
+}

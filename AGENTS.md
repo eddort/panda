@@ -34,8 +34,8 @@ owns runtime configuration; `bakes/*/recipe.json` pins recipes; `src/baker.ts` b
 `bakes/<hardfork>/tags/<tag>.json` manifests; `src/engine.ts` gates payload preparation using pinned
 Geth JSON logs; `bakes/shared/controlled_clock.rs` and the Lighthouse patch change only protocol
 clocks/schedules. `src/http.ts` contains real bounded waits. Keep third-party source/build artifacts
-under ignored `.cache/`. All Docker mutations must be scoped by the exact `io.zap-net.id` label.
-Never prune Docker globally: this machine may have unrelated running workloads.
+under ignored `.cache/`. All Docker mutations must be scoped by the exact `io.panda.id` label. Never
+prune Docker globally: this machine may have unrelated running workloads.
 
 Extended verification: `deno task e2e`, `e2e:withdrawal`, `e2e:protocol`, `test:lifecycle`,
 `test:clock <hardfork> --bake <tag>`, `measure`. Raw profile reports are tracked under

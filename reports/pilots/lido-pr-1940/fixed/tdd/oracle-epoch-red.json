@@ -1,0 +1,30 @@
+{
+  "passed": false,
+  "checks": [
+    {
+      "name": "all external packages were deployed",
+      "passed": true
+    },
+    {
+      "name": "all recorded contract implementations and proxies have bytecode",
+      "passed": true
+    },
+    {
+      "name": "four staking modules are registered in order",
+      "passed": true
+    },
+    {
+      "name": "external modules are resumed with DAO admin and circuit breaker wiring",
+      "passed": false,
+      "error": "sm:CSM consensus epoch is active"
+    },
+    {
+      "name": "core admin roles are handed to DAO and revoked from deployer",
+      "passed": true
+    },
+    {
+      "name": "privileged setup was executed through a real DAO vote",
+      "passed": true
+    }
+  ]
+}

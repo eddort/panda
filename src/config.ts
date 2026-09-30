@@ -6,7 +6,6 @@ export const images = {
     "sigp/lighthouse@sha256:870934e38931d1a0f6cf47ff976e246a08a4b5509b84ff585aa2233e76744aa8",
   genesis:
     "ethpandaops/ethereum-genesis-generator@sha256:683629884b35dce22e544663abd19ce5221ce65f9f0315e3971d66c67041bc1d",
-  controlled: "zap-lighthouse:7.1.0-clock1",
 } as const;
 export const buildImages = {
   rust: "rust@sha256:e51d0265072d2d9d5d320f6a44dde6b9ef13653b035098febd68cce8fa7c0bc4",
@@ -29,10 +28,10 @@ export interface Config {
   consolidationChurnLimitQuotient: number;
 }
 export function configuration(input: Partial<Config> = {}): Config {
-  const profile = profileName(input.profile ?? Deno.env.get("ZAP_PROFILE") ?? "pectra");
+  const profile = profileName(input.profile ?? Deno.env.get("PANDA_PROFILE") ?? "pectra");
   const result: Config = {
     profile,
-    bake: bakeTag(input.bake ?? Deno.env.get("ZAP_BAKE") ?? "default"),
+    bake: bakeTag(input.bake ?? Deno.env.get("PANDA_BAKE") ?? "default"),
     id: "local",
     mode: "controlled",
     genesisTime: 2_000_000_000,

@@ -265,9 +265,10 @@ async function compile(
     `${output}/Dockerfile`,
     `FROM ${runtime.id}\nRUN apt-get update && apt-get install -y --no-install-recommends libssl3 ca-certificates && rm -rf /var/lib/apt/lists/*\nCOPY ${name} /usr/local/bin/${name}\nENTRYPOINT ["${name}"]\n`,
   );
-  const tag = `zap-${name}:bake-${key.slice(0, 24)}`;
+  const tag = `panda-${name}:bake-${key.slice(0, 24)}`;
   const stream = await infra.docker.buildImage({ context: output, src: ["Dockerfile", name] }, {
     t: tag,
+    labels: infra.labels,
   });
   await new Promise<void>((resolve, reject) =>
     infra.docker.modem.followProgress(

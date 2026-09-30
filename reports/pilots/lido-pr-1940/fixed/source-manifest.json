@@ -1,0 +1,24 @@
+{
+  "coreHead": "2f4a21d0ba89826087ef328ecf9fbdf0775f8e44",
+  "workingClone": "/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working",
+  "files": {
+    ".gitignore": "12956359de0a22b8c62fcd949ba8c405a472013be70cd58d6c72dbb1de70f6d7",
+    "docs/scratch-zapnet.md": "99b6f83e5d7c689ac2b2111dd49c7d111ad7d462fea0160e57b28c3a4323e614",
+    "scripts/run-scratch-zapnet.py": "ff143bd172b3fb5f0652b04505393a80e4d3ad275a826d01e50c0339a0a7b25c",
+    "scripts/scratch/deploy-params-zapnet.toml": "358cb511619f0b5cc9bf7fa946065d250fbcb8220067f2f0b1fe314ee61bfc59",
+    "scripts/scratch/steps/0100-deploy-circuit-breaker.ts": "4be78bc29d038f24e5883db9bcc73c2410f39c00f773c061266af1e2c453dc4a",
+    "scripts/scratch/steps/0140-plug-staking-modules.ts": "42ce0ad38bc64da51bdcf888948dcd3828ec4dc08062bca654bea996126fbc82",
+    "scripts/tests/migration-env.test.cjs": "d4fe059433e7d4b26322cf9dad14e81b3c2736a57f9e78b802b3e5dcf05b9795",
+    "scripts/tests/scratch-acceptance.cjs": "dee41957fac5f49cb5502ca5da7d80d67651155b8186dcd06051694fb52b8abd",
+    "scripts/utils/execution-delegation-framework.ts": "319b8f7032dd8f2d249e69f56955fec9489d6abde8318339e25af3c99632e4d4",
+    "scripts/utils/external-project.ts": "031c0f84d43b04dd7593a749f8796b04791cac637338e0083c0b51169cda8c06",
+    "scripts/utils/migration-env.sh": "944da1c8b0012311e3edfa501319b034bc7af3a61a76eb81fa76997032c34f1a",
+    "scripts/utils/scratch-governance.ts": "dbd49c8240d5e9f1f06446007a9e37e5202c6077e778070a7802ffe4e10bcd27",
+    "scripts/utils/staking-modules.ts": "769fca00516bce95a2040ce6bff297b28bc783f89a1b06eda88973b0894f3e15"
+  },
+  "externalRefs": {
+    "circuit-breaker": "2567a2a683fa901a51a85f84d9427448201eb773",
+    "edf": "557299104ad3eb1a74198933bd016328c490e276",
+    "staking-modules": "e37fa1b783f34792f6db75684e74eb2be6c4b70f"
+  }
+}

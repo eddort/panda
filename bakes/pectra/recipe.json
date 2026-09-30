@@ -5,6 +5,7 @@
   "tailMs": 11500,
   "clockSource": "bakes/shared/controlled_clock.rs",
   "clockTest": "bakes/shared/controlled_clock_test.rs",
+  "clockEnvPrefix": "PANDA",
   "runtime": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
   "clRepository": "https://github.com/sigp/lighthouse.git",
   "elRepository": "https://github.com/ethereum/go-ethereum.git",

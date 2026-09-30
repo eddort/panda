@@ -3,7 +3,7 @@ name: debug-devnet
 description: Diagnose stopped Panda chains, missing finality, txpool gaps, and EL/CL or external-service failures.
 ---
 
-Run deno task diagnose and inspect .zap/<id>/*.log plus manifest.json. Compare Beacon head
+Run deno task diagnose and inspect .panda/<id>/*.log plus manifest.json. Compare Beacon head
 slot/root, current controlled clock, latest EL hash/timestamp, finalized checkpoints and validator
 completion watermarks. Check container exits before waiting for API readiness.
 

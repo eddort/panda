@@ -5,20 +5,25 @@ import { createReadStream, createWriteStream } from "node:fs";
 import { pipeline } from "node:stream/promises";
 import { createGzip } from "node:zlib";
 
-export const LABEL = "io.zap-net.id";
-export const ROLE = "io.zap-net.role";
+export const LABEL = "io.panda.id";
+export const ROLE = "io.panda.role";
 export function dockerClient(): Docker {
   const host = Deno.env.get("DOCKER_HOST");
-  const explicit = Deno.env.get("ZAP_DOCKER_SOCKET");
+  const explicit = Deno.env.get("PANDA_DOCKER_SOCKET");
   if (host && !host.startsWith("unix://") && !explicit) {
-    throw new Error("Use a local Unix Docker socket (ZAP_DOCKER_SOCKET or DOCKER_HOST=unix://…)");
+    throw new Error("Use a local Unix Docker socket (PANDA_DOCKER_SOCKET or DOCKER_HOST=unix://…)");
   }
   const desktop = `${Deno.env.get("HOME")}/.docker/run/docker.sock`;
   let fallback = "/var/run/docker.sock";
   try {
     if (Deno.statSync(desktop)) fallback = desktop;
   } catch { /* Linux default */ }
-  return new Docker({ socketPath: explicit ?? host?.slice(7) ?? fallback });
+  return new Docker({
+    socketPath: explicit ?? host?.slice(7) ?? fallback,
+    // dockerode also reads DOCKER_HOST; keep our explicit local socket authoritative.
+    host: undefined,
+    protocol: "http",
+  });
 }
 
 export function missing(error: unknown): boolean {
@@ -101,14 +106,14 @@ export class Infrastructure {
   }
   async network(): Promise<string> {
     const result = await this.docker.createNetwork({
-      Name: `zap-${this.id}`,
+      Name: `panda-${this.id}`,
       Labels: this.labels,
       Driver: "bridge",
     });
     return result.id;
   }
   async volume(role: string): Promise<string> {
-    const name = `zap-${this.id}-${role}`;
+    const name = `panda-${this.id}-${role}`;
     try {
       const existing = await this.docker.getVolume(name).inspect();
       if (existing.Labels?.[LABEL] !== this.id) throw new Error(`Foreign volume: ${name}`);
@@ -122,7 +127,7 @@ export class Infrastructure {
   async container(role: string, options: Docker.ContainerCreateOptions): Promise<Docker.Container> {
     return await this.docker.createContainer({
       ...options,
-      name: `zap-${this.id}-${role}`,
+      name: `panda-${this.id}-${role}`,
       Labels: { ...options.Labels, ...this.labels, [ROLE]: role },
     });
   }

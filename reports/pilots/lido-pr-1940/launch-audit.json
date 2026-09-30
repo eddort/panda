@@ -1,0 +1,88 @@
+{
+  "method": "Dry run of exact copied upstream shell wrappers with a non-executing yarn shim in an isolated directory; no chain access or tests.",
+  "calls": [
+    {
+      "arguments": [
+        "hardhat",
+        "compile"
+      ],
+      "environment": {
+        "MODE": "scratch",
+        "NETWORK": "local-devnet",
+        "RUN_NETWORK": "local-devnet",
+        "RPC_URL": "http://127.0.0.1:18545",
+        "LOCAL_RPC_URL": "http://127.0.0.1:18545",
+        "LOCAL_DEVNET_CHAIN_ID": "1337",
+        "DEPLOYER": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "GENESIS_TIME": "1639659600",
+        "GENESIS_FORK_VERSION": "0x10000000",
+        "SLOTS_PER_EPOCH": "32",
+        "DEPOSIT_CONTRACT": "0x4242424242424242424242424242424242424242",
+        "GAS_PRIORITY_FEE": "1",
+        "GAS_MAX_FEE": "10",
+        "GAS_LIMIT": "16000000",
+        "NETWORK_STATE_FILE": "deployed-local-devnet.json",
+        "SCRATCH_DEPLOY_CONFIG": "deploy-params-zapnet.toml",
+        "STEPS_FILE": "scratch/steps.json",
+        "AUTO_CONFIRM": "true",
+        "ALLOW_SKIP_STEPS": "false",
+        "UPGRADE": "false",
+        "SKIP_INTERFACES_CHECK": "true",
+        "SKIP_CONTRACT_SIZE": "true",
+        "SKIP_GAS_REPORT": "true",
+        "SKIP_LINT_SOLIDITY": "true"
+      }
+    },
+    {
+      "arguments": [
+        "hardhat",
+        "--network",
+        "local-devnet",
+        "run",
+        "--no-compile",
+        "scripts/utils/migrate.ts"
+      ],
+      "environment": {
+        "MODE": "scratch",
+        "NETWORK": "local-devnet",
+        "RUN_NETWORK": "local-devnet",
+        "RPC_URL": "http://127.0.0.1:18545",
+        "LOCAL_RPC_URL": "http://127.0.0.1:18545",
+        "LOCAL_DEVNET_CHAIN_ID": "1337",
+        "DEPLOYER": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "GENESIS_TIME": "1639659600",
+        "GENESIS_FORK_VERSION": "0x10000000",
+        "SLOTS_PER_EPOCH": "32",
+        "DEPOSIT_CONTRACT": "0x4242424242424242424242424242424242424242",
+        "GAS_PRIORITY_FEE": "1",
+        "GAS_MAX_FEE": "10",
+        "GAS_LIMIT": "16000000",
+        "NETWORK_STATE_FILE": "deployed-local-devnet.json",
+        "SCRATCH_DEPLOY_CONFIG": "deploy-params-zapnet.toml",
+        "STEPS_FILE": "scratch/steps.json",
+        "AUTO_CONFIRM": "true",
+        "ALLOW_SKIP_STEPS": "false",
+        "UPGRADE": "false",
+        "SKIP_INTERFACES_CHECK": "true",
+        "SKIP_CONTRACT_SIZE": "true",
+        "SKIP_GAS_REPORT": "true",
+        "SKIP_LINT_SOLIDITY": "true"
+      }
+    }
+  ],
+  "differences": {
+    "GENESIS_TIME": {
+      "pilot": "2000000000",
+      "wrapper": "1639659600"
+    },
+    "GAS_LIMIT": {
+      "pilot": "",
+      "wrapper": "16000000"
+    },
+    "UPGRADE": {
+      "pilot": null,
+      "wrapper": "false"
+    }
+  },
+  "trackedSourceChanged": false
+}

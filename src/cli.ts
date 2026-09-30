@@ -9,13 +9,13 @@ import { Network } from "./network.ts";
 
 const { flags, positional } = argumentsFor(Deno.args, ["profile", "bake"]);
 const [command = "up", argument] = positional;
-const id = Deno.env.get("ZAP_ID") ?? "local";
+const id = Deno.env.get("PANDA_ID") ?? "local";
 const config = configuration({
   id,
   ...(flags.profile ? { profile: profileName(flags.profile) } : {}),
   ...(flags.bake ? { bake: flags.bake } : {}),
 });
-const directory = `${Deno.cwd()}/.zap/${id}`;
+const directory = `${Deno.cwd()}/.panda/${id}`;
 const endpointFile = `${directory}/controller.json`;
 async function removeIfExists(path: string): Promise<void> {
   try {
@@ -90,7 +90,7 @@ async function up(): Promise<void> {
       if (status.id !== id) throw new Error("Controller ownership mismatch");
       if (status.profile !== config.profile || status.bake !== config.bake) {
         throw new Error(
-          `Running ${status.profile}:${status.bake}; requested ${config.profile}:${config.bake}. Use another ZAP_ID or stop this network first.`,
+          `Running ${status.profile}:${status.bake}; requested ${config.profile}:${config.bake}. Use another PANDA_ID or stop this network first.`,
         );
       }
       console.log(JSON.stringify({ event: "already-running", id, url: old }));
@@ -131,7 +131,7 @@ async function up(): Promise<void> {
   Deno.addSignalListener("SIGTERM", stop);
   try {
     controller = await Controller.start(config);
-    const port = Number(Deno.env.get("ZAP_PORT") ?? 8545);
+    const port = Number(Deno.env.get("PANDA_PORT") ?? 8545);
     const url = controller.serve(port);
     await Deno.writeTextFile(endpointFile, JSON.stringify({ url, id, pid: Deno.pid }));
     console.log(

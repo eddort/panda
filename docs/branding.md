@@ -19,11 +19,6 @@ control is one capability of that environment.
 Use **Panda** in titles and prose. Keep the name short and consistent throughout the documentation.
 The logo is a standalone panda-head mark; the banner pairs the mascot with the **Panda** wordmark.
 
-The current CLI runs through Deno tasks. Existing `ZAP_*` variables, `.zap/` state paths and
-`io.zap-net.*` Docker labels remain compatibility identifiers; see the
-[configuration guide](usage.md#connections-and-configuration). Historical research and raw reports
-keep their original names and identifiers.
-
 ## Files
 
 | File                            | Purpose                                                                   |

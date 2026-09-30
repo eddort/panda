@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "profile": "pectra",
+  "tag": "panda",
+  "key": "96b5d5a260d902e7a6abacbd745c89072a7f17407ac3d526d8240fd32dd884da",
+  "createdAt": "2026-09-30T09:36:33.443Z",
+  "recipe": {
+    "schema": 1,
+    "slotMs": 12000,
+    "slotsPerEpoch": 32,
+    "tailMs": 11500,
+    "clockSource": "bakes/shared/controlled_clock.rs",
+    "clockTest": "bakes/shared/controlled_clock_test.rs",
+    "clockEnvPrefix": "PANDA",
+    "runtime": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+    "clRepository": "https://github.com/sigp/lighthouse.git",
+    "elRepository": "https://github.com/ethereum/go-ethereum.git",
+    "goBuilder": "golang:1.25-bookworm",
+    "tests": {
+      "baseline": "bakes/shared/tests/baseline.ts",
+      "lifecycle": "bakes/shared/tests/lifecycle.ts",
+      "e2e": "bakes/shared/tests/e2e.ts",
+      "warp": "bakes/shared/tests/warp.ts",
+      "protocol": "bakes/shared/tests/protocol.ts",
+      "withdrawal": "bakes/shared/tests/withdrawal.ts",
+      "deploy": "bakes/shared/tests/deploy.ts"
+    },
+    "name": "pectra",
+    "elFork": "prague",
+    "clFork": "electra",
+    "clRef": "cfb1f7331064b758c6786e4e1dc15507af5ff5d1",
+    "patch": "bakes/pectra/lighthouse.patch",
+    "rust": "rust@sha256:e51d0265072d2d9d5d320f6a44dde6b9ef13653b035098febd68cce8fa7c0bc4",
+    "elImage": "ethereum/client-go@sha256:798b7eb1bcef6d4be7576232beea63bf291450f48b025dc8fb5c6e37840e4364",
+    "genesisImage": "ethpandaops/ethereum-genesis-generator@sha256:683629884b35dce22e544663abd19ce5221ce65f9f0315e3971d66c67041bc1d",
+    "baselineImage": "sigp/lighthouse@sha256:870934e38931d1a0f6cf47ff976e246a08a4b5509b84ff585aa2233e76744aa8",
+    "phases": [
+      0,
+      4000,
+      6000,
+      8000,
+      9000,
+      11500
+    ],
+    "attestationMs": 4000,
+    "aggregateMs": 8000,
+    "churnLimitQuotient": 65536,
+    "engineMethods": [
+      "engine_forkchoiceUpdatedV3",
+      "engine_getPayloadV4",
+      "engine_newPayloadV4"
+    ],
+    "genesisEnv": {
+      "ELECTRA_FORK_EPOCH": "0",
+      "FULU_FORK_EPOCH": "18446744073709551615",
+      "GLOAS_FORK_EPOCH": "18446744073709551615",
+      "HEZE_FORK_EPOCH": "18446744073709551615",
+      "SLOT_DURATION_IN_SECONDS": "12"
+    }
+  },
+  "source": {
+    "cl": "cfb1f7331064b758c6786e4e1dc15507af5ff5d1"
+  },
+  "hashes": {
+    "bakes/pectra/lighthouse.patch": "729cfb395a2381f46475d1317cc83af203b2188d8757443b2b3da2417e9a6fef",
+    "bakes/shared/controlled_clock.rs": "c006302ef05267e8816633c43b7ed4ddc0dcbab798e0eadf0ceee7daa839299c",
+    "bakes/shared/controlled_clock_test.rs": "5c56b4f7d17841f4f600fc8433214dfc53998ba426b4d9d21e11d212bcbdfab4"
+  },
+  "images": {
+    "cl": {
+      "ref": "panda-lighthouse:bake-96b5d5a260d902e7a6abacbd",
+      "id": "sha256:a41616ceb30437029b1bb8af32b1a0b234de1422e781a7f4a4ba54305cbf40ea",
+      "platform": "linux/arm64"
+    },
+    "el": {
+      "ref": "ethereum/client-go@sha256:798b7eb1bcef6d4be7576232beea63bf291450f48b025dc8fb5c6e37840e4364",
+      "id": "sha256:ea50b83fb38e42aa9fbcacedb276fec522778d5fb0bc480e9d1adcf386b60308",
+      "digest": "ethereum/client-go@sha256:798b7eb1bcef6d4be7576232beea63bf291450f48b025dc8fb5c6e37840e4364",
+      "platform": "linux/arm64"
+    },
+    "genesis": {
+      "ref": "ethpandaops/ethereum-genesis-generator@sha256:683629884b35dce22e544663abd19ce5221ce65f9f0315e3971d66c67041bc1d",
+      "id": "sha256:9eb052d4fda54a503b169cffeac016fd91b009446e315b718fc72978bb62dc25",
+      "digest": "ethpandaops/ethereum-genesis-generator@sha256:683629884b35dce22e544663abd19ce5221ce65f9f0315e3971d66c67041bc1d",
+      "platform": "linux/arm64"
+    },
+    "baseline": {
+      "ref": "sigp/lighthouse@sha256:870934e38931d1a0f6cf47ff976e246a08a4b5509b84ff585aa2233e76744aa8",
+      "id": "sha256:7db3c61689f48c60f4bff17da0ba8ba9cb9f7f4702c7489aaabdc7e157a9f247",
+      "digest": "sigp/lighthouse@sha256:870934e38931d1a0f6cf47ff976e246a08a4b5509b84ff585aa2233e76744aa8",
+      "platform": "linux/arm64"
+    }
+  },
+  "builders": {
+    "runtime": {
+      "ref": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+      "id": "sha256:813cd0370d827a30abbef1cf99f88217f87fda9612dd5241c9015ba182d32428",
+      "digest": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+      "platform": "linux/arm64"
+    },
+    "rust": {
+      "ref": "rust@sha256:e51d0265072d2d9d5d320f6a44dde6b9ef13653b035098febd68cce8fa7c0bc4",
+      "id": "sha256:0333b045ecc01d2f401777415e8e37ba6b7ba4d189cfbd71e73baca43a37cfcc",
+      "digest": "rust@sha256:e51d0265072d2d9d5d320f6a44dde6b9ef13653b035098febd68cce8fa7c0bc4",
+      "platform": "linux/arm64"
+    }
+  }
+}

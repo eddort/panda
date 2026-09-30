@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { profileName, profiles } from "../src/profiles.ts";
-const profile = profileName(Deno.env.get("ZAP_PROFILE") ?? "pectra");
+const profile = profileName(Deno.env.get("PANDA_PROFILE") ?? "pectra");
 const descriptions: Record<string, string> = {
   e2e: "time travel, pause, automine, finality and external indexer",
   warp: "large jumps finish in seconds and restore finality without slashable signatures",
@@ -14,7 +14,7 @@ const descriptions: Record<string, string> = {
 for (const [scenario, file] of Object.entries(profiles[profile].tests)) {
   Deno.test({
     name: `real ${profile}: ${descriptions[scenario] ?? scenario}`,
-    ignore: Deno.env.get("ZAP_E2E") !== "1",
+    ignore: Deno.env.get("PANDA_E2E") !== "1",
     sanitizeResources: false,
     sanitizeOps: false,
     fn: async () => {

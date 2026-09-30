@@ -19,7 +19,7 @@ index f51278d..3ff57db 100644
          config: StateSkipConfig,
      ) -> Result<BeaconState<T::EthSpec>, Error> {
 -        let head_state = self.head_beacon_state_cloned();
-+        let head_state = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++        let head_state = if std::env::var_os("PANDA_CLOCK_START_MS").is_some() {
 +            let head = self.head_snapshot();
 +            self.store.get_advanced_hot_state_from_cache(head.beacon_block_root, slot)
 +                .map(|(_, state)| state).unwrap_or_else(|| head.beacon_state.clone())
@@ -38,7 +38,7 @@ index f51278d..3ff57db 100644
 -                    cached_head.head_state_root(),
 -                    head_block.payload_bid_block_hash().ok(),
 -                )
-+                let cached = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++                let cached = if std::env::var_os("PANDA_CLOCK_START_MS").is_some() {
 +                    self.store.get_advanced_hot_state_from_cache(head_block_root, proposal_slot)
 +                } else { None };
 +                let (state, root) = cached.map(|(root, state)| (Cow::Owned(state), root))
@@ -52,7 +52,7 @@ index f51278d..3ff57db 100644
  
              // Don't run heavy-weight tasks during sync.
 -            if self.best_slot() + MAX_PER_SLOT_FORK_CHOICE_DISTANCE < slot {
-+            if self.best_slot() + MAX_PER_SLOT_FORK_CHOICE_DISTANCE < slot && std::env::var_os("ZAP_CLOCK_START_MS").is_none() {
++            if self.best_slot() + MAX_PER_SLOT_FORK_CHOICE_DISTANCE < slot && std::env::var_os("PANDA_CLOCK_START_MS").is_none() {
                  return;
              }
  
@@ -66,7 +66,7 @@ index 85e9442..148c070 100644
          // Take a copy of the head state.
 -        let head_state = head.snapshot.beacon_state.clone();
 -        let head_state_root = head.head_state_root();
-+        let cached = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++        let cached = if std::env::var_os("PANDA_CLOCK_START_MS").is_some() {
 +            chain.store.get_advanced_hot_state_from_cache(
 +                head.head_block_root(), request_epoch.end_slot(T::EthSpec::slots_per_epoch()))
 +        } else { None };
@@ -83,7 +83,7 @@ index 04ea7b8..19510b7 100644
  pub mod beacon_block_reward;
  mod beacon_block_streamer;
  mod beacon_chain;
-+mod zap_controlled_skip;
++mod panda_controlled_skip;
  mod beacon_fork_choice_store;
  pub mod beacon_proposer_cache;
  mod beacon_snapshot;
@@ -110,7 +110,7 @@ index c57af26..fb25ae8 100644
          let cached_head = canonical_head.cached_head();
 -        let head_state_opt = if cached_head.head_block_root() == head_block_root {
 +        let head_state_opt = if cached_head.head_block_root() == head_block_root
-+            && (std::env::var_os("ZAP_CLOCK_START_MS").is_none()
++            && (std::env::var_os("PANDA_CLOCK_START_MS").is_none()
 +                || cached_head.snapshot.beacon_state.current_epoch() + 1 >= shuffling_epoch) {
              Some((
                  cached_head.snapshot.beacon_state.clone(),
@@ -181,7 +181,7 @@ index 2106539..f267319 100644
 -                head.beacon_state.clone(),
 -                execution_status.is_optimistic_or_invalid(),
 -            ))
-+            let cached = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++            let cached = if std::env::var_os("PANDA_CLOCK_START_MS").is_some() {
 +                chain.store.get_advanced_hot_state_from_cache(
 +                    head.beacon_block_root, request_epoch.end_slot(T::EthSpec::slots_per_epoch()))
 +            } else { None };
@@ -204,7 +204,7 @@ index 6d27fa5..45fc022 100644
 -                head.beacon_state.clone(),
 -                execution_status.is_optimistic_or_invalid(),
 -            ))
-+            let cached = if std::env::var_os("ZAP_CLOCK_START_MS").is_some() {
++            let cached = if std::env::var_os("PANDA_CLOCK_START_MS").is_some() {
 +                chain.store.get_advanced_hot_state_from_cache(
 +                    head.beacon_block_root, request_epoch.end_slot(T::EthSpec::slots_per_epoch()))
 +            } else { None };
@@ -333,13 +333,13 @@ index b4644a5..532b1a0 100644
  
 +        if !shuffle_indices || indices.len() <= 4096 {
 +            let max = spec.max_effective_balance_for_fork(self.fork_name_unchecked());
-+            let ordered = super::zap_weighted_selection::order(indices, seed, spec.shuffle_round_count, shuffle_indices)
++            let ordered = super::panda_weighted_selection::order(indices, seed, spec.shuffle_round_count, shuffle_indices)
 +                .ok_or(BeaconStateError::UnableToShuffle)?;
 +            let candidates = ordered.iter().map(|&index| {
 +                let threshold = self.get_effective_balance(index)?.safe_mul(MAX_RANDOM_VALUE)?.safe_div(max)?;
 +                Ok((index, threshold))
 +            }).collect::<Result<Vec<_>, BeaconStateError>>()?;
-+            return super::zap_weighted_selection::select(&candidates, seed, size)
++            return super::panda_weighted_selection::select(&candidates, seed, size)
 +                .ok_or(BeaconStateError::InvalidIndicesCount);
 +        }
          let mut selected = Vec::with_capacity(size);
@@ -353,7 +353,7 @@ index 715db4b..afc7c40 100644
  mod activation_queue;
  mod balance;
  mod beacon_state;
-+mod zap_weighted_selection;
++mod panda_weighted_selection;
  #[macro_use]
  mod committee_cache;
  mod epoch_cache;
@@ -648,10 +648,10 @@ index e5d1d8f..946bf08 100644
              tokio::time::sleep(Duration::from_millis(10)).await;
          }
  
-diff --git a/consensus/types/src/state/zap_weighted_selection.rs b/consensus/types/src/state/zap_weighted_selection.rs
+diff --git a/consensus/types/src/state/panda_weighted_selection.rs b/consensus/types/src/state/panda_weighted_selection.rs
 new file mode 100644
 --- /dev/null
-+++ b/consensus/types/src/state/zap_weighted_selection.rs
++++ b/consensus/types/src/state/panda_weighted_selection.rs
 @@ -0,0 +1,96 @@
 +//! Equivalent PTC rejection sampling: cache candidate balances and consume all 16
 +//! random u16 values from each SHA-256 digest before hashing the next counter.
@@ -749,17 +749,17 @@ new file mode 100644
 +        }
 +    }
 +}
-diff --git a/consensus/types/tests/zap_weighted_selection.rs b/consensus/types/tests/zap_weighted_selection.rs
+diff --git a/consensus/types/tests/panda_weighted_selection.rs b/consensus/types/tests/panda_weighted_selection.rs
 new file mode 100644
 --- /dev/null
-+++ b/consensus/types/tests/zap_weighted_selection.rs
++++ b/consensus/types/tests/panda_weighted_selection.rs
 @@ -0,0 +1,2 @@
-+#[path = "../src/state/zap_weighted_selection.rs"]
++#[path = "../src/state/panda_weighted_selection.rs"]
 +mod selection;
-diff --git a/beacon_node/beacon_chain/src/zap_controlled_skip.rs b/beacon_node/beacon_chain/src/zap_controlled_skip.rs
+diff --git a/beacon_node/beacon_chain/src/panda_controlled_skip.rs b/beacon_node/beacon_chain/src/panda_controlled_skip.rs
 new file mode 100644
 --- /dev/null
-+++ b/beacon_node/beacon_chain/src/zap_controlled_skip.rs
++++ b/beacon_node/beacon_chain/src/panda_controlled_skip.rs
 @@ -0,0 +1,43 @@
 +//! Prepare a controlled clock jump once, persisting authentic empty-slot states
 +//! through the normal store for duties, proposals and verification. Never changes head.
@@ -770,7 +770,7 @@ new file mode 100644
 +
 +impl<T: BeaconChainTypes> BeaconChain<T> {
 +    pub async fn prepare_controlled_skip(self: &Arc<Self>) -> Result<(), String> {
-+        if std::env::var_os("ZAP_CLOCK_START_MS").is_none() { return Ok(()); }
++        if std::env::var_os("PANDA_CLOCK_START_MS").is_none() { return Ok(()); }
 +        let slot = self.slot().map_err(|e| format!("{e:?}"))?;
 +        if self.best_slot() + T::EthSpec::slots_per_epoch() >= slot { return Ok(()); }
 +        let chain = self.clone();

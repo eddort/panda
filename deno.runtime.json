@@ -12,7 +12,7 @@
   "exclude": [
     ".cache",
     ".tools",
-    ".zap",
+    ".panda",
     "node_modules",
     "reports"
   ]

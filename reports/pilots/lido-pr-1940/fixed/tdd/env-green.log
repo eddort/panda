@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: scratch preserves the actual network genesis and supports RPC gas estimation
+ok 1 - scratch preserves the actual network genesis and supports RPC gas estimation
+  ---
+  duration_ms: 19.836917
+  type: 'test'
+  ...
+# Subtest: an explicitly configured fixed gas limit is preserved
+ok 2 - an explicitly configured fixed gas limit is preserved
+  ---
+  duration_ms: 14.82225
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 78.32725

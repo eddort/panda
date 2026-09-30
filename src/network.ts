@@ -1,4 +1,4 @@
-import { type Bake, readBake } from "./profiles.ts";
+import { type Bake, clockEnvironment, readBake } from "./profiles.ts";
 import { requireImage } from "./artifacts.ts";
 import { account, type Config, configuration, mnemonic } from "./config.ts";
 import { Infrastructure, LABEL, ROLE } from "./docker.ts";
@@ -22,7 +22,7 @@ export class Network {
   readonly directory: string;
   constructor(readonly config: Config) {
     this.infra = new Infrastructure(config.id);
-    this.directory = `${Deno.cwd()}/.zap/${config.id}`;
+    this.directory = `${Deno.cwd()}/.panda/${config.id}`;
   }
   async start(): Promise<Manifest> {
     await Deno.mkdir(this.directory, { recursive: true });
@@ -86,6 +86,12 @@ export class Network {
     }
     const bake = await readBake(config.profile, config.bake);
     const recipe = bake.recipe;
+    const clockEnv = config.mode === "controlled"
+      ? [
+        `${clockEnvironment(recipe).startMs}=${config.genesisTime * 1000 + 11_500}`,
+        `${clockEnvironment(recipe).port}=5059`,
+      ]
+      : [];
     const images = {
       geth: await requireImage(infra, bake.images.el),
       genesis: await requireImage(infra, bake.images.genesis),
@@ -189,15 +195,12 @@ export class Network {
       if (config.mode === "controlled") {
         this.engine = await EngineGate.start(
           infra,
-          infra.docker.getContainer(`zap-${config.id}-el`),
+          infra.docker.getContainer(`panda-${config.id}-el`),
           el(8551),
           config.genesisTime * 1000 + 11_500,
           await Deno.readTextFile(`${directory}/jwt/jwtsecret`),
         );
       }
-      const clockEnv = config.mode === "controlled"
-        ? [`ZAP_CLOCK_START_MS=${config.genesisTime * 1000 + 11_500}`, "ZAP_CLOCK_PORT=5059"]
-        : [];
       const bn = await start("bn", {
         Image: clientImage,
         Entrypoint: ["lighthouse"],
@@ -345,12 +348,13 @@ export class Network {
     }
     const prepared = performance.now();
     await old.remove();
-    const env = (info.Config.Env ?? []).filter((e) => !e.startsWith("ZAP_CLOCK_START_MS="));
+    const { startMs } = clockEnvironment(manifest.bake.recipe);
+    const env = (info.Config.Env ?? []).filter((e) => !e.startsWith(`${startMs}=`));
     const replacement = await this.infra.container("vc", {
       Image: info.Image,
       Entrypoint: info.Config.Entrypoint,
       Cmd: info.Config.Cmd,
-      Env: [...env, `ZAP_CLOCK_START_MS=${nowMs}`],
+      Env: [...env, `${startMs}=${nowMs}`],
       ExposedPorts: info.Config.ExposedPorts,
       HostConfig: {
         ...info.HostConfig,
@@ -409,6 +413,6 @@ export class Network {
   }
   static async manifest(id = "local"): Promise<Manifest> {
     configuration({ id });
-    return JSON.parse(await Deno.readTextFile(`.zap/${id}/manifest.json`));
+    return JSON.parse(await Deno.readTextFile(`.panda/${id}/manifest.json`));
   }
 }

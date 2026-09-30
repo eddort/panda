@@ -13,6 +13,8 @@ export interface Recipe {
   tailMs: number;
   clockSource: string;
   clockTest: string;
+  /** Environment namespace compiled into the selected client's protocol clock. */
+  clockEnvPrefix?: string;
   patch: string;
   sourceFiles?: string[];
   nativeTests?: { package: string; target: string }[];
@@ -38,6 +40,17 @@ export interface Recipe {
 export function profileName(value: string): ProfileName {
   if (!Object.hasOwn(profiles, value)) throw new Error(`Unknown hardfork profile: ${value}`);
   return value as ProfileName;
+}
+/** Use the namespace declared by the bake; never guess a compiled clock ABI. */
+export function clockEnvironment(recipe: Recipe): { startMs: string; port: string } {
+  const prefix = recipe.clockEnvPrefix;
+  if (prefix === undefined) {
+    throw new Error(
+      `Missing clock environment namespace. Build and select a new tag: deno task bake ${recipe.name} --tag <new-tag>`,
+    );
+  }
+  if (!/^[A-Z][A-Z0-9_]*$/.test(prefix)) throw new Error("Invalid clock environment namespace");
+  return { startMs: `${prefix}_CLOCK_START_MS`, port: `${prefix}_CLOCK_PORT` };
 }
 export function bakeTag(value: string): string {
   if (!/^[a-z0-9][a-z0-9._-]{0,63}$/.test(value)) throw new Error(`Invalid bake tag: ${value}`);

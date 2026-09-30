@@ -1,29 +1,29 @@
-# Bake-профили и версии клиентов
+# Bake profiles and client versions
 
-Профиль называется по хардфорку: `pectra` или `gloas`. Внутри профиля можно держать несколько сборок
-с произвольными тегами. Например, `gloas:default` и `gloas:experiment-2` используют один протокол,
-но могут содержать разные версии EL/CL.
+Profiles are named after hardforks: `pectra` or `gloas`. Each profile can contain multiple builds
+with arbitrary tags. For example, `gloas:default` and `gloas:experiment-2` use the same protocol but
+may contain different EL/CL versions.
 
-| Профиль  | EL / CL           | Особенности контроллера                                               |
-| -------- | ----------------- | --------------------------------------------------------------------- |
-| `pectra` | Prague / Electra  | Engine FCU V3, get/newPayload V4; payload внутри BeaconBlock          |
-| `gloas`  | Amsterdam / Gloas | Engine FCU V4, getPayload V6, newPayload V5; отдельный envelope и PTC |
+| Profile  | EL / CL           | Controller behavior                                                    |
+| -------- | ----------------- | ---------------------------------------------------------------------- |
+| `pectra` | Prague / Electra  | Engine FCU V3, get/newPayload V4; payload inside BeaconBlock           |
+| `gloas`  | Amsterdam / Gloas | Engine FCU V4, getPayload V6, newPayload V5; separate envelope and PTC |
 
-Оба профиля используют mainnet preset: 12 секунд в слоте, 32 слота в эпохе. Gloas здесь означает
-конкретную закреплённую экспериментальную реализацию, описанную в `bakes/gloas/recipe.json`.
-Совместимость с произвольным новым upstream commit нужно подтвердить набором тестов.
+Both profiles use the mainnet preset: 12-second slots and 32-slot epochs. Gloas refers to the pinned
+experimental implementation in `bakes/gloas/recipe.json`. Compatibility with another upstream commit
+requires verification with the test suite.
 
-## Организация по хардфоркам
+## Hardfork layout
 
-Рецепт, патч, собственные Rust-исходники и дополнительные тесты находятся в `bakes/<hardfork>/`.
-Общие часы и сценарии — в `bakes/shared/`; готовые манифесты — в `<hardfork>/tags/`. Сборщик один,
-профиль задаёт стратегию данными и подключает общие части через композицию.
+Recipes, patches, profile-specific Rust sources and additional tests live in `bakes/<hardfork>/`.
+Shared clocks and scenarios live in `bakes/shared/`; built manifests live in `<hardfork>/tags/`. One
+builder composes shared components using the profile's declarative strategy.
 
-[Структура папок и порядок добавления нового hardfork](../bakes/README.md). Перенос выполнен по TDD;
-содержимое существующих патчей, Rust helpers и девяти манифестов сохранено. Проверки и ограничения
-текущего изменения описаны в [отчёте переноса](bake-layout-verification.md).
+See the [layout and extension guide](../bakes/README.md). The earlier directory relocation preserved
+existing patches, Rust helpers and nine manifests byte for byte. Its checks and limitations are
+recorded in the [relocation report](bake-layout-verification.md).
 
-## Собрать, проверить, запустить
+## Build, verify and start
 
 ```sh
 deno task bake pectra --replace
@@ -36,153 +36,156 @@ deno task bakes
 deno task up --profile gloas --bake experiment-2
 ```
 
-`up` использует готовый манифест и не запускает компиляцию. Отсутствующий bake даёт ошибку с
-командой сборки. Уже работающий стенд другого профиля/тега также отклоняется. Для нескольких
-одновременных сетей нужны разные `ZAP_ID` и `ZAP_PORT`.
+`up` consumes a built manifest without compiling clients. A missing bake produces an error with the
+build command. A running instance with a different profile or tag is rejected. Use different
+`PANDA_ID` and `PANDA_PORT` values for simultaneous networks.
 
-На новой машине `--replace` нужен для создания локальных артефактов из закреплённого рецепта:
-манифесты в Git могут ссылаться на образы другой машины, а `.cache/` не переносится вместе с Git.
-Для уже собранного локального тега обычный `deno task bake pectra` переиспользует его артефакты.
+On a new machine, `--replace` builds local artifacts from the pinned recipe: committed manifests may
+refer to images from another host, and Git does not transfer `.cache/`. For an existing local tag,
+`deno task bake pectra` reuses its pinned artifacts.
 
 ```ts
 import { Devnet } from "../src/api.ts";
 
 await using net = await Devnet.start({ id: "contracts", profile: "gloas", bake: "experiment-2" });
 await net.advanceTime(3600);
-await net.advanceTo(new Date("2033-06-01T00:00:00Z")); // дата должна быть впереди текущего времени
+await net.advanceTo(new Date("2033-06-01T00:00:00Z")); // Must be later than current protocol time.
 await net.setAutomine(true);
 ```
 
-`ZAP_PROFILE` и `ZAP_BAKE` задают те же значения через окружение, в том числе для отдельных `e2e:*`
-задач. Явные параметры API/CLI имеют приоритет. По умолчанию: `pectra:default`. `build:clients`
-сохранён как алиас `bake`.
+`PANDA_PROFILE` and `PANDA_BAKE` select the same settings through the environment, including for
+individual `e2e:*` tasks. Explicit API/CLI options take precedence. The default is `pectra:default`.
+`build:clients` is an alias for `bake`.
 
-## Другие версии EL и CL
+## Other EL and CL versions
 
 ```sh
-# Совместимый Lighthouse ref с подходящим clock-патчем; имя профиля остаётся gloas.
+# A compatible Lighthouse ref and clock patch; the profile remains gloas.
 deno task bake gloas --tag candidate --cl-ref <commit-or-ref> --patch bakes/gloas/my-clock.patch
 
-# Готовый EL-образ или сборка неизменённого Geth из исходников.
+# A prebuilt EL image or an unmodified Geth source build.
 deno task bake gloas --tag el-image --el-image <image-tag-or-digest>
 deno task bake gloas --tag el-source --el-ref <commit-or-ref>
 
-# При необходимости согласованный генератор genesis.
+# A compatible genesis generator when needed.
 deno task bake gloas --tag genesis-candidate --genesis-image <image-tag-or-digest>
 ```
 
-По умолчанию EL и genesis берутся из закреплённых образов рецепта. CL собирается из закреплённого
-commit с патчем профиля и общим кодом часов. Перед сборкой Lighthouse запускается native Rust-тест
-часов. Git ref разрешается в commit, Docker ref — в image ID/digest и платформу. Если указанный
-mutable Docker tag уже присутствует локально, baker фиксирует именно этот локальный образ; для
-однозначного выбора другой версии передай digest.
+EL and genesis default to the recipe's pinned images. CL is built from its pinned commit with the
+profile patch and shared clock source. The builder runs the native Rust clock test before compiling
+Lighthouse. Git refs resolve to commits; Docker refs resolve to image IDs/digests and platforms. If
+a mutable Docker tag already exists locally, the builder pins that local image. Use a digest to
+select an unambiguous version.
 
-Патч применяется строго: несовместимый ref завершает bake ошибкой. Добавление нового hardfork
-требует отдельного рецепта, адаптера расписания/Engine/Beacon API и собственного списка тестов.
-Название нового тега само по себе не меняет правила протокола.
+Patches apply strictly: an incompatible ref fails the build. Adding a hardfork requires its own
+recipe, schedule/Engine/Beacon API support and scenario list. A new tag alone does not change
+protocol rules.
 
-Для переноса существующего локального clock-образа есть `--import-cl <image>`. Импорт закрепляет его
-ID, но **не доказывает**, что бинарник получен из указанного в рецепте исходника или прошёл
-native-тест. Это явно записано в `source.importedCl`; после импорта нужен `test:profile`.
+`--import-cl <image>` imports an existing controlled-clock image. This pins its ID but does not
+prove that the binary was built from the declared source or passed native tests. The import is
+recorded in `source.importedCl`; run `test:profile` afterward. The imported binary must match the
+recipe's clock environment and protocol. Current recipes use `PANDA_CLOCK_START_MS` and
+`PANDA_CLOCK_PORT`.
 
-## Манифесты, кеш и замена тега
+## Manifests, caches and tag replacement
 
-- Рецепты: `bakes/<hardfork>/recipe.json`.
-- Готовые сборки: `bakes/<hardfork>/tags/<tag>.json`, включая рецепт, source commits, хеши
-  патча/часов, image IDs, digests, платформу и builder images.
-- Исходники, патченные деревья и кеш артефактов: игнорируемая `.cache/baker/`.
-- Точные архивы локальных образов: `.cache/baker/images/<image-id>.tar.gz`. После удаления образа из
-  Docker baker восстанавливает его из архива и проверяет тот же image ID. Образы registry
-  восстанавливаются по закреплённому digest.
-- Cargo/Go-кеши: Docker volumes с точной меткой владельца `io.zap-net.id`.
+- Recipes: `bakes/<hardfork>/recipe.json`.
+- Built manifests: `bakes/<hardfork>/tags/<tag>.json`, including the recipe, source commits,
+  patch/clock hashes, image IDs, digests, platform and builder images.
+- Sources, patched trees and artifact caches: ignored `.cache/baker/`.
+- Exact local image archives: `.cache/baker/images/<image-id>.tar.gz`. If an image is removed from
+  Docker, the builder restores it from the archive and verifies the same image ID. Registry images
+  are restored through their pinned digest.
+- Cargo/Go caches: Docker volumes with the exact `io.panda.id` ownership label.
 
-Повторный `bake` существующего тега переиспользует его закреплённые образы. Чтобы изменить его,
-укажи `--replace`, либо выбери новый тег. Новая запись появляется атомарно после успешной сборки;
-ошибка сохраняет прежний манифест. Блокировки защищают тег и общие compiler caches от одновременной
-записи. Одинаковые входы под новым тегом переиспользуют готовый артефакт. Уже запущенная сеть хранит
-собственную копию bake-манифеста.
+Repeating `bake` for an existing tag reuses its pinned images. To change it, use `--replace` or
+choose another tag. A new manifest is published atomically after a successful build; failure
+preserves the previous manifest. Locks protect tags and shared compiler caches against concurrent
+writes. Identical inputs under another tag reuse the built artifact. A running network keeps its own
+copy of the bake manifest.
 
-Локальные собранные образы пока не публикуются в registry: манифест сам по себе не переносит
-бинарники на другую машину. Для другой архитектуры создай отдельный тег сборки; несовпадение image
-ID/платформы отклоняется.
+Locally built images are not published to a registry. A manifest alone cannot transfer binaries to
+another machine. Use a separate build tag for another architecture; image identity and platform
+mismatches are rejected.
 
-## Наборы тестов
+## Test suites
 
-`bakes/<hardfork>/recipe.json` содержит явную карту имён сценариев и путей к исполняемым файлам.
-`test:profile` запускает только интеграционные сценарии выбранного профиля и тега. Общие unit-тесты
-запускаются через `test`, а Docker rollback/ownership и проверки бейкера — отдельно через
-`test:baker`. Изменение одного бейка не запускает сборку или тесты остальных.
+`bakes/<hardfork>/recipe.json` explicitly maps scenario names to executable files. `test:profile`
+runs only the selected profile and tag's integration scenarios. `test` runs shared unit tests;
+`test:baker` separately checks Docker rollback/ownership and the builder. Changing one bake does not
+build or test the others.
 
-| Сценарий                                                                                              | Pectra | Gloas |
-| ----------------------------------------------------------------------------------------------------- | ------ | ----- |
-| Обычные upstream-клиенты: первый блок и совпадение EL/CL                                              | да     | да    |
-| CLI up/down/reset, неизменный genesis, другой профиль отклонён                                        | да     | да    |
-| Пауза, advanceTime/advanceTo, будущие timestamps, automine, nonce gaps, финализация, индексатор       | да     | да    |
-| Два скачка на 8192 слота: следующая транзакция за <25 с, восстановление финализации, история подписей | да     | да    |
-| Депозит, активация ключа, консолидация                                                                | да     | да    |
-| Подписанный voluntary exit, реальная withdrawal, окончательный нулевой баланс                         | да     | да    |
-| 20 последовательных деплоев через raw RPC и ethers                                                    | да     | да    |
-| Отдельный envelope, согласованный bid/hash, PTC-голоса и фазовые барьеры                              | —      | да    |
+| Scenario                                                                                   | Pectra | Gloas |
+| ------------------------------------------------------------------------------------------ | ------ | ----- |
+| Ordinary upstream clients: first block and EL/CL agreement                                 | Yes    | Yes   |
+| CLI up/down/reset, stable genesis, rejection of a different profile                        | Yes    | Yes   |
+| Pause, advanceTime/advanceTo, future timestamps, automine, nonce gaps, finality, indexer   | Yes    | Yes   |
+| Two 8192-slot jumps: next transaction within 25 seconds, resumed finality, signing history | Yes    | Yes   |
+| Deposit, key activation and consolidation                                                  | Yes    | Yes   |
+| Signed voluntary exit, actual withdrawal and final zero balance                            | Yes    | Yes   |
+| Twenty sequential deployments through raw RPC and ethers                                   | Yes    | Yes   |
+| Separate envelope, matching bid/hash, PTC votes and phase barriers                         | —      | Yes   |
 
-Консолидационный сценарий явно использует `churnLimitQuotient: 4`, чтобы маленькая сеть имела
-consolidation capacity. Для Gloas он также задаёт независимый `consolidationChurnLimitQuotient: 4`:
-в этом хардфорке изменение общего churn уже не увеличивает ёмкость консолидации. По умолчанию
-отдельный коэффициент остаётся mainnet `65536`; остальные сценарии сохраняют профильный mainnet
-churn. Длинные периоды в exit/consolidation проходят через явный `skipSlots` с реальными штрафами.
+The consolidation scenario explicitly uses `churnLimitQuotient: 4` to give the small network
+consolidation capacity. Gloas also sets the independent `consolidationChurnLimitQuotient: 4`:
+changing general churn no longer increases consolidation capacity in this fork. The separate
+quotient defaults to the mainnet value of `65536`; other scenarios retain their profile's mainnet
+churn. Long exit/consolidation periods use explicit `skipSlots` and incur real protocol penalties.
 
-Отчёты пишутся в `reports/profiles/<hardfork>/<tag>/`. Итоговый `verification.json` содержит bake
-key, уникальный run ID, fingerprint тестов/контроллера/зависимостей и результаты текущего запуска.
-Старый отчёт другого запуска или bake не засчитывается. Изменение кода во время проверки делает итог
-неуспешным. `bakes` показывает `verified: true` только для совпадающих bake key и текущего
-fingerprint; `verifiedAt` сохраняет дату исторически успешной проверки. Fingerprint включает только
-сценарии выбранного профиля и их runtime-зависимости. Изменение другого профиля, будущего рецепта
-сборки или исходника патча не отменяет проверку уже собранного неизменяемого артефакта. Изменения
-общего runtime требуют перепроверки затронутых профилей, но не пересборки клиентских образов.
+Reports are stored in `reports/profiles/<hardfork>/<tag>/`. The final `verification.json` records
+the bake key, unique run ID, test/controller/dependency fingerprint and current results. Reports
+from another run or bake do not count. Changing code during verification fails the result. `bakes`
+shows `verified: true` only when the bake key and current fingerprint match; `verifiedAt` retains
+the date of a historically successful run. The fingerprint includes only the selected profile's
+scenarios and runtime dependencies. Another profile's changes, future recipes or patch edits do not
+invalidate verification of an unchanged baked artifact. Shared runtime changes require affected
+profiles to be verified again, without necessarily rebuilding their clients.
 
-Финализация Gloas проверяется через execution-родителя финализированного Beacon checkpoint:
-собственный envelope этого checkpoint ещё не является финализированным payload. Правило взято из
-[закреплённого Lighthouse](https://github.com/sigp/lighthouse/blob/2d281dfa1b407f7c81cd123954a9fd18ee8f02d2/consensus/proto_array/src/proto_array_fork_choice.rs#L363).
+Gloas finality is checked through the execution parent of the finalized Beacon checkpoint: that
+checkpoint's own envelope is not yet the finalized payload. This follows the
+[pinned Lighthouse implementation](https://github.com/sigp/lighthouse/blob/2d281dfa1b407f7c81cd123954a9fd18ee8f02d2/consensus/proto_array/src/proto_array_fork_choice.rs#L363).
 
-Для другой toolchain доступны `--rust-image` и `--go-image`; `--baseline-image` выбирает обычный
-Lighthouse для проверки совместимости без управляемых часов. Отдельный native-тест конкретного bake:
-`deno task test:clock gloas --bake experiment-2`. Он использует сохранённые входы этого бейка из
-`.cache/baker/inputs/<key>/` и проверяет их хеши. Редактирование патча для новой сборки не мешает
-тестировать старую. Для старых манифестов без архива допускается только точное совпадение хеша с
-исходником в рабочем дереве или Git; при отсутствии такого исходника native-тест отклоняется.
+Use `--rust-image` and `--go-image` for another toolchain. `--baseline-image` selects an ordinary
+Lighthouse for checks without controlled clocks. To run a particular bake's native regression:
+`deno task test:clock gloas --bake experiment-2`. It uses that bake's archived inputs in
+`.cache/baker/inputs/<key>/` and verifies their hashes. Editing a patch for a new build does not
+prevent testing an older artifact. For manifests without a source archive, recovery requires an
+exact hash match from the working tree or Git; otherwise native verification is rejected.
 
-`advanceTime`/`advanceTo` при скачке больше эпохи пропускают промежуточные слоты и создают настоящий
-блок в целевом слоте. `advanceSlots`/`advanceEpochs` сохраняют непрерывное производство блоков.
-Пропущенные голоса учитываются протоколом: возможны штрафы за неактивность. `skipSlots` оставлен для
-явного пропуска без блока в целевом слоте. SLA проверяется до следующей успешной транзакции, чтобы
-не прятать отложенные вычисления за быстрым возвратом API.
+`advanceTime`/`advanceTo` jumps longer than an epoch skip intermediate slots and produce a real
+block at the destination. `advanceSlots`/`advanceEpochs` retain continuous block production. The
+protocol accounts for missed votes, including possible inactivity penalties. `skipSlots` explicitly
+skips without producing a destination block. The timing bound includes the next successful
+transaction, so deferred work cannot be hidden behind a quick API response.
 
-Новый Gloas-патч переиспользует балансы кандидатов и 16 случайных значений каждого SHA-256
-дайджеста; для маленького набора валидаторов применяет штатный пакетный shuffle. Native-тесты
-сравнивают PTC и proposer selection с исходным алгоритмом. Перед возобновлением VC BN один раз
-проходит реальные пустые слоты и сохраняет полученные состояния для обязанностей, proposal и
-проверки блока. Canonical head и finalized checkpoint при подготовке не подменяются. Бейки с
-`preparedSkip` используют обычные ограниченные ожидания вместо прежних 10–12 минут на догоняние.
-Запуски одновременно со сборкой не являются замерами производительности.
+The Gloas patch reuses candidate balances and sixteen random values per SHA-256 digest; small
+validator sets use upstream batch shuffling. Native tests compare PTC and proposer selection with
+the original algorithm. Before resuming the VC, the BN processes real empty slots once and retains
+the resulting states for duties, proposals and block validation. Preparation does not substitute the
+canonical head or finalized checkpoint. Bakes with `preparedSkip` use ordinary bounded waits in
+place of the earlier 10–12 minute catch-up. Runs concurrent with compilation are not performance
+measurements.
 
-## Стабильный вариант перемотки
+## Stable time advancement
 
-Этот раздел фиксирует стабилизацию 2026-09-29. Повторные прогоны после переноса каталогов 2026-09-30
-записаны в [отдельном отчёте](bake-layout-verification.md).
+This section records stabilization on September 29, 2026. Reruns after the September 30 directory
+relocation are recorded in a [separate report](bake-layout-verification.md).
 
-После сравнений закреплён `gloas/stable`: тот же неизменяемый образ, что `fast-warp-v3`, с обычным
-`store.put_state` для каждого промежуточного состояния. Пакетная запись summaries из v4 и отдельная
-ветка одинаковых балансов из v5 исключены. По решению пользователя дальнейшая оптимизация
-остановлена в пользу меньшего изменения клиента. В controlled-режиме используется штатная схема
-Lighthouse `--hierarchy-exponents=9,13,16,18,21`; протокольные константы не меняются.
+The selected `gloas/stable` uses the same immutable image as `fast-warp-v3`, with ordinary
+`store.put_state` calls for every intermediate state. Batched summary writes from v4 and a separate
+equal-balance branch from v5 were excluded. Further optimization was paused at the user's request to
+keep the client change smaller. Controlled mode uses Lighthouse's standard
+`--hierarchy-exponents=9,13,16,18,21`; protocol constants are unchanged.
 
-Итоговый полный набор прошёл: **8/8 сценариев**, `verified: true`. Измерено 10,8 / 11,6 с на два
-скачка по 8192 слота вместе со следующей транзакцией; после каждого восстановилась финализация, все
-64 валидатора продолжили подписывать без слэшинга и конфликтов. Текущий регрессионный порог — 25 с с
-учётом разброса запуска VC; прежняя цель 10 с больше не используется как критерий приёмки. Отчёт:
-`reports/profiles/gloas/stable/verification.json`.
+That full suite passed 8/8 scenarios with `verified: true`. Its two 8192-slot jumps including the
+following transaction took 10.8 / 11.6 seconds. Both resumed finality; all 64 validators continued
+signing without slashing or conflicts. The current regression threshold is 25 seconds to account for
+VC startup variation; the earlier 10-second target is no longer an acceptance criterion. The report
+is `reports/profiles/gloas/stable/verification.json`.
 
-2026-09-30 пользователь разрешил поднять общий порог с 20 до 25 с. Это изменение критерия теста;
-алгоритм перемотки и проверки финализации/истории подписей сохранены.
+On September 30, 2026, the user approved raising the shared threshold from 20 to 25 seconds. This
+changed the test criterion while retaining the advancement algorithm and finality/signing-history
+checks.
 
 ```sh
 deno task up --profile gloas --bake stable

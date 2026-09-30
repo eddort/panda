@@ -26,8 +26,8 @@ run `deno task up --profile gloas --bake trial` after building and verifying `gl
 ## Connections and configuration
 
 In another terminal, run `deno task down` or `deno task reset --profile pectra --bake local`.
-`ZAP_ID` selects the instance (default: `local`), and `ZAP_PORT` sets the controller port (8545). To
-select a Docker socket, use `ZAP_DOCKER_SOCKET=/path/to/docker.sock` or
+`PANDA_ID` selects the instance (default: `local`), and `PANDA_PORT` sets the controller port
+(8545). To select a Docker socket, use `PANDA_DOCKER_SOCKET=/path/to/docker.sock` or
 `DOCKER_HOST=unix:///path/to/docker.sock`. Docker Desktop on macOS is detected automatically. Remote
 Docker daemons are not supported because the network uses local bind mounts. Public RPC and Beacon
 API bind to 127.0.0.1. The internal Engine proxy accepts container connections through the host
@@ -37,10 +37,8 @@ JSON-RPC is available at the root of the controller URL. Standard Beacon API pat
 `/eth/v2/...` use the same address. Automine is off by default. Keys and the mnemonic are public and
 intended only for this local environment.
 
-Panda retains the previous `ZAP_*` configuration names, `.zap/` state paths and `io.zap-net.*`
-Docker labels so existing instances and build artifacts remain compatible. `ZAP_PROFILE` and
-`ZAP_BAKE` select the default profile and bake when command-line options or API configuration do not
-specify them. Commands currently run through `deno task`.
+`PANDA_PROFILE` and `PANDA_BAKE` select the default profile and bake when command-line options or
+API configuration do not specify them.
 
 ## TypeScript API
 
@@ -94,8 +92,8 @@ no `minimal` profile.
 
 ```sh
 deno task test                         # Fast unit checks; Docker and e2e tests are skipped.
-ZAP_DOCKER_TEST=1 deno task test        # Rollback and protection of unrelated resources.
-ZAP_E2E=1 deno task test                # All four real e2e scenarios, sequentially; requires the image.
+PANDA_DOCKER_TEST=1 deno task test        # Rollback and protection of unrelated resources.
+PANDA_E2E=1 deno task test                # Selected profile's real e2e scenarios; requires its images.
 deno task e2e                          # Time, automine, finality and a separate indexer.
 deno task e2e:withdrawal               # Real exit to withdrawal across hundreds of epochs.
 deno task e2e:protocol                 # Deposit, activation and consolidation with an explicit churn override.
@@ -148,9 +146,10 @@ sees advanced block timestamps, while its own system clock remains unchanged.
 
 ## State and cleanup
 
-Fork sources, build artifacts and instance state live in `.cache/`, `.tools/` and `.zap/`, which are
-not committed. Images and volumes named `zap-build-*` form a separate, reusable build cache.
-`down/reset` cleans up resources only for the selected `ZAP_ID`. Global Docker prune is never used.
+Fork sources, build artifacts and instance state live in `.cache/`, `.tools/` and `.panda/`, which
+are not committed. Volumes named `panda-bake-cache-*` form a separate, reusable compiler cache.
+`down/reset` cleans up resources only for the selected `PANDA_ID`. Global Docker prune is never
+used.
 
 ## Validator exits and consolidation
 

@@ -63,7 +63,7 @@ HTTP JSON-RPC and Beacon API share `http://127.0.0.1:8545`: use `/` for JSON-RPC
 
 Press Ctrl-C to stop and clean up, or run `./scripts/deno task down` in another terminal.
 `./scripts/deno task reset --profile pectra --bake local` starts again with fresh state. Use
-`ZAP_ID` and `ZAP_PORT` for separate instances. Once Deno is available on your path, the same
+`PANDA_ID` and `PANDA_PORT` for separate instances. Once Deno is available on your path, the same
 commands can be written as `deno task …`.
 
 ## TypeScript API
@@ -121,13 +121,6 @@ transaction-pool expiry continues during a protocol pause.
 Recipes, patches and profile tests live together under `bakes/<hardfork>/`; reusable parts live in
 `bakes/shared/`. See [the bake layout and extension guide](bakes/README.md) to add another hardfork
 or build a client version under a new tag.
-
-## Existing configuration
-
-Panda was previously named `zap-net`. The current runtime retains `ZAP_*` environment variables, the
-`.zap/` state directory and `io.zap-net.*` Docker ownership labels for compatibility with existing
-instances and bakes. Use the commands and identifiers documented here; the CLI is invoked through
-Deno tasks. Historical research and raw reports retain the names used when they were recorded.
 
 ## Validation
 

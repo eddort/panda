@@ -110,7 +110,7 @@ do not combine unrelated runs into a claimed full pass.
 On a failure, retain logs and failed evidence, fix the identified cause, and rerun the original
 scenario separately. Use [debug-devnet](../debug-devnet/SKILL.md) for a stalled network. Avoid
 repeated unchanged runs merely to obtain green; report an unresolved cause or timing variance. Keep
-compiler caches and use exact `io.zap-net.id` ownership for Docker cleanup; never prune globally to
+compiler caches and use exact `io.panda.id` ownership for Docker cleanup; never prune globally to
 repair a bake.
 
 Update the relevant profile/version documentation with the delivered behavior and limitations.

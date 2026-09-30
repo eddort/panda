@@ -1,0 +1,511 @@
+{
+  "clientVersion": "Geth/v1.17.7-unstable-5d8fd6b6-20260929/linux-arm64/go1.27.1",
+  "chainId": "0x539",
+  "deployerNonce": 115,
+  "addresses": [
+    {
+      "statePath": "accounting.proxy",
+      "address": "0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "accounting.implementation",
+      "address": "0xcbEAF3BDe82155F56486Fb5a1072cb8baAf547cc",
+      "contract": "contracts/0.8.9/Accounting.sol",
+      "runtimeBytes": 8481
+    },
+    {
+      "statePath": "accountingOracle.proxy",
+      "address": "0x162A433068F51e18b7d13932F27e66a3f99E6890",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "accountingOracle.implementation",
+      "address": "0xB0D4afd8879eD9F52b28595d31B441D079B2Ca07",
+      "contract": "contracts/0.8.9/oracle/AccountingOracle.sol",
+      "runtimeBytes": 17757
+    },
+    {
+      "statePath": "apmRegistryFactory",
+      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+      "contract": "@aragon/os/contracts/factory/APMRegistryFactory.sol",
+      "runtimeBytes": 7756
+    },
+    {
+      "statePath": "app:aragon-agent.implementation",
+      "address": "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+      "contract": "@aragon/apps-agent/contracts/Agent.sol",
+      "runtimeBytes": 16282
+    },
+    {
+      "statePath": "app:aragon-agent.proxy",
+      "address": "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+      "contract": "@aragon/os/contracts/apps/AppProxyUpgradeable.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "app:aragon-finance.implementation",
+      "address": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+      "contract": "@aragon/apps-finance/contracts/Finance.sol",
+      "runtimeBytes": 19741
+    },
+    {
+      "statePath": "app:aragon-finance.proxy",
+      "address": "0xd0f3e4Fe40C8023b87B71201ec5BD35f476C0130",
+      "contract": "@aragon/os/contracts/apps/AppProxyUpgradeable.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "app:aragon-token-manager.implementation",
+      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "contract": "@aragon/apps-lido/apps/token-manager/contracts/TokenManager.sol",
+      "runtimeBytes": 14012
+    },
+    {
+      "statePath": "app:aragon-token-manager.proxy",
+      "address": "0x4068E9A78751b2991d6ecE6514Dff1098FaFe46b",
+      "contract": "@aragon/os/contracts/apps/AppProxyUpgradeable.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "app:aragon-voting.implementation",
+      "address": "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+      "contract": "@aragon/apps-lido/apps/voting/contracts/Voting.sol",
+      "runtimeBytes": 15811
+    },
+    {
+      "statePath": "app:aragon-voting.proxy",
+      "address": "0xe05a4AA2d6de3934e9c37588e545958b8815a44B",
+      "contract": "@aragon/os/contracts/apps/AppProxyUpgradeable.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "app:lido.implementation",
+      "address": "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+      "contract": "contracts/0.4.24/Lido.sol",
+      "runtimeBytes": 23855
+    },
+    {
+      "statePath": "app:lido.proxy",
+      "address": "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+      "contract": "@aragon/os/contracts/apps/AppProxyUpgradeable.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "app:node-operators-registry.implementation",
+      "address": "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+      "contract": "contracts/0.4.24/nos/NodeOperatorsRegistry.sol",
+      "runtimeBytes": 23067
+    },
+    {
+      "statePath": "app:node-operators-registry.proxy",
+      "address": "0xC0415C90D86cB2FEDc05529F5CFAe0E2a806c3BB",
+      "contract": "@aragon/os/contracts/apps/AppProxyUpgradeable.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "app:simple-dvt.proxy",
+      "address": "0x41CB323999d67832A2bF9735148B37785bcc3335",
+      "contract": "@aragon/os/contracts/apps/AppProxyUpgradeable.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "aragon-acl.implementation",
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "contract": "@aragon/os/contracts/acl/ACL.sol",
+      "runtimeBytes": 9954
+    },
+    {
+      "statePath": "aragon-acl.proxy",
+      "address": "0x504da1E03B2e312aB1089585d58A22b42c70c85a",
+      "contract": "@aragon/os/contracts/apps/AppProxyUpgradeable.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "aragon-apm-registry.implementation",
+      "address": "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      "contract": "@aragon/os/contracts/apm/APMRegistry.sol",
+      "runtimeBytes": 13137
+    },
+    {
+      "statePath": "aragon-apm-registry.proxy",
+      "address": "0xc74e6E20415F30BF4e586aC063055D926Cdf124f",
+      "contract": "@aragon/os/contracts/apm/APMRegistry.sol",
+      "runtimeBytes": 1007
+    },
+    {
+      "statePath": "aragon-evm-script-registry.proxy",
+      "address": "0x6585934BBe4d975F7E08C0DdB42a7525679f985d",
+      "contract": "@aragon/os/contracts/apps/AppProxyPinned.sol",
+      "runtimeBytes": 830
+    },
+    {
+      "statePath": "aragon-evm-script-registry.implementation",
+      "address": "0x856e4424f806D16E8CBC702B3c0F2ede5468eae5",
+      "contract": "@aragon/os/contracts/evmscript/EVMScriptRegistry.sol",
+      "runtimeBytes": 5737
+    },
+    {
+      "statePath": "aragon-kernel.implementation",
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "contract": "@aragon/os/contracts/kernel/Kernel.sol",
+      "runtimeBytes": 10670
+    },
+    {
+      "statePath": "aragon-kernel.proxy",
+      "address": "0x8EFa1819Ff5B279077368d44B593a4543280e402",
+      "contract": "@aragon/os/contracts/kernel/KernelProxy.sol",
+      "runtimeBytes": 870
+    },
+    {
+      "statePath": "aragon-repo-base",
+      "address": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+      "contract": "@aragon/os/contracts/apm/Repo.sol",
+      "runtimeBytes": 6571
+    },
+    {
+      "statePath": "aragonID",
+      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+      "contract": "@aragon/id/contracts/FIFSResolvingRegistrar.sol",
+      "runtimeBytes": 1236
+    },
+    {
+      "statePath": "beaconChainDepositor",
+      "address": "0xb7278A61aa25c888815aFC32Ad3cC52fF24fE575",
+      "contract": "contracts/0.8.25/lib/BeaconChainDepositor.sol",
+      "runtimeBytes": 3076
+    },
+    {
+      "statePath": "burner.proxy",
+      "address": "0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "burner.implementation",
+      "address": "0x1c85638e118b37167e9298c2268758e058DdfDA0",
+      "contract": "contracts/0.8.9/Burner.sol",
+      "runtimeBytes": 10516
+    },
+    {
+      "statePath": "callsScript",
+      "address": "0xb0279Db6a2F1E01fbC8483FCCef0Be2bC6299cC3",
+      "contract": "@aragon/os/contracts/evmscript/executors/CallsScript.sol",
+      "runtimeBytes": 1928
+    },
+    {
+      "statePath": "consolidationBus.proxy",
+      "address": "0x36b58F5C1969B7b6591D752ea6F5486D069010AB",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "consolidationBus.implementation",
+      "address": "0x51A1ceB83B83F1985a81C295d1fF28Afef186E02",
+      "contract": "contracts/0.8.25/consolidation/ConsolidationBus.sol",
+      "runtimeBytes": 6923
+    },
+    {
+      "statePath": "consolidationGateway",
+      "address": "0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD",
+      "contract": "contracts/0.8.25/consolidation/ConsolidationGateway.sol",
+      "runtimeBytes": 8360
+    },
+    {
+      "statePath": "consolidationMigrator.proxy",
+      "address": "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "consolidationMigrator.implementation",
+      "address": "0x172076E0166D1F9Cc711C77Adf8488051744980C",
+      "contract": "contracts/0.8.25/consolidation/ConsolidationMigrator.sol",
+      "runtimeBytes": 6777
+    },
+    {
+      "statePath": "daoFactory",
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "contract": "@aragon/os/contracts/factory/DAOFactory.sol",
+      "runtimeBytes": 3673
+    },
+    {
+      "statePath": "dashboardImpl",
+      "address": "0xF8e31cb472bc70500f08Cd84917E5A1912Ec8397",
+      "contract": "contracts/0.8.25/vaults/dashboard/Dashboard.sol",
+      "runtimeBytes": 24566
+    },
+    {
+      "statePath": "depositSecurityModule",
+      "address": "0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650",
+      "contract": "contracts/0.8.9/DepositSecurityModule.sol",
+      "runtimeBytes": 8343
+    },
+    {
+      "statePath": "dummyEmptyContract",
+      "address": "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
+      "contract": "contracts/0.8.9/utils/DummyEmptyContract.sol",
+      "runtimeBytes": 63
+    },
+    {
+      "statePath": "eip712StETH",
+      "address": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+      "contract": "contracts/0.8.9/EIP712StETH.sol",
+      "runtimeBytes": 942
+    },
+    {
+      "statePath": "ens",
+      "address": "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be",
+      "contract": "@aragon/os/contracts/lib/ens/ENS.sol",
+      "runtimeBytes": 1252
+    },
+    {
+      "statePath": "ensFactory",
+      "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "contract": "@aragon/os/contracts/factory/ENSFactory.sol",
+      "runtimeBytes": 7156
+    },
+    {
+      "statePath": "ensSubdomainRegistrar.implementation",
+      "address": "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+      "contract": "@aragon/os/contracts/ens/ENSSubdomainRegistrar.sol",
+      "runtimeBytes": 7097
+    },
+    {
+      "statePath": "evmScriptRegistryFactory",
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "contract": "@aragon/os/contracts/factory/EVMScriptRegistryFactory.sol",
+      "runtimeBytes": 1660
+    },
+    {
+      "statePath": "executionLayerRewardsVault",
+      "address": "0x1291Be112d480055DaFd8a610b7d1e203891C274",
+      "contract": "contracts/0.8.9/LidoExecutionLayerRewardsVault.sol",
+      "runtimeBytes": 2019
+    },
+    {
+      "statePath": "hashConsensusForAccountingOracle",
+      "address": "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe",
+      "contract": "contracts/0.8.9/oracle/HashConsensus.sol",
+      "runtimeBytes": 13199
+    },
+    {
+      "statePath": "hashConsensusForValidatorsExitBusOracle",
+      "address": "0x04C89607413713Ec9775E14b954286519d836FEf",
+      "contract": "contracts/0.8.9/oracle/HashConsensus.sol",
+      "runtimeBytes": 13199
+    },
+    {
+      "statePath": "lazyOracle.proxy",
+      "address": "0xCace1b78160AE76398F486c8a18044da0d66d86D",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "lazyOracle.implementation",
+      "address": "0x4b6aB5F819A515382B0dEB6935D793817bB4af28",
+      "contract": "contracts/0.8.25/vaults/LazyOracle.sol",
+      "runtimeBytes": 12092
+    },
+    {
+      "statePath": "ldo",
+      "address": "0x1F708C24a0D3A740cD47cC0444E9480899f3dA7D",
+      "contract": "@aragon/minime/contracts/MiniMeToken.sol",
+      "runtimeBytes": 6422
+    },
+    {
+      "statePath": "lidoLocator.proxy",
+      "address": "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "lidoLocator.implementation",
+      "address": "0x22753E4264FDDc6181dc7cce468904A80a363E44",
+      "contract": "contracts/0.8.9/LidoLocator.sol",
+      "runtimeBytes": 1984
+    },
+    {
+      "statePath": "lidoTemplate",
+      "address": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+      "contract": "contracts/0.4.24/template/LidoTemplate.sol",
+      "runtimeBytes": 22722
+    },
+    {
+      "statePath": "minFirstAllocationStrategy",
+      "address": "0xCD8a1C3ba11CF5ECfa6267617243239504a98d90",
+      "contract": "contracts/common/lib/MinFirstAllocationStrategy.sol",
+      "runtimeBytes": 1013
+    },
+    {
+      "statePath": "miniMeTokenFactory",
+      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      "contract": "@aragon/minime/contracts/MiniMeToken.sol",
+      "runtimeBytes": 7819
+    },
+    {
+      "statePath": "operatorGrid.proxy",
+      "address": "0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "operatorGrid.implementation",
+      "address": "0x4631BCAbD6dF18D94796344963cB60d44a4136b6",
+      "contract": "contracts/0.8.25/vaults/OperatorGrid.sol",
+      "runtimeBytes": 14909
+    },
+    {
+      "statePath": "oracleDaemonConfig",
+      "address": "0x9E545E3C0baAB3E08CdfD552C960A1050f373042",
+      "contract": "contracts/0.8.9/OracleDaemonConfig.sol",
+      "runtimeBytes": 5737
+    },
+    {
+      "statePath": "oracleReportSanityChecker",
+      "address": "0x7A9Ec1d04904907De0ED7b6839CcdD59c3716AC9",
+      "contract": "contracts/0.8.9/sanity_checks/OracleReportSanityChecker.sol",
+      "runtimeBytes": 23676
+    },
+    {
+      "statePath": "predepositGuarantee.proxy",
+      "address": "0x34B40BA116d5Dec75548a9e9A8f15411461E8c70",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "predepositGuarantee.implementation",
+      "address": "0xc96304e3c037f81dA488ed9dEa1D8F2a48278a75",
+      "contract": "contracts/0.8.25/vaults/predeposit_guarantee/PredepositGuarantee.sol",
+      "runtimeBytes": 19801
+    },
+    {
+      "statePath": "srLib",
+      "address": "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1",
+      "contract": "contracts/0.8.25/sr/SRLib.sol",
+      "runtimeBytes": 13727
+    },
+    {
+      "statePath": "stakingRouter.proxy",
+      "address": "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "stakingRouter.implementation",
+      "address": "0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3",
+      "contract": "contracts/0.8.25/sr/StakingRouter.sol",
+      "runtimeBytes": 21087
+    },
+    {
+      "statePath": "stakingVaultBeacon",
+      "address": "0xAA292E8611aDF267e563f334Ee42320aC96D0463",
+      "contract": "@openzeppelin/contracts-v5.2/proxy/beacon/UpgradeableBeacon.sol",
+      "runtimeBytes": 619
+    },
+    {
+      "statePath": "stakingVaultFactory",
+      "address": "0xc0F115A19107322cFBf1cDBC7ea011C19EbDB4F8",
+      "contract": "contracts/0.8.25/vaults/VaultFactory.sol",
+      "runtimeBytes": 5109
+    },
+    {
+      "statePath": "stakingVaultImplementation",
+      "address": "0xf953b3A269d80e3eB0F2947630Da976B896A8C5b",
+      "contract": "contracts/0.8.25/vaults/StakingVault.sol",
+      "runtimeBytes": 7867
+    },
+    {
+      "statePath": "tokenRebaseNotifier",
+      "address": "0x49fd2BE640DB2910c2fAb69bB8531Ab6E76127ff",
+      "contract": "contracts/0.8.9/TokenRateNotifier.sol",
+      "runtimeBytes": 3580
+    },
+    {
+      "statePath": "topUpGateway.proxy",
+      "address": "0xFD471836031dc5108809D173A067e8486B9047A3",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "topUpGateway.implementation",
+      "address": "0xc351628EB244ec633d5f21fBD6621e1a683B1181",
+      "contract": "contracts/0.8.25/TopUpGateway.sol",
+      "runtimeBytes": 9930
+    },
+    {
+      "statePath": "triggerableWithdrawalsGateway",
+      "address": "0x21dF544947ba3E8b3c32561399E88B52Dc8b2823",
+      "contract": "contracts/0.8.9/TriggerableWithdrawalsGateway.sol",
+      "runtimeBytes": 8128
+    },
+    {
+      "statePath": "validatorConsolidationRequests",
+      "address": "0x07882Ae1ecB7429a84f1D53048d35c4bB2056877",
+      "contract": "contracts/0.8.25/vaults/ValidatorConsolidationRequests.sol",
+      "runtimeBytes": 2580
+    },
+    {
+      "statePath": "validatorExitDelayVerifier",
+      "address": "0xfbC22278A96299D91d41C453234d97b4F5Eb9B2d",
+      "contract": "contracts/0.8.25/ValidatorExitDelayVerifier.sol",
+      "runtimeBytes": 6156
+    },
+    {
+      "statePath": "validatorsExitBusOracle.proxy",
+      "address": "0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "validatorsExitBusOracle.implementation",
+      "address": "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d",
+      "contract": "contracts/0.8.9/oracle/ValidatorsExitBusOracle.sol",
+      "runtimeBytes": 20203
+    },
+    {
+      "statePath": "vaultHub.proxy",
+      "address": "0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "vaultHub.implementation",
+      "address": "0x5c74c94173F05dA1720953407cbb920F3DF9f887",
+      "contract": "contracts/0.8.25/vaults/VaultHub.sol",
+      "runtimeBytes": 24156
+    },
+    {
+      "statePath": "withdrawalQueueERC721.proxy",
+      "address": "0x809d550fca64d94Bd9F66E60752A544199cfAC3D",
+      "contract": "contracts/0.8.9/proxy/OssifiableProxy.sol",
+      "runtimeBytes": 2497
+    },
+    {
+      "statePath": "withdrawalQueueERC721.implementation",
+      "address": "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570",
+      "contract": "contracts/0.8.9/WithdrawalQueueERC721.sol",
+      "runtimeBytes": 24190
+    },
+    {
+      "statePath": "withdrawalVault.proxy",
+      "address": "0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154",
+      "contract": "contracts/0.8.9/proxy/WithdrawalsManagerProxy.sol",
+      "runtimeBytes": 1965
+    },
+    {
+      "statePath": "withdrawalVault.implementation",
+      "address": "0x46b142DD1E924FAb83eCc3c08e4D46E82f005e0E",
+      "contract": "contracts/0.8.9/WithdrawalVault.sol",
+      "runtimeBytes": 5088
+    },
+    {
+      "statePath": "wstETH",
+      "address": "0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00",
+      "contract": "contracts/0.6.12/WstETH.sol",
+      "runtimeBytes": 6492
+    }
+  ]
+}

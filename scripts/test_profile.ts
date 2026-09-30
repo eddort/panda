@@ -30,10 +30,10 @@ try {
   const result = await new Deno.Command(Deno.execPath(), {
     args: ["test", "--config=deno.runtime.json", "-A", "tests/e2e_test.ts"],
     env: {
-      ZAP_E2E: "1",
-      ZAP_PROFILE: profile,
-      ZAP_BAKE: tag,
-      ZAP_VERIFY_RUN: runId,
+      PANDA_E2E: "1",
+      PANDA_PROFILE: profile,
+      PANDA_BAKE: tag,
+      PANDA_VERIFY_RUN: runId,
     },
     stdout: "inherit",
     stderr: "inherit",

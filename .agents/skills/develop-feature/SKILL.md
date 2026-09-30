@@ -8,7 +8,7 @@ clock; real deadlines belong to src/http.ts. Preserve Pectra mainnet constants a
 signature/state validation.
 
 Keep Docker calls in src/docker.ts and topology in src/network.ts. Resource ownership is the exact
-io.zap-net.id label. Startup failure and repeated down must clean up only that id. Avoid adding
+io.panda.id label. Startup failure and repeated down must clean up only that id. Avoid adding
 dependencies when Deno or existing dockerode suffices; pin direct versions in deno.json and retain
 deno.lock.
 

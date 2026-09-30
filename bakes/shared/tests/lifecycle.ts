@@ -8,7 +8,7 @@ import { profileReport } from "./report.ts";
 import { readBake } from "../../../src/profiles.ts";
 
 const id = `lifecycle-${crypto.randomUUID().slice(0, 8)}`;
-const env = { ZAP_ID: id, ZAP_PORT: "0" };
+const env = { PANDA_ID: id, PANDA_PORT: "0" };
 const infra = new Infrastructure(id);
 const command = (task: string) =>
   new Deno.Command(Deno.execPath(), {
@@ -23,7 +23,7 @@ const start = async (task: string) => {
   child = command(task).spawn();
   output = child.output();
   return await waitFor("CLI ready", async () => {
-    const endpoint = JSON.parse(await Deno.readTextFile(`.zap/${id}/controller.json`));
+    const endpoint = JSON.parse(await Deno.readTextFile(`.panda/${id}/controller.json`));
     const net = new Devnet(endpoint.url);
     return (await net.status()).id === id ? net : undefined;
   }, 120_000);

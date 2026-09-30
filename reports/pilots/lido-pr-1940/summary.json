@@ -1,0 +1,214 @@
+{
+  "status": "partial-deployment-failed",
+  "date": "2026-09-30",
+  "scope": "Scratch migration only; no upstream repository tests or protocol behavior tests executed.",
+  "source": {
+    "pullRequest": "https://github.com/lidofinance/core/pull/1940",
+    "commit": "2f4a21d0ba89826087ef328ecf9fbdf0775f8e44",
+    "trackedSourceModified": false
+  },
+  "bake": {
+    "profile": "gloas",
+    "tag": "stable",
+    "key": "8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9",
+    "images": {
+      "el": {
+        "ref": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
+        "id": "sha256:50acd60c272047362ff5369de1eae09dc0094ba714eeff0f88e8ab64d53903e5",
+        "digest": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
+        "platform": "linux/arm64"
+      },
+      "cl": {
+        "ref": "zap-lighthouse:bake-8b1fa94aaf9f1719d3c61793",
+        "id": "sha256:70926edb37f1bb6daa2e171c5dd025e0c5d6e5494b9f85fe9c18b7a464e8c782",
+        "platform": "linux/arm64"
+      },
+      "genesis": {
+        "ref": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
+        "id": "sha256:95d66723fab247e476861b7168e8b20150e85daeee734f2417a79c2db8e2b1a3",
+        "digest": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
+        "platform": "linux/arm64"
+      }
+    }
+  },
+  "environment": {
+    "hostPlatform": "darwin/arm64",
+    "node": "22.22.2",
+    "yarn": "4.9.2",
+    "hardhat": "2.26.1",
+    "ethers": "6.14.4",
+    "forgeVersion": "1.7.1",
+    "forgeCommit": "4072e48705af9d93e3c0f6e29e93b5e9a40caed8",
+    "elClient": "Geth/v1.17.7-unstable-5d8fd6b6-20260929/linux-arm64/go1.27.1",
+    "networkId": "lido1940",
+    "rpc": "http://127.0.0.1:18545",
+    "chainId": 1337,
+    "validators": 64,
+    "genesisTime": 2000000000,
+    "genesisForkVersion": "0x10000000",
+    "slotsPerEpoch": 32,
+    "slotSeconds": 12,
+    "competingDockerWorkloads": [
+      "buildx_buildkit_oracle-buildkit0",
+      "qbittorrent"
+    ],
+    "otherZapNetTestsRunning": false
+  },
+  "preparationSeconds": {
+    "yarnInstallImmutable": 24.6,
+    "coreCompilation": 98.5,
+    "firstCachedImageNetworkStartup": 17.602427959,
+    "measuredAttemptNetworkStartup": 12.831202,
+    "emptyBlockIndexerWarmup": 0.4033177919918671
+  },
+  "measurement": {
+    "command": [
+      "yarn",
+      "hardhat",
+      "--network",
+      "local-devnet",
+      "run",
+      "--no-compile",
+      "scripts/utils/migrate.ts"
+    ],
+    "clock": "Python time.perf_counter; parent process launch to exit",
+    "attempt": 4,
+    "exitCode": 1,
+    "elapsedSeconds": 72.72957187495194,
+    "successfulPrefixThrough0090Seconds": 67.15138325002044,
+    "fullScratchElapsedSeconds": null,
+    "passedMigrationSteps": 12,
+    "totalMigrationSteps": 21,
+    "successfulTransactions": 114,
+    "failedTransactions": 1,
+    "executionBlocks": 116,
+    "emptyWarmupBlocks": 1,
+    "totalGasUsedIncludingFailed": 1128048184,
+    "contractAddressesInStateWithNonemptyCode": 84,
+    "steps": [
+      {
+        "elapsedSeconds": 5.039206124958582,
+        "step": "scratch/steps/0000-populate-deploy-artifact-from-env.ts",
+        "durationSeconds": 0.09908920805901289,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 5.138295333017595,
+        "step": "scratch/steps/0010-deploy-deposit-contract.ts",
+        "durationSeconds": 0.0036829590098932385,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 5.141978292027488,
+        "step": "scratch/steps/0020-deploy-aragon-env.ts",
+        "durationSeconds": 9.030454040970653,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 14.172432332998142,
+        "step": "scratch/steps/0030-deploy-template-and-app-bases.ts",
+        "durationSeconds": 4.398699500015937,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 18.57113183301408,
+        "step": "scratch/steps/0040-register-ens-domain.ts",
+        "durationSeconds": 0.5433007499668747,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 19.114432582980953,
+        "step": "scratch/steps/0050-deploy-apm.ts",
+        "durationSeconds": 0.5623802499612793,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 19.676812832942232,
+        "step": "scratch/steps/0060-create-app-repos.ts",
+        "durationSeconds": 1.0826149589847773,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 20.75942779192701,
+        "step": "scratch/steps/0070-deploy-dao.ts",
+        "durationSeconds": 0.6269422080367804,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 21.38636999996379,
+        "step": "scratch/steps/0080-issue-tokens.ts",
+        "durationSeconds": 0.5353307500481606,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 21.92170075001195,
+        "step": "scratch/steps/0083-deploy-core.ts",
+        "durationSeconds": 33.949893957935274,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 55.871594707947224,
+        "step": "scratch/steps/0085-deploy-vaults.ts",
+        "durationSeconds": 10.217985667055473,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 66.0895803750027,
+        "step": "scratch/steps/0090-upgrade-locator.ts",
+        "durationSeconds": 1.0618028750177473,
+        "status": "passed"
+      },
+      {
+        "elapsedSeconds": 67.15138325002044,
+        "step": "scratch/steps/0100-deploy-circuit-breaker.ts",
+        "durationSeconds": 5.578188624931499,
+        "status": "failed"
+      }
+    ]
+  },
+  "blocker": {
+    "step": "0100-deploy-circuit-breaker",
+    "transactionHash": "0x5ebf1bf9c91d6da93f8154a4ba1812e555e85a55a67a83fb84d32091cdf43427",
+    "sentGasLimit": 1426395,
+    "gasUsed": 1426395,
+    "receiptStatus": 0,
+    "gethEstimateAtLatest": 7586344,
+    "traceError": "contract creation code storage out of gas",
+    "forgeCommandGasLimitArgument": 16000000,
+    "note": "The --gas-limit argument did not force the actual broadcast transaction gas. Forge simulation estimated 1,426,395; Geth estimate was 7,586,344. CircuitBreaker source checkout is deleted by upstream finally; its exact commit was not captured."
+  },
+  "configurationAdaptations": [
+    "Use configured local-devnet signer and chainId 1337.",
+    "Point to actual genesis deposit contract 0x4242424242424242424242424242424242424242.",
+    "Match genesis time/fork version and set four gloasSlot parameters to 0.",
+    "Set max fee to 10 gwei, priority fee 1 gwei, and GAS_LIMIT empty to use Geth estimates for Hardhat transactions.",
+    "Produce one empty real block and wait for the transaction indexer before timed migration.",
+    "Invoke upstream migrate.ts directly after compilation; avoid shell wrapper that overrides GENESIS_TIME."
+  ],
+  "earlierAttempts": [
+    {
+      "attempt": 1,
+      "elapsedSeconds": 6.300720916944556,
+      "failure": "100 gwei * 16M gas exceeded Geth 1 ETH RPC tx fee cap; no tx accepted."
+    },
+    {
+      "attempt": 2,
+      "elapsedSeconds": 5.3433270420646295,
+      "failure": "Hardhat receipt polling failed with transaction indexing is in progress at genesis; submitted transaction later mined. Chain recreated."
+    },
+    {
+      "attempt": 3,
+      "elapsedSeconds": 6.5628643749514595,
+      "failure": "Fixed 16M gas exhausted deploying Aragon Kernel; trace: contract creation code storage out of gas. Chain recreated."
+    }
+  ],
+  "limitations": [
+    "Full scratch deployment is not complete; 72.73 seconds is time to failure, not successful full deploy time.",
+    "Successful-prefix timing includes Hardhat startup, RPC polling, filesystem writes and migration work. It is not pure mining latency.",
+    "CircuitBreaker step includes external clone/install/compile and Forge simulation in timed run.",
+    "Only one attempt with working Hardhat gas configuration was measured; no distribution or throughput guarantee.",
+    "Downstream steps 0101 through 0150 were not executed. Static inspection shows step 0140 also uses account impersonation unsupported by Geth.",
+    "No zap-net source, bake, client or upstream tracked source changes; no broad profile validation was run.",
+    "No upstream tests, post-deploy protocol flow, warp, economics or finality assertions executed in this pilot."
+  ]
+}

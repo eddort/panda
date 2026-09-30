@@ -9,6 +9,7 @@ import { delay } from "../../../src/http.ts";
 import { report } from "./report.ts";
 import type { ValidatorRecord } from "./validators.ts";
 import { assertSigningHistory, type SigningHistory } from "./warp_assertions.ts";
+import { clockEnvironment } from "../../../src/profiles.ts";
 
 const started = performance.now();
 await using net = await Devnet.start({ id: `warp-${crypto.randomUUID().slice(0, 8)}` });
@@ -16,7 +17,7 @@ const initial = await net.status();
 const manifest = await Network.manifest(initial.id);
 const infra = new Infrastructure(initial.id);
 const docker = await infra.docker.info();
-const beaconContainer = await infra.docker.getContainer(`zap-${initial.id}-bn`).inspect();
+const beaconContainer = await infra.docker.getContainer(`panda-${initial.id}-bn`).inspect();
 const environment = {
   architecture: docker.Architecture,
   dockerVersion: docker.ServerVersion,
@@ -77,9 +78,9 @@ const exportHistory = async (): Promise<SigningHistory> => {
   await infra.exec(vc, [
     "env",
     "-u",
-    "ZAP_CLOCK_START_MS",
+    clockEnvironment(manifest.bake.recipe).startMs,
     "-u",
-    "ZAP_CLOCK_PORT",
+    clockEnvironment(manifest.bake.recipe).port,
     "lighthouse",
     "--testnet-dir=/shared/metadata",
     "account",

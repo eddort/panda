@@ -1,0 +1,1230 @@
+MODE: scratch
+UPGRADE: false
+NETWORK: local-devnet
+RUN_NETWORK: local-devnet
+RPC_URL: http://127.0.0.1:18546
+NETWORK_STATE_FILE: deployed-local-devnet.json
+SCRATCH_DEPLOY_CONFIG: scripts/scratch/deploy-params-zapnet.toml
+STEPS_FILE: scratch/steps.json
+DEPLOYER: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+ALLOW_SKIP_STEPS: false
+AUTO_CONFIRM: true
+Compiling contracts...
+Nothing to compile
+Generating typings for: 0 artifacts in dir: typechain-types for target: ethers-v6
+Successfully generated 446 typings!
+Successfully generated 446 typings for external artifacts!
+Skipping lint-solidity upon compile because SKIP_LINT_SOLIDITY is set
+Skipping interfaces check upon compile because SKIP_INTERFACES_CHECK is set
+Starting migration...
+Loaded 21 migration steps from scratch/steps.json
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0000-populate-deploy-artifact-from-env.ts
+========================================
+Started script: 0000-populate-deploy-artifact-from-env.ts
+========================================
+
+DEPLOYER = 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+GENESIS_TIME = 2000000000
+SLOTS_PER_EPOCH = 32
+DEPOSIT_CONTRACT = 0x4242424242424242424242424242424242424242
+WITHDRAWAL_QUEUE_BASE_URI = 
+DSM_PREDEFINED_ADDRESS = 
+GENESIS_FORK_VERSION = 0x10000000
+CONSOLIDATION_MIGRATOR_SOURCE_MODULE_ID = 
+CONSOLIDATION_MIGRATOR_TARGET_MODULE_ID = 
+
+✅ Finished script: 0000-populate-deploy-artifact-from-env.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0010-deploy-deposit-contract.ts
+========================================
+Started script: 0010-deploy-deposit-contract.ts
+========================================
+
+Using DepositContract at: 0x4242424242424242424242424242424242424242
+✅ Finished script: 0010-deploy-deposit-contract.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0020-deploy-aragon-env.ts
+========================================
+Started script: 0020-deploy-aragon-env.ts
+========================================
+
+========================
+=         ENS          =
+========================
+
+Deploying: ENSFactory (without proxy)
+✅ Deployed: ENSFactory at 0x5FbDB2315678afecb367f032d93F642f64180aa3
+Call: ENSFactory[0x5FbDB2315678afecb367f032d93F642f64180aa3].newENS("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+========================
+=     DAO factory      =
+========================
+
+Deploying implementation: Kernel with constructor args (true)
+✅ Deployed: Kernel at 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+Deploying implementation: ACL
+✅ Deployed: ACL at 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+Deploying: EVMScriptRegistryFactory (without proxy)
+✅ Deployed: EVMScriptRegistryFactory at 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+Deploying: DAOFactory (without proxy) with constructor args (
+ "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+ "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+ "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+)
+✅ Deployed: DAOFactory at 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
+============================
+=   APM registry factory   =
+============================
+
+Deploying implementation: APMRegistry
+✅ Deployed: APMRegistry at 0x0165878A594ca255338adfa4d48449f69242Eb8F
+Deploying: Repo (without proxy)
+✅ Deployed: Repo at 0xa513E6E4b8f2a923D98304ec87F64353C4D5C853
+Deploying implementation: ENSSubdomainRegistrar
+✅ Deployed: ENSSubdomainRegistrar at 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
+Deploying: APMRegistryFactory (without proxy) with constructor args (
+ "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+ "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+ "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+ "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
+ "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be",
+ "0x0000000000000000000000000000000000000000",
+)
+✅ Deployed: APMRegistryFactory at 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
+========================
+=      Aragon APM      =
+========================
+
+Assigning ENS name aragonpm.eth to APMRegistryFactory at 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318...
+Node: aragonpm.eth (0x9065c3e7f7b7ef1ef4e53d2d0b8e0cef02874ab020c1ece79d5f0d3d0111c0ba)
+Parent node: eth (0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae)
+Label: aragonpm (0x1542111b4698ac085139692eae7c6efb632a4ae2779f8686da94511ebbbff594)
+Call: ENS[0xa16E02E87b7454126E5E10d957A927A7F5B5d2be].setSubnodeOwner(
+ "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae",
+ "0x1542111b4698ac085139692eae7c6efb632a4ae2779f8686da94511ebbbff594",
+ "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+)
+Call: APMRegistryFactory[0x8A791620dd6260079BF849Dc5567aDC3F2FdC318].newAPM(
+ "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae",
+ "0x1542111b4698ac085139692eae7c6efb632a4ae2779f8686da94511ebbbff594",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Using APMRegistry: 0xc74e6E20415F30BF4e586aC063055D926Cdf124f
+
+==========================
+=   MiniMeTokenFactory   =
+==========================
+
+Deploying: MiniMeTokenFactory (without proxy)
+✅ Deployed: MiniMeTokenFactory at 0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0
+========================
+=       AragonID       =
+========================
+
+Using public resolver: 0xB7A5bd0345EF1Cc5E66bf61BdeC17D2461fBd968
+ Node: aragonid.eth (0x7e74a86b6e146964fb965db04dc2590516da77f720bb6759337bf5632415fd86)
+
+Deploying: FIFSResolvingRegistrar (without proxy) with constructor args (
+ "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be",
+ "0xB7A5bd0345EF1Cc5E66bf61BdeC17D2461fBd968",
+ "0x7e74a86b6e146964fb965db04dc2590516da77f720bb6759337bf5632415fd86",
+)
+✅ Deployed: FIFSResolvingRegistrar at 0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82
+Assigning ENS name aragonid.eth to AragonID at 0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82...
+Node: aragonid.eth (0x7e74a86b6e146964fb965db04dc2590516da77f720bb6759337bf5632415fd86)
+Parent node: eth (0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae)
+Label: aragonid (0xb50225e66585b05f85fa55923224991b0517e07903ac43c0e5258b4d48950a97)
+Call: ENS[0xa16E02E87b7454126E5E10d957A927A7F5B5d2be].setSubnodeOwner(
+ "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae",
+ "0xb50225e66585b05f85fa55923224991b0517e07903ac43c0e5258b4d48950a97",
+ "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+)
+Call: FIFSResolvingRegistrar[0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82].register(
+ "0x02016836a56b71f0d02689e69e326f4f4c1b9057164ef592671cf0d37c8040c0",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+✅ Finished script: 0020-deploy-aragon-env.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0030-deploy-template-and-app-bases.ts
+========================================
+Started script: 0030-deploy-template-and-app-bases.ts
+========================================
+
+Deploying implementation: Agent
+✅ Deployed: Agent at 0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1
+Deploying implementation: Finance
+✅ Deployed: Finance at 0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE
+Deploying implementation: TokenManager
+✅ Deployed: TokenManager at 0x68B1D87F95878fE05B998F19b66F4baba5De1aed
+Deploying implementation: Voting
+✅ Deployed: Voting at 0x3Aa5ebB10DC797CAC828524e59A333d0A371443c
+Deploying implementation: Lido
+✅ Deployed: Lido at 0xc6e7DF5E7b4f2A278906862b61205850344D4e7d
+Deploying: MinFirstAllocationStrategy (without proxy)
+✅ Deployed: MinFirstAllocationStrategy at 0x59b670e9fA9D0A427751Af201D676719a970857b
+Deploying implementation: NodeOperatorsRegistry
+✅ Deployed: NodeOperatorsRegistry at 0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1
+Deploying: LidoTemplate (without proxy) with constructor args (
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+ "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be",
+ "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+ "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+ "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+)
+✅ Deployed: LidoTemplate at 0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44
+✅ Finished script: 0030-deploy-template-and-app-bases.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0040-register-ens-domain.ts
+========================================
+Started script: 0040-register-ens-domain.ts
+========================================
+
+Using ENS: 0xa16E02E87b7454126E5E10d957A927A7F5B5d2be
+ ENS domain: lidopm.eth (0xbfc3884a938047d1e93d1dbd85bfcfb929a63a4ed292efc654596c10e96a88c9)
+ TLD node: eth (0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae)
+ Label: lidopm (0x90a9580abeb24937fc658e497221c81ce8553b560304f9525821f32b17dbdaec)
+
+ENS domain new owner: 0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44
+
+Call: ENS[0xa16E02E87b7454126E5E10d957A927A7F5B5d2be].setSubnodeOwner(
+ "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae",
+ "0x90a9580abeb24937fc658e497221c81ce8553b560304f9525821f32b17dbdaec",
+ "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
+)
+✅ Finished script: 0040-register-ens-domain.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0050-deploy-apm.ts
+========================================
+Started script: 0050-deploy-apm.ts
+========================================
+
+APM ENS domain: lidopm.eth
+Using DAO template: 0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44
+
+✅ ENS node is owned by the DAO template
+
+Parent domain: eth (0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae)
+Subdomain label: lidopm (0x90a9580abeb24937fc658e497221c81ce8553b560304f9525821f32b17dbdaec)
+
+Call: LidoTemplate[0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44].deployLidoAPM(
+ "0x93cdeb708b7545dc668eb9280176169d1c33cfd8ed6f04690a0bcc88a93fc4ae",
+ "0x90a9580abeb24937fc658e497221c81ce8553b560304f9525821f32b17dbdaec",
+)
+Using APMRegistry: 0xBf7F95cf4858DFbA4651A283fcB3fcbE68F5b43B
+
+✅ Finished script: 0050-deploy-apm.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0060-create-app-repos.ts
+========================================
+Started script: 0060-create-app-repos.ts
+========================================
+
+Call: LidoTemplate[0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44].createRepos(
+ [1,0,0],
+ "0xc6e7DF5E7b4f2A278906862b61205850344D4e7d",
+ "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+ "0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1",
+ "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+)
+Call: LidoTemplate[0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44].createStdAragonRepos(
+ "0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1",
+ "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+ "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+ "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
+)
+✅ Finished script: 0060-create-app-repos.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0070-deploy-dao.ts
+========================================
+Started script: 0070-deploy-dao.ts
+========================================
+
+Using LidoTemplate deploy block: 25
+Using DAO token settings: { name: 'TEST Lido DAO Token', symbol: 'TLDO' }
+Using DAO voting settings: {
+  minSupportRequired: '500000000000000000',
+  minAcceptanceQuorum: '50000000000000000',
+  voteDuration: 300,
+  objectionPhaseDuration: 60
+}
+
+Call: LidoTemplate[0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44].newDAO(
+ "TEST Lido DAO Token",
+ "TLDO",
+ ["500000000000000000","50000000000000000",300,60],
+)
+✅ all (and only) expected apps are installed
+✅ aragon-agent: the installed app base is 0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1
+✅ aragon-finance: the installed app base is 0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE
+✅ aragon-token-manager: the installed app base is 0x68B1D87F95878fE05B998F19b66F4baba5De1aed
+✅ aragon-voting: the installed app base is 0x3Aa5ebB10DC797CAC828524e59A333d0A371443c
+✅ lido: the installed app base is 0xc6e7DF5E7b4f2A278906862b61205850344D4e7d
+✅ node-operators-registry: the installed app base is 0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1
+✅ simple-dvt: the installed app base is 0x4ed7c70F96B99c776995fB64377f0d4aB3B0e1C1
+
+✅ Finished script: 0070-deploy-dao.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0080-issue-tokens.ts
+========================================
+Started script: 0080-issue-tokens.ts
+========================================
+
+Using vesting settings:
+ Start: Thu, 01 Jan 1970 00:00:00 GMT
+ Cliff: Thu, 01 Jan 1970 00:00:00 GMT
+ End: Thu, 01 Jan 1970 00:00:00 GMT
+ Revokable: false
+ Total supply: 1000000.0
+ Unvested tokens amount: 0.0
+ Token receivers (total 5):
+  0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266: 760000.0 (76%)
+  0x51Af50A64Ec8A4F442A36Bd5dcEF1e86c127Bd51: 60000.0 (6%)
+  0xaa6bfBCD634EE744CB8FE522b29ADD23124593D3: 60000.0 (6%)
+  0xBA59A84C6440E8cccfdb5448877E26F1A431Fc8B: 60000.0 (6%)
+  0x066000801c27C5184aDdb7513aD530301B1Bd447: 60000.0 (6%)
+ Total batches: 1
+
+Call: LidoTemplate[0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44].issueTokens(
+ ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266","0x51Af50A64Ec8A4F442A36Bd5dcEF1e86c127Bd51","0xaa6bfBCD634EE744CB8FE522b29ADD23124593D3","0xBA59A84C6440E8cccfdb5448877E26F1A431Fc8B","0x066000801c27C5184aDdb7513aD530301B1Bd447"],
+ ["760000000000000000000000","60000000000000000000000","60000000000000000000000","60000000000000000000000","60000000000000000000000"],
+ 0,
+ 0,
+ 0,
+ false,
+ "0xd3c21bcecceda1000000",
+)
+✅ Finished script: 0080-issue-tokens.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0083-deploy-core.ts
+========================================
+Started script: 0083-deploy-core.ts
+========================================
+
+Deploying: DummyEmptyContract (without proxy)
+✅ Deployed: DummyEmptyContract at 0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E
+Using pre-deployed implementation of DummyEmptyContract: 0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E
+Deploying OssifiableProxy for DummyEmptyContract with constructor args (
+ "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690
+Deploying: EIP712StETH (without proxy) with constructor args ("0x55d232AE4097eCaA14366fF9D99351Fa8408eB51")
+✅ Deployed: EIP712StETH at 0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB
+Deploying: OracleDaemonConfig (without proxy) with constructor args (
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ [],
+)
+✅ Deployed: OracleDaemonConfig at 0x9E545E3C0baAB3E08CdfD552C960A1050f373042
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].grantRole(
+ "0xbbfb55d933c2bfa638763473275b1d84c4418e58d26cf9d2cd5758237756d9f0",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "NORMALIZED_CL_REWARD_PER_EPOCH",
+ "0x40",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "NORMALIZED_CL_REWARD_MISTAKE_RATE_BP",
+ "0x03e8",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "REBASE_CHECK_NEAREST_EPOCH_DISTANCE",
+ "0x01",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "REBASE_CHECK_DISTANT_EPOCH_DISTANCE",
+ "0x17",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "VALIDATOR_DELAYED_TIMEOUT_IN_SLOTS",
+ "0x1c20",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "VALIDATOR_DELINQUENT_TIMEOUT_IN_SLOTS",
+ "0x7080",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "NODE_OPERATOR_NETWORK_PENETRATION_THRESHOLD_BP",
+ "0x64",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "PREDICTION_DURATION_IN_SLOTS",
+ "0xc4e0",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "FINALIZATION_MAX_NEGATIVE_REBASE_EPOCH_SHIFT",
+ "0x0546",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].set(
+ "EXIT_EVENTS_LOOKBACK_WINDOW_IN_SLOTS",
+ "0x1c20",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].renounceRole(
+ "0xbbfb55d933c2bfa638763473275b1d84c4418e58d26cf9d2cd5758237756d9f0",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Deploying: WstETH (without proxy) with constructor args ("0x55d232AE4097eCaA14366fF9D99351Fa8408eB51")
+✅ Deployed: WstETH at 0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00
+Deploying implementation: WithdrawalQueueERC721 (with proxy) with constructor args (
+ "0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00",
+ "Lido: stETH Withdrawal NFT",
+ "unstETH",
+)
+✅ Deployed: WithdrawalQueueERC721 at 0x36C02dA8a0983159322a80FFE9F24b1acfF8B570
+Deploying OssifiableProxy for WithdrawalQueueERC721 with constructor args (
+ "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x809d550fca64d94Bd9F66E60752A544199cfAC3D
+Call: WithdrawalQueueERC721[0x809d550fca64d94Bd9F66E60752A544199cfAC3D].initialize("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+Deploying: LidoExecutionLayerRewardsVault (without proxy) with constructor args (
+ "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+✅ Deployed: LidoExecutionLayerRewardsVault at 0x1291Be112d480055DaFd8a610b7d1e203891C274
+✅ Deployed: WithdrawalsManagerProxy at 0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154
+Deploying: BeaconChainDepositor (without proxy)
+✅ Deployed: BeaconChainDepositor at 0xb7278A61aa25c888815aFC32Ad3cC52fF24fE575
+Deploying: MinFirstAllocationStrategy (without proxy)
+✅ Deployed: MinFirstAllocationStrategy at 0xCD8a1C3ba11CF5ECfa6267617243239504a98d90
+Deploying: SRLib (without proxy)
+✅ Deployed: SRLib at 0x82e01223d51Eb87e16A03E24687EDF0F294da6f1
+Deploying implementation: StakingRouter (with proxy) with constructor args (
+ "0x4242424242424242424242424242424242424242",
+ "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "32000000000000000000",
+ "2048000000000000000000",
+)
+✅ Deployed: StakingRouter at 0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3
+Deploying OssifiableProxy for StakingRouter with constructor args (
+ "0x2bdCC0de6bE1f7D2ee689a0342D76F52E8EFABa3",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x684560a2000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb922660100000000000000000000005f3f1dbd7b74c6b46e8c44f98792a1daf8d69154000000000000000000000000000000000000000000000000000002e90edd0000",
+)
+✅ Deployed: OssifiableProxy at 0x7969c5eD335650692Bc04293B07F5BF2e7A673C0
+Deploying: DepositSecurityModule (without proxy) with constructor args (
+ "0x4242424242424242424242424242424242424242",
+ "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
+ 6646,
+ 200,
+)
+✅ Deployed: DepositSecurityModule at 0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650
+Deploying implementation: TopUpGateway (with proxy) with constructor args (
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ 0,
+ 32,
+)
+✅ Deployed: TopUpGateway at 0xc351628EB244ec633d5f21fBD6621e1a683B1181
+Deploying OssifiableProxy for TopUpGateway with constructor args (
+ "0xc351628EB244ec633d5f21fBD6621e1a683B1181",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x45ff4c80000000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb922660000000000000000000000000000000000000000000000000000000000000064000000000000000000000000000000000000000000000000000000000000004b000000000000000000000000000000000000000000000000000000000000012c000000000000000000000000000000000000000000000000000001dc8bce8380000000000000000000000000000000000000000000000000000000003b9aca00",
+)
+✅ Deployed: OssifiableProxy at 0xFD471836031dc5108809D173A067e8486B9047A3
+Deploying implementation: Accounting (with proxy) with constructor args (
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+)
+✅ Deployed: Accounting at 0xcbEAF3BDe82155F56486Fb5a1072cb8baAf547cc
+Deploying OssifiableProxy for Accounting with constructor args (
+ "0xcbEAF3BDe82155F56486Fb5a1072cb8baAf547cc",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f
+Deploying implementation: AccountingOracle (with proxy) with constructor args (
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ 12,
+ 2000000000,
+)
+✅ Deployed: AccountingOracle at 0xB0D4afd8879eD9F52b28595d31B441D079B2Ca07
+Deploying OssifiableProxy for AccountingOracle with constructor args (
+ "0xB0D4afd8879eD9F52b28595d31B441D079B2Ca07",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x162A433068F51e18b7d13932F27e66a3f99E6890
+Deploying: HashConsensus (without proxy) with constructor args (
+ 32,
+ 12,
+ 2000000000,
+ 12,
+ 10,
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x162A433068F51e18b7d13932F27e66a3f99E6890",
+)
+✅ Deployed: HashConsensus at 0x922D6956C99E12DFeB3224DEA977D0939758A1Fe
+Call: AccountingOracle[0x162A433068F51e18b7d13932F27e66a3f99E6890].initialize(
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe",
+ 6,
+ 0,
+)
+Deploying implementation: ValidatorsExitBusOracle (with proxy) with constructor args (
+ 12,
+ 2000000000,
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+)
+✅ Deployed: ValidatorsExitBusOracle at 0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d
+Deploying OssifiableProxy for ValidatorsExitBusOracle with constructor args (
+ "0x1fA02b2d6A771842690194Cf62D91bdd92BfE28d",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6
+Deploying: HashConsensus (without proxy) with constructor args (
+ 32,
+ 12,
+ 2000000000,
+ 4,
+ 10,
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6",
+)
+✅ Deployed: HashConsensus at 0x04C89607413713Ec9775E14b954286519d836FEf
+Call: ValidatorsExitBusOracle[0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6].initialize(
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x04C89607413713Ec9775E14b954286519d836FEf",
+ 5,
+ 0,
+ 600,
+ 358400,
+ 32,
+ 48,
+)
+Deploying: TriggerableWithdrawalsGateway (without proxy) with constructor args (
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ 250,
+ 1,
+ 240,
+)
+✅ Deployed: TriggerableWithdrawalsGateway at 0x21dF544947ba3E8b3c32561399E88B52Dc8b2823
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0x0766e72e5c008b3df8129fb356d9176eef8544f6241e078b7d61aff604f8812b",
+ "0x21dF544947ba3E8b3c32561399E88B52Dc8b2823",
+)
+Call: TriggerableWithdrawalsGateway[0x21dF544947ba3E8b3c32561399E88B52Dc8b2823].grantRole(
+ "0x15fac8ba7fe8dd5344b88c1915452ce66976f270d1cd793c3b0ab579cecd33c0",
+ "0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6",
+)
+Deploying: ConsolidationGateway (without proxy) with constructor args (
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ 2900,
+ 1,
+ 36,
+ 0,
+)
+✅ Deployed: ConsolidationGateway at 0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD
+Deploying implementation: ConsolidationBus (with proxy) with constructor args ("0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD")
+✅ Deployed: ConsolidationBus at 0x51A1ceB83B83F1985a81C295d1fF28Afef186E02
+Deploying OssifiableProxy for ConsolidationBus with constructor args (
+ "0x51A1ceB83B83F1985a81C295d1fF28Afef186E02",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x36b58F5C1969B7b6591D752ea6F5486D069010AB
+Call: ConsolidationBus[0x36b58F5C1969B7b6591D752ea6F5486D069010AB].initialize(
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ 350,
+ 10,
+ 0,
+)
+Call: ConsolidationBus[0x36b58F5C1969B7b6591D752ea6F5486D069010AB].grantRole(
+ "0xa076a07f65bcd51bcb15a0f01a65bc18f2d922acb81bcfd8af4caf5adb557091",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: ConsolidationGateway[0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD].grantRole(
+ "0x2893ea78cf4b35bcb6ca1f49c79c387fe7f3d8fd18fe56f2424c792c6a8207d2",
+ "0x36b58F5C1969B7b6591D752ea6F5486D069010AB",
+)
+Call: ConsolidationGateway[0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD].grantRole(
+ "0x2893ea78cf4b35bcb6ca1f49c79c387fe7f3d8fd18fe56f2424c792c6a8207d2",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Deploying implementation: ConsolidationMigrator (with proxy) with constructor args (
+ "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
+ "0x36b58F5C1969B7b6591D752ea6F5486D069010AB",
+ 1,
+ 4,
+)
+✅ Deployed: ConsolidationMigrator at 0x172076E0166D1F9Cc711C77Adf8488051744980C
+Deploying OssifiableProxy for ConsolidationMigrator with constructor args (
+ "0x172076E0166D1F9Cc711C77Adf8488051744980C",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B
+Call: ConsolidationMigrator[0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B].initialize("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+Call: ConsolidationMigrator[0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B].grantRole(
+ "0x11b7ee1b50f8c4aefc7ba573dc738d6c20f03c1869ff81aa1d8be99ab7cfd7c1",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: ConsolidationBus[0x36b58F5C1969B7b6591D752ea6F5486D069010AB].grantRole(
+ "0xf3156f38966c62e303ac6c7519c63e00636409e3b3ca4abecd13cd0092fee53e",
+ "0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B",
+)
+Deploying: ValidatorExitDelayVerifier (without proxy) with constructor args (
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ 0,
+ 0,
+ 0,
+ 8192,
+ 32,
+ 12,
+ 2000000000,
+ 98304,
+)
+✅ Deployed: ValidatorExitDelayVerifier at 0xfbC22278A96299D91d41C453234d97b4F5Eb9B2d
+Deploying implementation: WithdrawalVault with constructor args (
+ "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+ "0x21dF544947ba3E8b3c32561399E88B52Dc8b2823",
+ "0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD",
+ "0x00000961Ef480Eb55e80D19ad83579A64c007002",
+ "0x0000BBdDc7CE488642fb579F8B00f3a590007251",
+)
+✅ Deployed: WithdrawalVault at 0x46b142DD1E924FAb83eCc3c08e4D46E82f005e0E
+Call: WithdrawalsManagerProxy[0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154].proxy_upgradeTo(
+ "0x46b142DD1E924FAb83eCc3c08e4D46E82f005e0E",
+ "0x",
+)
+Deploying implementation: Burner (with proxy) with constructor args (
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+)
+✅ Deployed: Burner at 0x1c85638e118b37167e9298c2268758e058DdfDA0
+Deploying OssifiableProxy for Burner with constructor args (
+ "0x1c85638e118b37167e9298c2268758e058DdfDA0",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb
+Call: Burner[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].initialize(
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ false,
+)
+Deploying: OracleReportSanityChecker (without proxy) with constructor args (
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ {"exitedEthAmountPerDayLimit":57600,"appearedEthAmountPerDayLimit":57600,"annualBalanceIncreaseBPLimit":1000,"simulatedShareRateDeviationBPLimit":250,"maxBalanceExitRequestedPerReportInEth":19200,"maxEffectiveBalanceWeightWCType01":32,"maxEffectiveBalanceWeightWCType02":2048,"maxItemsPerExtraDataTransaction":8,"maxNodeOperatorsPerExtraDataItem":24,"requestTimestampMargin":128,"maxPositiveTokenRebase":5000000,"maxCLBalanceDecreaseBP":360,"clBalanceOraclesErrorUpperBPLimit":50,"consolidationEthAmountPerDayLimit":93375,"exitedValidatorEthAmountLimit":32,"externalPendingBalanceCapEth":300},
+)
+✅ Deployed: OracleReportSanityChecker at 0x7A9Ec1d04904907De0ED7b6839CcdD59c3716AC9
+Deploying: TokenRateNotifier (without proxy) with constructor args (
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+ "0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f",
+)
+✅ Deployed: TokenRateNotifier at 0x49fd2BE640DB2910c2fAb69bB8531Ab6E76127ff
+✅ Finished script: 0083-deploy-core.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0085-deploy-vaults.ts
+========================================
+Started script: 0085-deploy-vaults.ts
+========================================
+
+Deploying implementation: OperatorGrid (with proxy) with constructor args ("0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690")
+✅ Deployed: OperatorGrid at 0x4631BCAbD6dF18D94796344963cB60d44a4136b6
+Deploying OssifiableProxy for OperatorGrid with constructor args (
+ "0x4631BCAbD6dF18D94796344963cB60d44a4136b6",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D
+Call: OperatorGrid[0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D].initialize(
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ {"shareLimit":"0","reserveRatioBP":5000,"forcedRebalanceThresholdBP":4975,"infraFeeBP":100,"liquidityFeeBP":650,"reservationFeeBP":0},
+)
+Deploying: StakingVault (without proxy) with constructor args ("0x4242424242424242424242424242424242424242")
+✅ Deployed: StakingVault at 0xf953b3A269d80e3eB0F2947630Da976B896A8C5b
+Deploying: UpgradeableBeacon (without proxy) with constructor args (
+ "0xf953b3A269d80e3eB0F2947630Da976B896A8C5b",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+✅ Deployed: UpgradeableBeacon at 0xAA292E8611aDF267e563f334Ee42320aC96D0463
+Deploying implementation: VaultHub (with proxy) with constructor args (
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+ "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe",
+ 1000,
+)
+✅ Deployed: VaultHub at 0x5c74c94173F05dA1720953407cbb920F3DF9f887
+Deploying OssifiableProxy for VaultHub with constructor args (
+ "0x5c74c94173F05dA1720953407cbb920F3DF9f887",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3
+Call: VaultHub[0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3].initialize("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+Call: VaultHub[0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3].grantRole(
+ "0x479bc4a51d27fbdc8e51b5b1ebd3dcd58bd229090980bff226f8930587e69ce3",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: VaultHub[0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3].renounceRole(
+ "0x479bc4a51d27fbdc8e51b5b1ebd3dcd58bd229090980bff226f8930587e69ce3",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Deploying implementation: LazyOracle (with proxy) with constructor args ("0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690")
+✅ Deployed: LazyOracle at 0x4b6aB5F819A515382B0dEB6935D793817bB4af28
+Deploying OssifiableProxy for LazyOracle with constructor args (
+ "0x4b6aB5F819A515382B0dEB6935D793817bB4af28",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0xCace1b78160AE76398F486c8a18044da0d66d86D
+Call: LazyOracle[0xCace1b78160AE76398F486c8a18044da0d66d86D].initialize(
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ 259200,
+ 350,
+ "180000000000000000",
+)
+Deploying: Dashboard (without proxy) with constructor args (
+ "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+ "0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00",
+ "0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3",
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+)
+✅ Deployed: Dashboard at 0xF8e31cb472bc70500f08Cd84917E5A1912Ec8397
+Deploying: VaultFactory (without proxy) with constructor args (
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "0xAA292E8611aDF267e563f334Ee42320aC96D0463",
+ "0xF8e31cb472bc70500f08Cd84917E5A1912Ec8397",
+ "0x0000000000000000000000000000000000000000",
+)
+✅ Deployed: VaultFactory at 0xc0F115A19107322cFBf1cDBC7ea011C19EbDB4F8
+Deploying implementation: PredepositGuarantee (with proxy) with constructor args (
+ "0x10000000",
+ 0,
+)
+✅ Deployed: PredepositGuarantee at 0xc96304e3c037f81dA488ed9dEa1D8F2a48278a75
+Deploying OssifiableProxy for PredepositGuarantee with constructor args (
+ "0xc96304e3c037f81dA488ed9dEa1D8F2a48278a75",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+ "0x",
+)
+✅ Deployed: OssifiableProxy at 0x34B40BA116d5Dec75548a9e9A8f15411461E8c70
+Call: PredepositGuarantee[0x34B40BA116d5Dec75548a9e9A8f15411461E8c70].initialize("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+Deploying: ValidatorConsolidationRequests (without proxy) with constructor args ("0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690")
+✅ Deployed: ValidatorConsolidationRequests at 0x07882Ae1ecB7429a84f1D53048d35c4bB2056877
+✅ Finished script: 0085-deploy-vaults.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0090-upgrade-locator.ts
+========================================
+Started script: 0090-upgrade-locator.ts
+========================================
+
+Upgrading proxy 0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690 to new implementation: LidoLocator with constructor args ({"accountingOracle":"0x162A433068F51e18b7d13932F27e66a3f99E6890","depositSecurityModule":"0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650","elRewardsVault":"0x1291Be112d480055DaFd8a610b7d1e203891C274","lido":"0x55d232AE4097eCaA14366fF9D99351Fa8408eB51","oracleReportSanityChecker":"0x7A9Ec1d04904907De0ED7b6839CcdD59c3716AC9","postTokenRebaseReceiver":"0x49fd2BE640DB2910c2fAb69bB8531Ab6E76127ff","burner":"0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb","stakingRouter":"0x7969c5eD335650692Bc04293B07F5BF2e7A673C0","treasury":"0x066000801c27C5184aDdb7513aD530301B1Bd447","validatorsExitBusOracle":"0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6","withdrawalQueue":"0x809d550fca64d94Bd9F66E60752A544199cfAC3D","withdrawalVault":"0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154","validatorExitDelayVerifier":"0xfbC22278A96299D91d41C453234d97b4F5Eb9B2d","triggerableWithdrawalsGateway":"0x21dF544947ba3E8b3c32561399E88B52Dc8b2823","consolidationGateway":"0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD","oracleDaemonConfig":"0x9E545E3C0baAB3E08CdfD552C960A1050f373042","accounting":"0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f","predepositGuarantee":"0x34B40BA116d5Dec75548a9e9A8f15411461E8c70","wstETH":"0x5eb3Bc0a489C5A8288765d2336659EbCA68FCd00","vaultHub":"0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3","vaultFactory":"0xc0F115A19107322cFBf1cDBC7ea011C19EbDB4F8","lazyOracle":"0xCace1b78160AE76398F486c8a18044da0d66d86D","operatorGrid":"0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D","topUpGateway":"0xFD471836031dc5108809D173A067e8486B9047A3"})
+✅ Deployed: LidoLocator at 0x22753E4264FDDc6181dc7cce468904A80a363E44
+Call: OssifiableProxy[0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690].proxy__upgradeTo("0x22753E4264FDDc6181dc7cce468904A80a363E44")
+✅ Finished script: 0090-upgrade-locator.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0100-deploy-circuit-breaker.ts
+========================================
+Started script: 0100-deploy-circuit-breaker.ts
+========================================
+
+{"event":"external-project","name":"circuit-breaker","ref":"2567a2a683fa901a51a85f84d9427448201eb773","directory":"/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/circuit-breaker/2567a2a683fa901a51a85f84d9427448201eb773"}
+Updating dependencies in /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/circuit-breaker/2567a2a683fa901a51a85f84d9427448201eb773/lib
+Running CircuitBreaker deploy script...
+No files changed, compilation skipped
+2026-09-30T07:29:57.880213Z  WARN evm::traces::external: etherscan config not found
+Warning: EIP-3855 is not supported in one or more of the RPCs used.
+Unsupported Chain IDs: 1337.
+Contracts deployed with a Solidity version equal or higher than 0.8.20 might not work properly.
+For more information, please see https://eips.ethereum.org/EIPS/eip-3855
+Script ran successfully.
+
+== Logs ==
+  Deploying CircuitBreaker
+    chainid:                   1337
+    admin:                     0x066000801c27C5184aDdb7513aD530301B1Bd447
+    minPauseDuration:          300
+    maxPauseDuration:          5184000
+    minHeartbeatInterval:      300
+    maxHeartbeatInterval:      94608000
+    initialPauseDuration:      1814400
+    initialHeartbeatInterval:  31536000
+  CircuitBreaker deployed at: 0xfaAddC93baf78e89DCf37bA67943E1bE8F37Bb8c
+  Artifact written to 1337.json
+
+SKIPPING ON CHAIN SIMULATION.
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Transactions saved to: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/circuit-breaker/2567a2a683fa901a51a85f84d9427448201eb773/broadcast/Deploy.s.sol/1337/run-latest.json
+
+Sensitive values saved to: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/circuit-breaker/2567a2a683fa901a51a85f84d9427448201eb773/cache/Deploy.s.sol/1337/run-latest.json
+
+CircuitBreaker deployed at: 0xfaAddC93baf78e89DCf37bA67943E1bE8F37Bb8c
+
+✅ Finished script: 0100-deploy-circuit-breaker.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0101-deploy-easytrack.ts
+========================================
+Started script: 0101-deploy-easytrack.ts
+========================================
+
+Deploying: EasyTrackEVMScriptExecutorStub (without proxy)
+✅ Deployed: EasyTrackEVMScriptExecutorStub at 0x276C216D241856199A83bf27b2286659e5b877D3
+EasyTrackEVMScriptExecutor deployed at: 0x276C216D241856199A83bf27b2286659e5b877D3
+
+✅ Finished script: 0101-deploy-easytrack.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0102-deploy-execution-delegation-framework.ts
+========================================
+Started script: 0102-deploy-execution-delegation-framework.ts
+========================================
+
+{"event":"external-project","name":"edf","ref":"557299104ad3eb1a74198933bd016328c490e276","directory":"/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/edf/557299104ad3eb1a74198933bd016328c490e276"}
+yarn workspaces focus --all --production
+➤ YN0000: · Yarn 4.1.1
+➤ YN0000: ┌ Resolution step
+➤ YN0085: │ - @babel/code-frame@npm:7.29.7, @babel/helper-validator-identifier@npm:7.29.7, @pnpm/config.env-replace@npm:1.1.0, @pnpm/network.ca-file@npm:1.0.2, and 157 more.
+➤ YN0000: └ Completed
+➤ YN0000: ┌ Fetch step
+➤ YN0000: └ Completed
+➤ YN0000: ┌ Link step
+➤ YN0000: └ Completed
+➤ YN0000: · Done in 0s 32ms
+Deploying Execution Delegation Framework from external repo...
+mkdir -p ./artifacts/local/
+ARTIFACTS_DIR=./artifacts/local/ just _deploy-local-devnet-generic script/DeployLocalDevnet.s.sol:DeployLocalDevnet http://127.0.0.1:18546 1337 --private-key=<PUBLIC_LOCAL_DEVELOPMENT_KEY> --skip-simulation
+FOUNDRY_PROFILE=deploy forge script script/DeployLocalDevnet.s.sol:DeployLocalDevnet --sig="run(string,uint256)" --rpc-url http://127.0.0.1:18546 --broadcast --slow --private-key=<PUBLIC_LOCAL_DEVELOPMENT_KEY> --skip-simulation -- `git rev-parse HEAD` 1337
+No files changed, compilation skipped
+2026-09-30T07:30:00.202210Z  WARN evm::traces::external: etherscan config not found
+Warning: EIP-3855 is not supported in one or more of the RPCs used.
+Unsupported Chain IDs: 1337.
+Contracts deployed with a Solidity version equal or higher than 0.8.20 might not work properly.
+For more information, please see https://eips.ethereum.org/EIPS/eip-3855
+Script ran successfully.
+
+SKIPPING ON CHAIN SIMULATION.
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Transactions saved to: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/edf/557299104ad3eb1a74198933bd016328c490e276/broadcast/DeployLocalDevnet.s.sol/1337/run-latest.json
+
+Sensitive values saved to: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/edf/557299104ad3eb1a74198933bd016328c490e276/cache/DeployLocalDevnet.s.sol/1337/run-latest.json
+
+just _finalize-broadcast-artifacts DeployLocalDevnet http://127.0.0.1:18546 "" "run-latest.json" ./artifacts/local/deploy-local-devnet.json
+just _copy-broadcast-json "DeployLocalDevnet" "http://127.0.0.1:18546" "" "run-latest.json" "$(dirname "./artifacts/local/deploy-local-devnet.json")/transactions.json"
+just _copy-file ./broadcast/DeployLocalDevnet.s.sol/$(cast chain-id --rpc-url "http://127.0.0.1:18546")/run-latest.json ./artifacts/local/transactions.json
+mkdir -p "$(dirname "./artifacts/local/transactions.json")"
+cp "./broadcast/DeployLocalDevnet.s.sol/1337/run-latest.json" "./artifacts/local/transactions.json"
+Execution Delegation Framework deployed at: 0x3347B4d90ebe72BeFb30444C9966B2B990aE9FcB
+
+✅ Finished script: 0102-deploy-execution-delegation-framework.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0110-finalize-dao.ts
+========================================
+Started script: 0110-finalize-dao.ts
+========================================
+
+Call: LidoTemplate[0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44].finalizeDAO(
+ "lido-dao",
+ "0",
+ "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0",
+)
+✅ Finished script: 0110-finalize-dao.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0120-post-locator-initializers.ts
+========================================
+Started script: 0120-post-locator-initializers.ts
+========================================
+
+Call: NodeOperatorsRegistry[0xC0415C90D86cB2FEDc05529F5CFAe0E2a806c3BB].initialize(
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "0x637572617465642d6f6e636861696e2d76310000000000000000000000000000",
+ 172800,
+)
+Call: NodeOperatorsRegistry[0x41CB323999d67832A2bF9735148B37785bcc3335].initialize(
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "0x637572617465642d6f6e636861696e2d76310000000000000000000000000000",
+ 432000,
+)
+Call: Lido[0x55d232AE4097eCaA14366fF9D99351Fa8408eB51].initialize(
+ "0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690",
+ "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+ "1500000000000000000000",
+)
+✅ Finished script: 0120-post-locator-initializers.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0130-grant-roles.ts
+========================================
+Started script: 0130-grant-roles.ts
+========================================
+
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0x240525496a9dc32284b17ce03b43e539e4bd81414634ee54395030d793463b57",
+ "0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0xc23292b191d95d2a7dd94fc6436eb44338fda9e1307d9394fd27c28157c1b33c",
+ "0x162A433068F51e18b7d13932F27e66a3f99E6890",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0x3105bcbf19d4417b73ae0e58d508a65ecf75665e46c2622d8521732de6080c48",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0x779e5c23cb7a5bcb9bfe1e9a5165a00057f12bcdfd13e374540fdf1a1cd91137",
+ "0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0x0766e72e5c008b3df8129fb356d9176eef8544f6241e078b7d61aff604f8812b",
+ "0x21dF544947ba3E8b3c32561399E88B52Dc8b2823",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0xbe1bd143a0dde8a867d58aab054bfdb25250951665c4570e39abc3b3de3c2d6c",
+ "0xfbC22278A96299D91d41C453234d97b4F5Eb9B2d",
+)
+Call: ValidatorsExitBusOracle[0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6].grantRole(
+ "0x139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d",
+ "0xfaAddC93baf78e89DCf37bA67943E1bE8F37Bb8c",
+)
+Call: TriggerableWithdrawalsGateway[0x21dF544947ba3E8b3c32561399E88B52Dc8b2823].grantRole(
+ "0x15fac8ba7fe8dd5344b88c1915452ce66976f270d1cd793c3b0ab579cecd33c0",
+ "0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6",
+)
+Call: WithdrawalQueueERC721[0x809d550fca64d94Bd9F66E60752A544199cfAC3D].grantRole(
+ "0x139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d",
+ "0xfaAddC93baf78e89DCf37bA67943E1bE8F37Bb8c",
+)
+Call: WithdrawalQueueERC721[0x809d550fca64d94Bd9F66E60752A544199cfAC3D].grantRole(
+ "0x485191a2ef18512555bd4426d18a716ce8e98c80ec2de16394dcf86d7d91bc80",
+ "0x55d232AE4097eCaA14366fF9D99351Fa8408eB51",
+)
+Call: WithdrawalQueueERC721[0x809d550fca64d94Bd9F66E60752A544199cfAC3D].grantRole(
+ "0x68e79a7bf1e0bc45d0a330c573bc367f9cf464fd326078812f301165fbda4ef1",
+ "0x162A433068F51e18b7d13932F27e66a3f99E6890",
+)
+Call: Burner[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].grantRole(
+ "0x4be29e0e4eb91f98f709d98803cba271592782e293b84a625e025cbb40197ba8",
+ "0xC0415C90D86cB2FEDc05529F5CFAe0E2a806c3BB",
+)
+Call: Burner[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].grantRole(
+ "0x4be29e0e4eb91f98f709d98803cba271592782e293b84a625e025cbb40197ba8",
+ "0x41CB323999d67832A2bF9735148B37785bcc3335",
+)
+Call: Burner[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].grantRole(
+ "0x4be29e0e4eb91f98f709d98803cba271592782e293b84a625e025cbb40197ba8",
+ "0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f",
+)
+✅ Finished script: 0130-grant-roles.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0135-deploy-staking-modules.ts
+========================================
+Started script: 0135-deploy-staking-modules.ts
+========================================
+
+{"event":"external-project","name":"staking-modules","ref":"e37fa1b783f34792f6db75684e74eb2be6c4b70f","directory":"/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/staking-modules/e37fa1b783f34792f6db75684e74eb2be6c4b70f"}
+yarn workspaces focus --all --production
+➤ YN0000: · Yarn 4.1.1
+➤ YN0000: ┌ Resolution step
+➤ YN0085: │ - @babel/code-frame@npm:7.23.5, @babel/helper-validator-identifier@npm:7.22.20, @babel/highlight@npm:7.23.4, @pnpm/config.env-replace@npm:1.1.0, and 164 more.
+➤ YN0000: └ Completed
+➤ YN0000: ┌ Fetch step
+➤ YN0000: └ Completed
+➤ YN0000: ┌ Link step
+➤ YN0000: └ Completed
+➤ YN0000: · Done in 0s 77ms
+Deploying Community Staking Module from external repo...
+ARTIFACTS_DIR=./artifacts/local/csm/ just _deploy-generic script/csm/DeployLocalDevNet.s.sol:DeployLocalDevNet http://127.0.0.1:18546 --private-key=<PUBLIC_LOCAL_DEVELOPMENT_KEY> --skip-simulation
+FOUNDRY_PROFILE=deploy forge script script/csm/DeployLocalDevNet.s.sol:DeployLocalDevNet --sig="run(string)" --rpc-url http://127.0.0.1:18546 --broadcast --slow --private-key=<PUBLIC_LOCAL_DEVELOPMENT_KEY> --skip-simulation -- `git rev-parse HEAD`
+No files changed, compilation skipped
+2026-09-30T07:30:12.004805Z  WARN foundry_evm_traces::debug::sources: failed to parse contract definitions for script/curated/DeployLocalDevNet.s.sol
+2026-09-30T07:30:12.156168Z  WARN evm::traces::external: etherscan config not found
+Warning: EIP-3855 is not supported in one or more of the RPCs used.
+Unsupported Chain IDs: 1337.
+Contracts deployed with a Solidity version equal or higher than 0.8.20 might not work properly.
+For more information, please see https://eips.ethereum.org/EIPS/eip-3855
+Script ran successfully.
+
+SKIPPING ON CHAIN SIMULATION.
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Transactions saved to: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/staking-modules/e37fa1b783f34792f6db75684e74eb2be6c4b70f/broadcast/DeployLocalDevNet.s.sol/1337/run-latest.json
+
+Sensitive values saved to: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/staking-modules/e37fa1b783f34792f6db75684e74eb2be6c4b70f/cache/DeployLocalDevNet.s.sol/1337/run-latest.json
+
+just _finalize-broadcast-artifacts DeployLocalDevNet http://127.0.0.1:18546 "" "run-latest.json" ./artifacts/local/csm/deploy-local-devnet.json
+just _copy-broadcast-json "DeployLocalDevNet" "http://127.0.0.1:18546" "" "run-latest.json" "$(dirname "./artifacts/local/csm/deploy-local-devnet.json")/transactions.json"
+just _copy-file ./broadcast/DeployLocalDevNet.s.sol/$(cast chain-id --rpc-url "http://127.0.0.1:18546")/run-latest.json ./artifacts/local/csm/transactions.json
+mkdir -p "$(dirname "./artifacts/local/csm/transactions.json")"
+cp "./broadcast/DeployLocalDevNet.s.sol/1337/run-latest.json" "./artifacts/local/csm/transactions.json"
+just _merge-external-libraries "./artifacts/local/csm/deploy-local-devnet.json" "$(dirname "./artifacts/local/csm/deploy-local-devnet.json")/transactions.json"
+Community Staking Module deployed at: 0x02b0B4EFd909240FCB2Eb5FAe060dC60D112E3a4
+
+Deploying Curated Module v2 from external repo...
+mkdir -p ./artifacts/local/curated/
+ARTIFACTS_DIR=./artifacts/local/curated/ just _deploy-generic script/curated/DeployLocalDevNet.s.sol:DeployLocalDevNet http://127.0.0.1:18546 --private-key=<PUBLIC_LOCAL_DEVELOPMENT_KEY> --skip-simulation
+FOUNDRY_PROFILE=deploy forge script script/curated/DeployLocalDevNet.s.sol:DeployLocalDevNet --sig="run(string)" --rpc-url http://127.0.0.1:18546 --broadcast --slow --private-key=<PUBLIC_LOCAL_DEVELOPMENT_KEY> --skip-simulation -- `git rev-parse HEAD`
+No files changed, compilation skipped
+2026-09-30T07:31:03.318357Z  WARN foundry_evm_traces::debug::sources: failed to parse contract definitions for script/csm/DeployLocalDevNet.s.sol
+2026-09-30T07:31:03.422463Z  WARN evm::traces::external: etherscan config not found
+Warning: EIP-3855 is not supported in one or more of the RPCs used.
+Unsupported Chain IDs: 1337.
+Contracts deployed with a Solidity version equal or higher than 0.8.20 might not work properly.
+For more information, please see https://eips.ethereum.org/EIPS/eip-3855
+Script ran successfully.
+
+SKIPPING ON CHAIN SIMULATION.
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Transactions saved to: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/staking-modules/e37fa1b783f34792f6db75684e74eb2be6c4b70f/broadcast/DeployLocalDevNet.s.sol/1337/run-latest.json
+
+Sensitive values saved to: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.cache/external-deploy/staking-modules/e37fa1b783f34792f6db75684e74eb2be6c4b70f/cache/DeployLocalDevNet.s.sol/1337/run-latest.json
+
+just _finalize-broadcast-artifacts DeployLocalDevNet http://127.0.0.1:18546 "" "run-latest.json" ./artifacts/local/curated/deploy-local-devnet.json
+just _copy-broadcast-json "DeployLocalDevNet" "http://127.0.0.1:18546" "" "run-latest.json" "$(dirname "./artifacts/local/curated/deploy-local-devnet.json")/transactions.json"
+just _copy-file ./broadcast/DeployLocalDevNet.s.sol/$(cast chain-id --rpc-url "http://127.0.0.1:18546")/run-latest.json ./artifacts/local/curated/transactions.json
+mkdir -p "$(dirname "./artifacts/local/curated/transactions.json")"
+cp "./broadcast/DeployLocalDevNet.s.sol/1337/run-latest.json" "./artifacts/local/curated/transactions.json"
+just _merge-external-libraries "./artifacts/local/curated/deploy-local-devnet.json" "$(dirname "./artifacts/local/curated/deploy-local-devnet.json")/transactions.json"
+Curated Module v2 deployed at: 0x512F7469BcC83089497506b5df64c6E246B39925
+
+✅ Finished script: 0135-deploy-staking-modules.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0140-plug-staking-modules.ts
+========================================
+Started script: 0140-plug-staking-modules.ts
+========================================
+
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0x3105bcbf19d4417b73ae0e58d508a65ecf75665e46c2622d8521732de6080c48",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].addStakingModule(
+ "curated-onchain-v1",
+ "0xC0415C90D86cB2FEDc05529F5CFAe0E2a806c3BB",
+ {"stakeShareLimit":10000,"priorityExitShareThreshold":10000,"stakingModuleFee":500,"treasuryFee":500,"maxDepositsPerBlock":150,"minDepositBlockDistance":25,"withdrawalCredentialsType":1},
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].addStakingModule(
+ "SimpleDVT",
+ "0x41CB323999d67832A2bF9735148B37785bcc3335",
+ {"stakeShareLimit":400,"priorityExitShareThreshold":10000,"stakingModuleFee":800,"treasuryFee":200,"maxDepositsPerBlock":150,"minDepositBlockDistance":25,"withdrawalCredentialsType":1},
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].addStakingModule(
+ "Community Staking",
+ "0x02b0B4EFd909240FCB2Eb5FAe060dC60D112E3a4",
+ {"stakeShareLimit":2000,"priorityExitShareThreshold":2500,"stakingModuleFee":800,"treasuryFee":200,"maxDepositsPerBlock":30,"minDepositBlockDistance":25,"withdrawalCredentialsType":1},
+)
+Call: Burner[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].grantRole(
+ "0x28186f938b759084eea36948ef1cd8b40ec8790a98d5f1a09b70879fe054e5cc",
+ "0x638A246F0Ec8883eF68280293FFE8Cfbabe61B44",
+)
+Call: TriggerableWithdrawalsGateway[0x21dF544947ba3E8b3c32561399E88B52Dc8b2823].grantRole(
+ "0x15fac8ba7fe8dd5344b88c1915452ce66976f270d1cd793c3b0ab579cecd33c0",
+ "0x70bDA08DBe07363968e9EE53d899dFE48560605B",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].addStakingModule(
+ "curated-onchain-v2",
+ "0x512F7469BcC83089497506b5df64c6E246B39925",
+ {"stakeShareLimit":10000,"priorityExitShareThreshold":10000,"stakingModuleFee":400,"treasuryFee":600,"maxDepositsPerBlock":150,"minDepositBlockDistance":25,"withdrawalCredentialsType":2},
+)
+Call: Burner[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].grantRole(
+ "0x28186f938b759084eea36948ef1cd8b40ec8790a98d5f1a09b70879fe054e5cc",
+ "0x9fD16eA9E31233279975D99D5e8Fc91dd214c7Da",
+)
+Call: TriggerableWithdrawalsGateway[0x21dF544947ba3E8b3c32561399E88B52Dc8b2823].grantRole(
+ "0x15fac8ba7fe8dd5344b88c1915452ce66976f270d1cd793c3b0ab579cecd33c0",
+ "0xeC827421505972a2AE9C320302d3573B42363C26",
+)
+Call: TokenManager[0x4068E9A78751b2991d6ecE6514Dff1098FaFe46b].forward("0x00000001e05a4aa2d6de3934e9c37588e545958b8815a44b00001f84d5db2c8000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000001f400000000000000000000000000000000000000000000000000000000000001ec400000001066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f600000000000000000000000002b0b4efd909240fcb2eb5fae060dc60d112e3a40000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d2fc10cc8ae19568712f7a176fb4978616a610650813c9d05326c34abb62749c7000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000a4b61d27f600000000000000000000000002b0b4efd909240fcb2eb5fae060dc60d112e3a4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000004046f7da200000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f600000000000000000000000002b0b4efd909240fcb2eb5fae060dc60d112e3a4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044d547741f2fc10cc8ae19568712f7a176fb4978616a610650813c9d05326c34abb62749c7000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000c4b61d27f6000000000000000000000000d9140951d8ae6e5f625a02f5908535e16e3af964000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000024323a41f6000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f600000000000000000000000002b0b4efd909240fcb2eb5fae060dc60d112e3a40000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc00000000000000000000000002b0b4efd909240fcb2eb5fae060dc60d112e3a4000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000638a246f0ec8883ef68280293ffe8cfbabe61b440000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc000000000000000000000000638a246f0ec8883ef68280293ffe8cfbabe61b44000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f60000000000000000000000006c2d83262ff84cbadb3e416d527403135d7578920000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc0000000000000000000000006c2d83262ff84cbadb3e416d527403135d757892000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f60000000000000000000000005302e909d1e93e30f05b5d6eea766363d14f98920000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc0000000000000000000000005302e909d1e93e30f05b5d6eea766363d14f9892000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f600000000000000000000000070bda08dbe07363968e9ee53d899dfe48560605b0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc00000000000000000000000070bda08dbe07363968e9ee53d899dfe48560605b000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f600000000000000000000000072b331afd0e6cc4853379def5c6b8f4422604dd70000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc00000000000000000000000072b331afd0e6cc4853379def5c6b8f4422604dd7000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000e51e4a411f12ac6600d8bb5aacb90ca91ec1a1c60000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc000000000000000000000000e51e4a411f12ac6600d8bb5aacb90ca91ec1a1c6000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000512f7469bcc83089497506b5df64c6e246b399250000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d2fc10cc8ae19568712f7a176fb4978616a610650813c9d05326c34abb62749c7000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000a4b61d27f6000000000000000000000000512f7469bcc83089497506b5df64c6e246b39925000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000004046f7da200000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000512f7469bcc83089497506b5df64c6e246b39925000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044d547741f2fc10cc8ae19568712f7a176fb4978616a610650813c9d05326c34abb62749c7000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000c4b61d27f600000000000000000000000025c0a2f0a077f537bd11897f04946794c2f6f1ef000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000024323a41f6000000000000000000000000000000000000000000000000000000000000000e00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000512f7469bcc83089497506b5df64c6e246b399250000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc000000000000000000000000512f7469bcc83089497506b5df64c6e246b39925000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f60000000000000000000000009fd16ea9e31233279975d99d5e8fc91dd214c7da0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc0000000000000000000000009fd16ea9e31233279975d99d5e8fc91dd214c7da000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000cbbe2a5c3a22be749d5ddf24e9534f98951983e20000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc000000000000000000000000cbbe2a5c3a22be749d5ddf24e9534f98951983e2000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000e38b6847e611e942e6c80ed89ae867f522402e800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc000000000000000000000000e38b6847e611e942e6c80ed89ae867f522402e80000000000000000000000000066000801c27c5184addb7513ad530301b1bd44700000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000ec827421505972a2ae9c320302d3573b42363c260000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000442f2ff15d139c2898040ef16910dc9f44dc697df79363da767d8bc92f2e310312b816e46d000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c00000000000000000000000000000000000000000000000000000000066000801c27c5184addb7513ad530301b1bd447000000e4b61d27f6000000000000000000000000faaddc93baf78e89dcf37ba67943e1be8f37bb8c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000044338d93fc000000000000000000000000ec827421505972a2ae9c320302d3573b42363c26000000000000000000000000066000801c27c5184addb7513ad530301b1bd4470000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001953637261746368206d6f64756c652061637469766174696f6e00000000000000")
+Call: Voting[0xe05a4AA2d6de3934e9c37588e545958b8815a44B].vote(
+ "0",
+ true,
+ false,
+)
+{"event":"scratch-vote-wait","voteId":"0","executableAt":2000005832}
+Call: Voting[0xe05a4AA2d6de3934e9c37588e545958b8815a44B].executeVote("0")
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].setMaxTopUpPerBlockGwei(3200000000000)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].renounceRole(
+ "0x3105bcbf19d4417b73ae0e58d508a65ecf75665e46c2622d8521732de6080c48",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+✅ Finished script: 0140-plug-staking-modules.ts
+
+Applying migration: /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/scratch/steps/0150-transfer-roles.ts
+========================================
+Started script: 0150-transfer-roles.ts
+========================================
+
+Call: Burner[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: Burner[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: HashConsensus[0x922D6956C99E12DFeB3224DEA977D0939758A1Fe].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: HashConsensus[0x922D6956C99E12DFeB3224DEA977D0939758A1Fe].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: HashConsensus[0x04C89607413713Ec9775E14b954286519d836FEf].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: HashConsensus[0x04C89607413713Ec9775E14b954286519d836FEf].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: StakingRouter[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: AccountingOracle[0x162A433068F51e18b7d13932F27e66a3f99E6890].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: AccountingOracle[0x162A433068F51e18b7d13932F27e66a3f99E6890].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: ValidatorsExitBusOracle[0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: ValidatorsExitBusOracle[0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: WithdrawalQueueERC721[0x809d550fca64d94Bd9F66E60752A544199cfAC3D].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: WithdrawalQueueERC721[0x809d550fca64d94Bd9F66E60752A544199cfAC3D].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: OracleDaemonConfig[0x9E545E3C0baAB3E08CdfD552C960A1050f373042].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: OracleReportSanityChecker[0x7A9Ec1d04904907De0ED7b6839CcdD59c3716AC9].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: OracleReportSanityChecker[0x7A9Ec1d04904907De0ED7b6839CcdD59c3716AC9].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: TriggerableWithdrawalsGateway[0x21dF544947ba3E8b3c32561399E88B52Dc8b2823].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: TriggerableWithdrawalsGateway[0x21dF544947ba3E8b3c32561399E88B52Dc8b2823].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: ConsolidationGateway[0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: ConsolidationGateway[0xDC11f7E700A4c898AE5CAddB1082cFfa76512aDD].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: ConsolidationBus[0x36b58F5C1969B7b6591D752ea6F5486D069010AB].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: ConsolidationBus[0x36b58F5C1969B7b6591D752ea6F5486D069010AB].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: ConsolidationMigrator[0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: ConsolidationMigrator[0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: TopUpGateway[0xFD471836031dc5108809D173A067e8486B9047A3].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: TopUpGateway[0xFD471836031dc5108809D173A067e8486B9047A3].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: VaultHub[0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: VaultHub[0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: PredepositGuarantee[0x34B40BA116d5Dec75548a9e9A8f15411461E8c70].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: PredepositGuarantee[0x34B40BA116d5Dec75548a9e9A8f15411461E8c70].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: OperatorGrid[0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: OperatorGrid[0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: LazyOracle[0xCace1b78160AE76398F486c8a18044da0d66d86D].grantRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0x066000801c27C5184aDdb7513aD530301B1Bd447",
+)
+Call: LazyOracle[0xCace1b78160AE76398F486c8a18044da0d66d86D].renounceRole(
+ "0x0000000000000000000000000000000000000000000000000000000000000000",
+ "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+)
+Call: OssifiableProxy[0xc3e53F4d16Ae77Db1c982e75a937B9f60FE63690].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0x7969c5eD335650692Bc04293B07F5BF2e7A673C0].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0x162A433068F51e18b7d13932F27e66a3f99E6890].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0xdbC43Ba45381e02825b14322cDdd15eC4B3164E6].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0x809d550fca64d94Bd9F66E60752A544199cfAC3D].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0x720472c8ce72c2A2D711333e064ABD3E6BbEAdd3].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0x34B40BA116d5Dec75548a9e9A8f15411461E8c70].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0x86A2EE8FAf9A840F7a2c64CA3d51209F9A02081D].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0xCace1b78160AE76398F486c8a18044da0d66d86D].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: OssifiableProxy[0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb].proxy__changeAdmin("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: DepositSecurityModule[0x7bc06c482DEAd17c0e297aFbC32f6e63d3846650].setOwner("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: LidoTemplate[0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44].setOwner("0x066000801c27C5184aDdb7513aD530301B1Bd447")
+Call: WithdrawalsManagerProxy[0x5f3f1dBD7B74C6B46e8c44f98792A1dAf8d69154].proxy_changeAdmin("0xe05a4AA2d6de3934e9c37588e545958b8815a44B")
+✅ Finished script: 0150-transfer-roles.ts
+

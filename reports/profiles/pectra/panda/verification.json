@@ -1,0 +1,21 @@
+{
+  "profile": "pectra",
+  "tag": "panda",
+  "bakeKey": "96b5d5a260d902e7a6abacbd745c89072a7f17407ac3d526d8240fd32dd884da",
+  "runId": "d3a14a47-f083-4479-b3c4-4a8423583d6e",
+  "suiteHash": "9675c7c9672e80e3bac7c0d083712611d61df4a8b3098a79ec3c066355a7bbfa",
+  "startedAt": "2026-09-30T10:15:57.721Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "protocol",
+    "withdrawal",
+    "deploy"
+  ],
+  "finishedAt": "2026-09-30T10:25:47.201Z",
+  "elapsedMs": 589485.330834,
+  "passed": true,
+  "status": "passed"
+}
