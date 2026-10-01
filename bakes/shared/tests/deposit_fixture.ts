@@ -37,6 +37,7 @@ export async function depositValidator(net: Devnet, index: number): Promise<stri
   const relative = `added-${index}`;
   const c = await infra.container("deposit-fixture", {
     Image: m.bake.images.genesis.id,
+    User: `${Deno.uid()}:${Deno.gid()}`,
     Entrypoint: ["/bin/bash"],
     Env: [`MNEMONIC=${mnemonic}`, `INDEX=${index}`, `END=${index + 1}`, `OUT=/data/${relative}`],
     Cmd: [
