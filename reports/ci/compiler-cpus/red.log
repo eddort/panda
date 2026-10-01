@@ -1,0 +1,42 @@
+Check tests/compiler_resources_test.ts
+running 4 tests from ./tests/compiler_resources_test.ts
+CL and EL compiler containers fit a 1-CPU Docker daemon ... FAILED (2ms)
+CL and EL compiler containers fit a 2-CPU Docker daemon ... FAILED (225µs)
+CL and EL compiler containers fit a 8-CPU Docker daemon ... ok (639µs)
+invalid Docker CPU information fails before creating compiler containers ... FAILED (598µs)
+
+ ERRORS
+
+CL and EL compiler containers fit a 1-CPU Docker daemon => ./tests/compiler_resources_test.ts:6:8
+error: Error: CPU limit exceeds the 1-CPU Docker daemon
+        return Promise.reject(new Error(`CPU limit exceeds the ${cpus}-CPU Docker daemon`));
+                              ^
+    at Docker.docker.createContainer (file:///Users/lexdort/development/zap-net/tests/compiler_resources_test.ts:12:31)
+    at Infrastructure.container (file:///Users/lexdort/development/zap-net/src/docker.ts:161:30)
+    at Infrastructure.compilerContainer (file:///Users/lexdort/development/zap-net/src/docker.ts:171:23)
+    at file:///Users/lexdort/development/zap-net/tests/compiler_resources_test.ts:19:19
+
+CL and EL compiler containers fit a 2-CPU Docker daemon => ./tests/compiler_resources_test.ts:6:8
+error: Error: CPU limit exceeds the 2-CPU Docker daemon
+        return Promise.reject(new Error(`CPU limit exceeds the ${cpus}-CPU Docker daemon`));
+                              ^
+    at Docker.docker.createContainer (file:///Users/lexdort/development/zap-net/tests/compiler_resources_test.ts:12:31)
+    at Infrastructure.container (file:///Users/lexdort/development/zap-net/src/docker.ts:161:30)
+    at Infrastructure.compilerContainer (file:///Users/lexdort/development/zap-net/src/docker.ts:171:23)
+    at file:///Users/lexdort/development/zap-net/tests/compiler_resources_test.ts:19:19
+
+invalid Docker CPU information fails before creating compiler containers => ./tests/compiler_resources_test.ts:39:6
+error: AssertionError: Missing expected rejection.
+    await assert.rejects(infra.compilerContainer("cl", { Image: "unit-builder" }), /CPU count/);
+    ^
+    at async file:///Users/lexdort/development/zap-net/tests/compiler_resources_test.ts:49:5
+
+ FAILURES
+
+CL and EL compiler containers fit a 1-CPU Docker daemon => ./tests/compiler_resources_test.ts:6:8
+CL and EL compiler containers fit a 2-CPU Docker daemon => ./tests/compiler_resources_test.ts:6:8
+invalid Docker CPU information fails before creating compiler containers => ./tests/compiler_resources_test.ts:39:6
+
+FAILED | 1 passed | 3 failed (8ms)
+
+error: Test failed

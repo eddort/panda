@@ -220,7 +220,7 @@ async function compile(
       throw new Error("Invalid native test target");
     }
   }
-  const container = await infra.container(kind, {
+  const container = await infra.compilerContainer(kind, {
     Image: builder.id,
     WorkingDir: "/source",
     Env: cl
@@ -254,7 +254,6 @@ async function compile(
         `${cache}:${cl ? "/usr/local/cargo" : "/cache"}`,
         `${target}:/target`,
       ],
-      NanoCpus: 4e9,
     },
   });
   try {

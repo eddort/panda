@@ -40,6 +40,10 @@ deno task up --profile gloas --bake experiment-2
 build command. A running instance with a different profile or tag is rejected. Use different
 `PANDA_ID` and `PANDA_PORT` values for simultaneous networks.
 
+CL and EL compiler containers use at most four CPUs, capped by the Docker daemon's reported CPU
+count. A two-CPU CI runner therefore gets a two-CPU container limit. Cargo's two concurrent build
+jobs are a separate setting; they do not determine the Docker CPU limit.
+
 On a new machine, `--replace` builds local artifacts from the pinned recipe: committed manifests may
 refer to images from another host, and Git does not transfer `.cache/`. For an existing local tag,
 `deno task bake pectra` reuses its pinned artifacts.

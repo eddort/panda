@@ -22,6 +22,14 @@ saves controller, EL, CL and VC logs as separate artifacts. See
 [the image guide](../../docs/ci-containers.md) for API authentication, client log commands and
 publication details.
 
+The workflow sets `PANDA_BEACON_URL=http://127.0.0.1:5052`, so the Node SDK reads CL directly.
+Startup checks fresh canonical CL genesis against the controller, EL genesis time and chain ID. Each
+captured proof also checks its Gloas bid/envelope against the canonical EL block. Finalization waits
+require a real CL checkpoint whose execution parent matches EL's finalized block. An explicit
+unavailable CL endpoint fails instead of falling back; omitting the endpoint retains the controller
+proxy for local startup. The SDK checks run with `node --test scripts/tests/panda-client.test.cjs`
+before the real verifier suite in CI.
+
 Exit eligibility and historical-summary tests explicitly use `advanceTo(..., { mode: "fast" })`.
 Voting, activation and finality recovery still advance complete slots. Omitting a mode keeps Panda's
 honest default; fast scenarios do not certify validator economics across the skipped interval.
