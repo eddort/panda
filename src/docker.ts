@@ -164,6 +164,20 @@ export class Infrastructure {
       Labels: { ...options.Labels, ...this.labels, [ROLE]: role },
     });
   }
+  async compilerContainer(
+    role: "cl" | "el",
+    options: Docker.ContainerCreateOptions,
+  ): Promise<Docker.Container> {
+    // Docker Desktop and CI can expose fewer CPUs than the controller's host.
+    const { NCPU } = await this.docker.info();
+    if (!Number.isSafeInteger(NCPU) || NCPU < 1) {
+      throw new Error(`Docker reported an invalid CPU count: ${NCPU}`);
+    }
+    return await this.container(role, {
+      ...options,
+      HostConfig: { ...options.HostConfig, NanoCpus: Math.min(4, NCPU) * 1e9 },
+    });
+  }
   async logs(container: Docker.Container): Promise<string> {
     const data = await container.logs({ stdout: true, stderr: true, tail: 300 });
     const output: Uint8Array[] = [];

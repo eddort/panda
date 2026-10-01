@@ -131,6 +131,7 @@ published Gloas digest and uses:
 ```yaml
 env:
   PANDA_URL: http://127.0.0.1:18547
+  PANDA_BEACON_URL: http://127.0.0.1:5052
 services:
   panda:
     image: ghcr.io/eddort/panda-gloas@sha256:<published-digest>
@@ -146,6 +147,11 @@ performs its own warmup and scratch deployment. `PANDA_URL` connects to the serv
 continues to start a local controller. The remote client reads no Panda files and never stops the
 externally owned service. Start a new service for every suite. For a private Panda package the
 consumer can use `PANDA_REGISTRY_TOKEN`.
+
+`PANDA_BEACON_URL` sends all SDK Beacon requests directly to CL. The SDK checks fresh CL genesis,
+matches it to the controller and EL configuration, binds each captured Gloas payload to canonical EL
+history, and confirms finalized checkpoints against EL. An explicit unavailable CL endpoint fails
+the suite; omitting the variable retains the Beacon proxy for local startup.
 
 The exit-eligibility and historical-summary transitions explicitly use
 `advanceTo(timestamp, { mode: "fast" })`. Voting, activation and finality recovery still execute
