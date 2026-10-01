@@ -111,11 +111,12 @@ The control endpoint accepts the same option:
 ```
 
 The fast regression budget is 25 seconds for 8192 slots **including the first next transaction**.
-Honest mode has separate economic assertions and a failure watchdog per 8192-slot sample: 20 minutes
+Honest mode has separate economic assertions and a failure watchdog per 1000-slot sample: 20 minutes
 on Gloas and 55 minutes on the older Pectra artifact, not a one-minute performance promise. See
-[mode validation](warp-modes.md). A full honest test contains two such samples and is deliberately
-long. These are test budgets, not per-call API deadlines. For phase-by-phase execution, exact-target
-examples, VC restart and failure semantics, read [the algorithm walkthrough](warp-algorithm.md).
+[mode validation](warp-modes.md). A full honest test contains two such samples; it does not certify
+an 8192-slot honest traversal. These are test budgets, not per-call API deadlines. For
+phase-by-phase execution, exact-target examples, VC restart and failure semantics, read
+[the algorithm walkthrough](warp-algorithm.md).
 
 ## Network parameters
 
@@ -133,7 +134,7 @@ PANDA_DOCKER_TEST=1 deno task test        # Rollback and protection of unrelated
 PANDA_E2E=1 deno task test                # Selected profile's real e2e scenarios; requires its images.
 deno task e2e                          # Time, automine, finality and a separate indexer.
 deno task e2e:warp-fast                # Two fast 8192-slot jumps, next tx, signing and resumed finality.
-deno task e2e:warp                     # Two long honest 8192-slot jumps with economic checks.
+deno task e2e:warp                     # Two honest 1000-slot jumps with economic checks.
 deno task e2e:warp-economics           # Short honest economics/deployment regression.
 deno task e2e:withdrawal               # Real exit to withdrawal across hundreds of epochs.
 deno task e2e:protocol                 # Deposit, activation and consolidation with an explicit churn override.

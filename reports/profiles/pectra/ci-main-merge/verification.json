@@ -1,0 +1,23 @@
+{
+  "profile": "pectra",
+  "tag": "ci-main-merge",
+  "bakeKey": "5ef3ac09acd8852fb5eecd18b081a13400f69d6c6dff3bbb8ef7100d44fbeed9",
+  "runId": "8181d072-d8c3-4fd6-947f-f834e977f262",
+  "suiteHash": "eb8a488d1aed13bd2eda9806e69fbd91b93e7da9c37679f6fc953e7dcbaf4ffe",
+  "startedAt": "2026-10-01T10:47:36.783Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "warp-fast",
+    "warp-economics",
+    "protocol",
+    "withdrawal",
+    "deploy"
+  ],
+  "finishedAt": "2026-10-01T10:58:51.273Z",
+  "elapsedMs": 674489.462292,
+  "passed": true,
+  "status": "passed"
+}

@@ -44,7 +44,7 @@ jobs:
       fail-fast: false
       matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
     runs-on: ubuntu-24.04
-    # The full profile includes two honest 8192-slot jumps, separately from fast checks.
+    # The full profile includes two honest 1000-slot jumps, separately from fast checks.
     timeout-minutes: 180
     concurrency:
       group: panda-image-${{ matrix.profile }}-${{ needs.select.outputs.revision }}

@@ -6,6 +6,7 @@ import { Devnet } from "../../../src/api.ts";
 import { account, privateKey } from "../../../src/config.ts";
 import { delay, json } from "../../../src/http.ts";
 import { Network } from "../../../src/network.ts";
+import { assertFeeCappedTransactionPaused } from "./automine_assertions.ts";
 
 const started = performance.now();
 await using net = await Devnet.start({ id: `e2e-${crypto.randomUUID().slice(0, 8)}` });
@@ -80,11 +81,10 @@ await net.waitForService(
   "concurrent receipts",
   async () => (await Promise.all(concurrent.map(receipt))).every(Boolean) ? true : undefined,
 );
-const beforeUnderpriced = await net.status();
-await send(5, { maxFeePerGas: 2n, maxPriorityFeePerGas: 1n });
-await delay(1000);
-assert.equal((await net.status()).slot, beforeUnderpriced.slot, "fee-capped tx produced blocks");
-await net.setAutomine(false);
+await assertFeeCappedTransactionPaused(
+  net,
+  () => send(5, { maxFeePerGas: 2n, maxPriorityFeePerGas: 1n }),
+);
 // Deploy a nine-byte EVM runtime that returns TIMESTAMP. No compiler or mock EVM.
 const deploy = await send(5, {
   to: null,

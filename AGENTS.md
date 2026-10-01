@@ -50,8 +50,8 @@ uses separate payload envelopes and PTC barriers; finalized execution is the che
 parent. Both warp modes use real state transitions. Default honest mode executes all duties and may
 take minutes; explicit fast mode skips slots and permits inactivity penalties, never conflicting
 signatures. Fast jumps must complete in seconds including the first subsequent transaction.
-`e2e:warp` checks two long honest 8192-slot jumps; `e2e:warp-fast` checks two fast jumps with the
-next transaction, resumed finality and signing history. `e2e:warp-economics` checks short honest
+`e2e:warp` checks two honest 1000-slot jumps; `e2e:warp-fast` checks two fast 8192-slot jumps with
+the next transaction, resumed finality and signing history. `e2e:warp-economics` checks short honest
 participation and rewards. Modes share a bake; do not build separate clients merely to select a
 mode. `test:profile` runs only the selected profile; `test:baker` owns shared Docker/baker checks.
 Do not run resource measurements concurrently with another devnet test. Public HTTP endpoints are

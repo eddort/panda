@@ -18,10 +18,16 @@ import {
 } from "./warp_assertions.ts";
 import { clockEnvironment } from "../../../src/profiles.ts";
 
-export async function runWarp(mode: WarpMode, slots = 8192): Promise<void> {
+export function warpScenario(mode: WarpMode, requestedSlots?: number) {
+  const defaultSlots = mode === "honest" ? 1000 : 8192;
+  const slots = requestedSlots ?? defaultSlots;
   assert(Number.isSafeInteger(slots) && slots > 32, "Warp fixture requires more than one epoch");
   const base = mode === "fast" ? "warp-fast" : "warp";
-  const scenario = slots === 8192 ? base : `${base}-${slots}`;
+  return { slots, name: slots === defaultSlots ? base : `${base}-${slots}` };
+}
+
+export async function runWarp(mode: WarpMode, requestedSlots?: number): Promise<void> {
+  const { slots, name: scenario } = warpScenario(mode, requestedSlots);
   const started = performance.now();
   await using net = await Devnet.start({ id: `warp-${crypto.randomUUID().slice(0, 8)}` });
   const initial = await net.status();
@@ -117,7 +123,7 @@ export async function runWarp(mode: WarpMode, slots = 8192): Promise<void> {
   const watchdogMs = mode === "fast"
     ? 25_000
     : (manifest.config.profile === "gloas" ? 20 : 55) * 60_000;
-  // Mainnet withdrawal delay (8192 slots) and a second jump across a committee period.
+  // Honest checks every duty in two 1000-slot ranges; fast retains two committee-period jumps.
   for (let index = 0; index < 2; index++) {
     const before = await net.status();
     const target = before.now + slots * 12;

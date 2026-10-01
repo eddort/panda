@@ -1,0 +1,45 @@
+{
+  "passed": true,
+  "steps": [
+    {
+      "name": "docker-smoke",
+      "exitCode": 0,
+      "elapsedSeconds": 4.599
+    },
+    {
+      "name": "baker-gloas",
+      "exitCode": 0,
+      "elapsedSeconds": 45.074
+    },
+    {
+      "name": "baker-pectra",
+      "exitCode": 0,
+      "elapsedSeconds": 68.389
+    },
+    {
+      "name": "package-suite-gloas",
+      "exitCode": 0,
+      "elapsedSeconds": 29.25103525002487
+    },
+    {
+      "name": "package-suite-pectra",
+      "exitCode": 0,
+      "elapsedSeconds": 41.652
+    },
+    {
+      "name": "lido-sdk",
+      "exitCode": 0,
+      "elapsedSeconds": 0.585
+    },
+    {
+      "name": "lido-typecheck",
+      "exitCode": 0,
+      "elapsedSeconds": 9.838
+    },
+    {
+      "name": "lido-verifiers",
+      "exitCode": 0,
+      "elapsedSeconds": 314.549
+    }
+  ]
+}

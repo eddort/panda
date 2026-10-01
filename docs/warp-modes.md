@@ -75,12 +75,17 @@ Pectra проверяется независимо на ранее собран�
 PANDA_PROFILE=gloas PANDA_BAKE=direct-sync ./scripts/deno task e2e:warp-fast
 PANDA_PROFILE=pectra PANDA_BAKE=panda ./scripts/deno task e2e:warp-fast
 PANDA_PROFILE=gloas PANDA_BAKE=direct-sync ./scripts/deno task e2e:warp-economics
-# Долгий сценарий: два honest диапазона по 8192, ориентировочно десятки минут целиком.
+# Два honest диапазона по 1000 слотов с проверкой всех обязанностей.
 PANDA_PROFILE=gloas PANDA_BAKE=direct-sync ./scripts/deno task e2e:warp
 ```
 
-Fast имеет deadline 25 с для скачка с первой tx. Honest имеет отдельный watchdog на sample: 20 минут
-для Gloas и 55 минут для более медленного старого Pectra bake и сохраняет проверки экономики/full
-coverage. Полная матрица deposit, activation, exit, consolidation, очередей и injected failures
-через honest warp ещё не закрыта; см. [критерии](warp-tdd-acceptance.md). Ни скорость fast, ни
-`slashed == false` её не заменяют.
+По решению пользователя от 2026-10-01 стандартный honest-сценарий сокращён до двух диапазонов по
+1000 слотов. Проверки каждого блока, экономики, signing history, финальности и первой tx сохранены.
+Полное honest-прохождение 8192 слотов этим набором больше не подтверждается; fast по-прежнему
+проверяет два диапазона по 8192.
+
+Fast имеет deadline 25 с для скачка с первой tx. Honest сохраняет watchdog на sample: 20 минут для
+Gloas и 55 минут для Pectra. Это ограничитель зависания, а не обещание скорости. Полная матрица
+deposit, activation, exit, consolidation, очередей и injected failures через honest warp ещё не
+закрыта; см. [критерии](warp-tdd-acceptance.md). Ни скорость fast, ни `slashed == false` её не
+заменяют.
