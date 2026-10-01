@@ -1,4 +1,4 @@
-import { HttpError, json, rpc, waitFor } from "./http.ts";
+import { defaultTimeoutMs, HttpError, json, rpc, waitFor } from "./http.ts";
 import { type Manifest, Network } from "./network.ts";
 import { type TimeBackend, Timeline } from "./time.ts";
 import type { EngineGate } from "./engine.ts";
@@ -18,7 +18,6 @@ export interface ExecutionBlock {
 }
 export class Consensus implements TimeBackend {
   private recovering = false;
-  private validatorRestarted = false;
   private confirmedHead?: { slot: number; root: string };
   constructor(readonly manifest: Manifest, readonly engine?: EngineGate) {}
   async clock(endpoint: string, at?: number): Promise<ClockState> {
@@ -27,18 +26,23 @@ export class Consensus implements TimeBackend {
       at === undefined ? {} : { method: "POST" },
     );
   }
-  async mark(endpoint: string, names: string[], slot: number, timeoutMs = 30_000): Promise<void> {
+  async mark(
+    endpoint: string,
+    names: string[],
+    slot: number,
+    timeoutMs = defaultTimeoutMs(),
+  ): Promise<void> {
     if (this.manifest.bake.recipe.clockWait && !this.recovering) {
       if (!names.length) return;
       // Published clients cap each native wait at 30 seconds. Bound the complete retry sequence
       // in real time as well; transport failures and invalid marks must never become retries.
-      const budget = AbortSignal.timeout(timeoutMs > 30_000 ? timeoutMs : 31_000);
+      const budget = AbortSignal.timeout(timeoutMs);
       let lastTimeout: HttpError | undefined;
       for (let remaining = timeoutMs; remaining > 0; remaining -= 30_000) {
         try {
           const state = await json<ClockState>(
             `${endpoint}/wait/${slot}/${Math.min(remaining, 30_000)}/${names.join(",")}`,
-            { method: "POST", signal: AbortSignal.any([budget, AbortSignal.timeout(31_000)]) },
+            { method: "POST", signal: budget },
           );
           if (!names.every((name) => state.marks[name] === slot)) {
             throw new Error(`Incomplete native barrier at slot ${slot}: ${names.join(", ")}`);
@@ -63,7 +67,7 @@ export class Consensus implements TimeBackend {
     await waitFor(`slot ${slot}: ${names.join(", ")}`, async () => {
       const state = await this.clock(endpoint);
       return names.every((name) => state.marks[name] === slot) ? true : undefined;
-    }, this.recovering ? 600_000 : 30_000);
+    }, timeoutMs);
   }
   async move(at: number, phase?: number): Promise<void> {
     if (this.engine) this.engine.nowMs = at;
@@ -80,7 +84,7 @@ export class Consensus implements TimeBackend {
           `${m.beacon}/eth/v1/beacon/headers/head`,
         );
         return Number(head.data.header.message.slot) === slot ? head.data : undefined;
-      }, this.recovering ? 600_000 : 30_000);
+      });
       await waitFor(`execution agreement at slot ${slot}`, () => this.consistency(slot));
       this.confirmedHead = { slot, root: head.root };
     } else if (phase === profile.attestationMs || phase === profile.aggregateMs) {
@@ -128,14 +132,12 @@ export class Consensus implements TimeBackend {
           m.vcClock,
           ["payload_attestations"],
           slot,
-          this.validatorRestarted ? 120_000 : 30_000,
         );
       }
       await this.mark(m.bnClock, ["state_advance"], slot);
     } else if (phase === 11_500) {
       await this.mark(m.bnClock, ["fork_choice"], slot);
       this.recovering = false;
-      this.validatorRestarted = false;
     }
   }
   async consistency(slot: number): Promise<ExecutionBlock> {
@@ -156,7 +158,6 @@ export class Consensus implements TimeBackend {
     this.recovering = !this.manifest.bake.recipe.preparedSkip;
     if (this.engine) this.engine.nowMs = at;
     await new Network(this.manifest.config).skipValidator(this.manifest, at);
-    this.validatorRestarted = true;
   }
   static async connect(manifest: Manifest, engine?: EngineGate): Promise<Timeline> {
     if (manifest.config.mode !== "controlled") {

@@ -40,7 +40,7 @@ try {
   await waitFor("private Docker daemon", async () => {
     if (daemonExited || abort.signal.aborted) throw new Error("Docker startup interrupted");
     return await infra.docker.ping().then(() => true).catch(() => undefined);
-  }, 60_000);
+  });
   for (const role of ["el", "cl", "genesis"] as const) {
     if (abort.signal.aborted) throw new Error("Image loading interrupted");
     if (!await infra.restoreImage(bake.images[role].id)) throw new Error(`Missing ${role} archive`);

@@ -180,6 +180,19 @@ continuous block sequence. Individual latency measurements are saved in `reports
 
 ## Errors, timeouts and external services
 
+Controller readiness, CL/VC completion barriers, Engine requests, validator operations and SDK
+requests default to a **one-hour wall-clock watchdog** (`3600000` ms). Set `PANDA_TIMEOUT_MS` in the
+controller process (or with `docker run -e PANDA_TIMEOUT_MS=3600000 ...`) to override it. A
+separately running SDK reads its own environment. This is a hang safeguard, not a performance target
+or a maximum slot count. A multi-stage operation can contain several bounded waits.
+
+Tests keep their own explicit `timeoutMs`, `AbortSignal.timeout(...)` and warp watchdogs. The
+missing-signer regression sets a 30-second controller budget for the failing step. Existing
+Lighthouse binaries still answer native waits in at most 30-second segments; Panda retries only HTTP
+408 within the common budget and still requires every exact slot/root completion mark. Health
+probes, shutdown grace periods and JWT freshness checks remain separate from operation budgets: they
+do not cut off a running warp. Client-internal networking deadlines are unchanged.
+
 `advanceUntil` has both a slot limit and a real-time deadline. An error within a phase does not roll
 back the clients. Further advancement is blocked until reset to avoid continuing from an uncertain
 state. Independent requests and network watchdogs continue to use real time. An external service

@@ -163,7 +163,7 @@ reports. Keep resource measurements separate from other devnet tests.
 ## Documentation
 
 - [Usage guide](docs/usage.md) — configuration, API details, ethers settings and troubleshooting.
-- [CI images](docs/ci-containers.md) — versioned hardfork images and Lido service integration.
+- [CI images](docs/ci-containers.md) — versioned hardfork images and CI service integration.
 - [Time and warp algorithm](docs/warp-algorithm.md) — start here to understand honest/fast modes,
   execution phases, validator duties, recovery and the source files involved.
 - [Architecture](docs/architecture.md) — clock boundaries, client patches and Engine API

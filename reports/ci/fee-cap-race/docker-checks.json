@@ -25,21 +25,6 @@
       "name": "package-suite-pectra",
       "exitCode": 0,
       "elapsedSeconds": 41.652
-    },
-    {
-      "name": "lido-sdk",
-      "exitCode": 0,
-      "elapsedSeconds": 0.585
-    },
-    {
-      "name": "lido-typecheck",
-      "exitCode": 0,
-      "elapsedSeconds": 9.838
-    },
-    {
-      "name": "lido-verifiers",
-      "exitCode": 0,
-      "elapsedSeconds": 314.549
     }
   ]
 }

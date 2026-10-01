@@ -1,7 +1,7 @@
 import { Writable } from "node:stream";
 // @deno-types="@types/dockerode"
 import type Docker from "dockerode";
-import { deadline } from "./http.ts";
+import { deadline, defaultTimeoutMs } from "./http.ts";
 import { type Infrastructure } from "./docker.ts";
 
 export async function checkEngineCapabilities(
@@ -40,7 +40,7 @@ export async function checkEngineCapabilities(
       method: "engine_exchangeCapabilities",
       params: [required],
     }),
-    signal: AbortSignal.timeout(10_000),
+    signal: AbortSignal.timeout(defaultTimeoutMs()),
   });
   const data = await response.json();
   if (
@@ -165,7 +165,7 @@ export class EngineGate {
     entries.add(waiting.resolve);
     this.waiters.set(key, entries);
     try {
-      await deadline(waiting.promise, 20_000, `Geth full payload ${id}`);
+      await deadline(waiting.promise, defaultTimeoutMs(), `Geth full payload ${id}`);
     } finally {
       entries.delete(waiting.resolve);
       if (!entries.size) this.waiters.delete(key);
@@ -188,7 +188,7 @@ export class EngineGate {
           authorization: request.headers.get("authorization")!,
         },
         body: JSON.stringify(call),
-        signal: AbortSignal.timeout(30_000),
+        signal: AbortSignal.timeout(defaultTimeoutMs()),
       });
     } catch (error) {
       return Response.json({ error: String(error) }, { status: 502 });

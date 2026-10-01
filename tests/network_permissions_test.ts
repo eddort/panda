@@ -149,3 +149,76 @@ Deno.test("deposit key generation uses the controller user for private host-read
     }
   });
 });
+
+for (const completes of [true, false]) {
+  Deno.test(
+    `prepared skip ${
+      completes
+        ? "allows slow CL state preparation"
+        : "times out without restarting the VC on a wrong slot"
+    }`,
+    async () => {
+      await fixture("gloas", async (network, manifest, created) => {
+        const original = created.get("vc")!;
+        const slot = 22593;
+        const nowMs = manifest.config.genesisTime * 1000 + slot * 12000 + 11500;
+        manifest.bake.recipe.preparedSkip = true;
+        let stopped = 0;
+        let removed = 0;
+        let probes = 0;
+        const docker = network.infra.docker;
+        docker.listContainers = (() =>
+          Promise.resolve([{ Id: "old-vc" }])) as typeof docker.listContainers;
+        docker.getContainer = (() => ({
+          inspect: () =>
+            Promise.resolve({
+              Image: original.Image,
+              Config: original,
+              HostConfig: original.HostConfig,
+            }),
+          stop: () => {
+            stopped++;
+            return Promise.resolve();
+          },
+          remove: () => {
+            removed++;
+            return Promise.resolve();
+          },
+        })) as unknown as typeof docker.getContainer;
+        const now = performance.now;
+        let elapsed = 0;
+        // Advance only the wall-clock fixture; no protocol time or real client is simulated here.
+        performance.now = () => elapsed;
+        globalThis.fetch = ((url) => {
+          if (String(url) === manifest.bnClock && removed === 0) {
+            probes++;
+            elapsed += completes ? 180_000 : 900_001;
+            return Promise.resolve(Response.json({
+              marks: { skip_ready: completes && probes >= 2 ? slot : slot - 1 },
+            }));
+          }
+          return Promise.resolve(Response.json({ nowMs, marks: { ready: 0, indices: 0 } }));
+        }) as typeof fetch;
+        try {
+          if (completes) {
+            await network.skipValidator(manifest, nowMs);
+            assert.equal(probes, 2);
+            assert.equal(removed, 1);
+            assert.notEqual(created.get("vc"), original);
+          } else {
+            await assert.rejects(
+              network.skipValidator(manifest, nowMs),
+              /Timed out: prepared empty-slot state.*22593.*3600000/,
+            );
+            assert.equal(probes, 4);
+            assert.equal(removed, 0);
+            assert.equal(created.get("vc"), original);
+          }
+          assert.equal(stopped, 1);
+        } finally {
+          performance.now = now;
+        }
+      });
+    },
+  );
+}

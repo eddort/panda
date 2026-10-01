@@ -1,3 +1,12 @@
+/** A runtime watchdog, not a performance target. Tests may supply a stricter budget. */
+export function defaultTimeoutMs(): number {
+  const value = Number(Deno.env.get("PANDA_TIMEOUT_MS") ?? 3_600_000);
+  if (!Number.isSafeInteger(value) || value < 1 || value > 2_147_483_647) {
+    throw new Error("PANDA_TIMEOUT_MS must be an integer from 1 to 2147483647");
+  }
+  return value;
+}
+
 export const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
 export async function deadline<T>(
   work: Promise<T>,
@@ -19,22 +28,22 @@ export async function deadline<T>(
 export async function waitFor<T>(
   description: string,
   probe: () => Promise<T | undefined>,
-  timeoutMs = 30_000,
+  timeoutMs = defaultTimeoutMs(),
 ): Promise<T> {
-  const deadline = performance.now() + timeoutMs;
+  const end = performance.now() + timeoutMs;
   let last: unknown;
   let pause = 10;
-  while (performance.now() < deadline) {
+  while (performance.now() < end) {
     try {
-      const value = await probe();
+      const value = await deadline(probe(), Math.max(1, end - performance.now()), description);
       if (value !== undefined) return value;
     } catch (error) {
       last = error;
     }
-    await delay(Math.min(pause, Math.max(0, deadline - performance.now())));
+    await delay(Math.min(pause, Math.max(0, end - performance.now())));
     pause = Math.min(250, pause * 1.5);
   }
-  throw new Error(`Timed out: ${description}${last ? ` (${last})` : ""}`);
+  throw new Error(`Timed out: ${description} (${timeoutMs} ms)${last ? ` (${last})` : ""}`);
 }
 export class HttpError extends Error {
   constructor(readonly status: number, url: string, body: string) {
@@ -44,7 +53,7 @@ export class HttpError extends Error {
 export async function json<T = unknown>(url: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(url, {
     ...init,
-    signal: init.signal ?? AbortSignal.timeout(10_000),
+    signal: init.signal ?? AbortSignal.timeout(defaultTimeoutMs()),
   });
   if (!response.ok) throw new HttpError(response.status, url, await response.text());
   return await response.json();

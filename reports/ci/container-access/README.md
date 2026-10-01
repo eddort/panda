@@ -14,7 +14,7 @@ Acceptance criteria:
   connections on service shutdown.
 - Read each client's stdout/stderr using exact `io.panda.id` and role, with tail and follow modes.
 - Retrieve the VC token explicitly through `docker exec`, without adding it to readiness logs.
-- Capture EL/CL/VC logs separately in the packaged smoke check and the Lido consumer workflow.
+- Capture EL/CL/VC logs separately in the packaged smoke check.
 
 Executed checks:
 
@@ -25,10 +25,8 @@ Executed checks:
 - `./scripts/deno task check`: passed formatting, lint and types (`check.log`).
 - `PANDA_DOCKER_TEST=0 PANDA_E2E=0 ./scripts/deno task test`: 72 passed, zero failed, 13 opt-ins
   ignored (`unit.log`).
-- `actionlint`: all three Panda workflows and the Lido consumer workflow passed (`actionlint.log`).
+- `actionlint`: all three Panda workflows passed (`actionlint.log`).
 - `sh -n container/panda`: passed.
-- Regenerated `integrations/lido-core/panda-ci.patch` applies to a clean temporary index at the
-  documented consumer base, without changing its real index.
 
 `scripts/test_image.ts` now checks real native Beacon/VC access, missing/invalid tokens, a 64-slot
 fast warp followed by authenticated access through the same external VC port, and nonempty logs from

@@ -3,7 +3,7 @@ import { requireImage } from "./artifacts.ts";
 import { account, type Config, configuration, mnemonic } from "./config.ts";
 import { Infrastructure, LABEL, ROLE } from "./docker.ts";
 import { checkEngineCapabilities, EngineGate } from "./engine.ts";
-import { deadline, json, rpc, waitFor } from "./http.ts";
+import { deadline, defaultTimeoutMs, json, rpc, waitFor } from "./http.ts";
 
 export interface Manifest {
   bake: Bake;
@@ -129,7 +129,7 @@ export class Network {
       const oneShot = async (role: string, options: Parameters<Infrastructure["container"]>[1]) => {
         const c = await infra.container(role, options);
         await c.start();
-        const result = await deadline(c.wait(), 120_000, `${role} container`);
+        const result = await deadline(c.wait(), defaultTimeoutMs(), `${role} container`);
         const logs = await infra.logs(c);
         await Deno.writeTextFile(`${directory}/${role}.log`, logs);
         if (result.StatusCode !== 0) throw new Error(`${role} failed: ${logs}`);
@@ -241,7 +241,7 @@ export class Network {
         },
         NetworkingConfig: { EndpointsConfig: { [network]: { Aliases: ["bn"] } } },
       });
-      await waitFor("Beacon API", () => json(`${bn(5052)}/eth/v1/beacon/genesis`), 90_000);
+      await waitFor("Beacon API", () => json(`${bn(5052)}/eth/v1/beacon/genesis`));
       const vc = await start("vc", {
         Image: clientImage,
         User: sharedUser,
@@ -285,7 +285,7 @@ export class Network {
         await waitFor("validator clock and services", async () => {
           const clock = await json<{ marks: Record<string, number> }>(vc(5059));
           return clock.marks.ready === 0 && clock.marks.indices === 0 ? clock : undefined;
-        }, 90_000);
+        });
       }
       await Deno.writeTextFile(`${directory}/manifest.json`, JSON.stringify(manifest, null, 2));
       console.log(
@@ -345,10 +345,10 @@ export class Network {
     await json(`${manifest.bnClock}/advance/${nowMs}`, { method: "POST" });
     if (manifest.bake.recipe.preparedSkip) {
       const slot = Math.floor((nowMs / 1000 - manifest.config.genesisTime) / 12);
-      await waitFor("prepared empty-slot state", async () => {
+      await waitFor(`prepared empty-slot state at slot ${slot}`, async () => {
         const clock = await json<{ marks: Record<string, number> }>(manifest.bnClock);
         return clock.marks.skip_ready === slot ? true : undefined;
-      }, 30_000);
+      });
     }
     const prepared = performance.now();
     await old.remove();
@@ -380,7 +380,7 @@ export class Network {
       return clock.nowMs === nowMs && clock.marks.ready === 0 && clock.marks.indices !== undefined
         ? true
         : undefined;
-    }, 90_000);
+    });
     console.log(JSON.stringify({
       event: "slots-skipped",
       id: this.config.id,

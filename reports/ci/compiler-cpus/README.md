@@ -22,9 +22,7 @@ evidence of a completed native build.
 Executed checks:
 
 - `./scripts/deno test -A tests/compiler_resources_test.ts`: 4 passed.
-- `./scripts/deno task check`: formatting, lint and types passed (`check.log`). An initial global
-  format check found an unformatted paragraph in concurrently edited Lido documentation; only its
-  wrapping was corrected before repeating the check.
+- `./scripts/deno task check`: formatting, lint and types passed (`check.log`).
 - `PANDA_DOCKER_TEST=0 PANDA_E2E=0 ./scripts/deno task test`: 76 passed, 0 failed, 13 ignored
   (`unit.log`).
 

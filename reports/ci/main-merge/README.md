@@ -1,4 +1,4 @@
-# Main merge and CI consumer verification
+# Main merge and CI verification
 
 Console logs mentioned below are local or CI artifacts, not versioned files. See the
 [report retention policy](../../README.md).
@@ -7,11 +7,6 @@ The integration combines `origin/main` at `b917a74` with the CI branch at `b3c11
 Lighthouse patches, controlled clocks, consensus barriers and time algorithms match main. CI keeps
 separate Lighthouse/Panda releases, pinned clients and versions derived from Git tags. Image source
 labels and the Git remote now point to `https://github.com/eddort/panda`.
-
-The Lido consumer is based on `c96c893ac67011681f4aa7caf4f7b9e25fa33aef`. Its patch is
-[tracked separately](../../../integrations/lido-core/panda-ci.patch), and was checked against a
-clean index at that base. Long historical-summary and exit-deadline jumps explicitly request
-`mode: "fast"`; activation, voting and finality recovery still advance complete slots.
 
 ## Executed checks
 
@@ -24,14 +19,11 @@ this run.
 | `deno task check`                                                          | Passed: formatting, lint and types                                                      | `check.log`                                                                            |
 | `PANDA_DOCKER_TEST=0 PANDA_E2E=0 deno task test`                           | 60 passed; 13 opt-in Docker/profile tests ignored by this command                       | `unit.log`                                                                             |
 | Docker registry error regression                                           | Red: stale digest incorrectly accepted; green: error rejected                           | `docker-progress-red.log`, `docker-progress-green.log`                                 |
-| Lido RPC client regression                                                 | Red: fast options lost; green: exact options forwarded, default preserved               | `lido-client-red.log`, `lido-client-green.log`                                         |
-| Lido `yarn typecheck` and targeted ESLint                                  | Passed                                                                                  | `lido-typecheck.log`, `lido-lint.log`                                                  |
-| `actionlint` on both Panda workflows and the Lido consumer workflow        | Passed                                                                                  | `actionlint.log`                                                                       |
+| `actionlint` on both Panda workflows         | Passed                                                                                  | `actionlint.log`                                                                       |
 | `deno task smoke:docker`                                                   | Passed                                                                                  | `docker-smoke.log`                                                                     |
 | `deno task bake gloas --tag ci-main-merge`                                 | Passed: native clock, BLS, weighted selection, direct-sync regressions and binary build | `bake-gloas.log`                                                                       |
 | `PANDA_PROFILE=gloas PANDA_BAKE=ci-main-merge deno task test:baker`        | 4 passed                                                                                | `baker-gloas.log`                                                                      |
 | `deno task test:image panda-ci-gloas:merge-main gloas`                     | Passed: fresh genesis, readiness, transaction, pause and shutdown                       | [report](gloas-container.json), `image-gloas.log`                                      |
-| Lido `PANDA_URL=http://127.0.0.1:18547 yarn test:integration:panda --bail` | 15 passed against the packaged Gloas service; 21 scratch deployment steps               | [verifiers](lido-verifiers.json), `lido-verifiers.log`, [service](lido-container.json) |
 
 Gloas bake: [ci-main-merge](../../../bakes/gloas/tags/ci-main-merge.json), key
 `d769395a4ea4f4f4d3290b54aefa32780d32410248518ea319648353ab18fb86`. The local build happened before

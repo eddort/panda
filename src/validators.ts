@@ -1,4 +1,4 @@
-import { json } from "./http.ts";
+import { defaultTimeoutMs, json } from "./http.ts";
 import type { Manifest } from "./network.ts";
 
 /** Credentials and private VC endpoints stay on the controller host. */
@@ -13,7 +13,7 @@ async function keymanager<T>(manifest: Manifest, route: string, body?: unknown):
     method: "POST",
     headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
-    signal: AbortSignal.timeout(60_000),
+    signal: AbortSignal.timeout(defaultTimeoutMs()),
   });
 }
 
@@ -50,7 +50,7 @@ export async function exitValidator(manifest: Manifest, pubkey: unknown) {
     method: "POST",
     headers: { "content-type": "application/json" },
     body: JSON.stringify(signed.data),
-    signal: AbortSignal.timeout(60_000),
+    signal: AbortSignal.timeout(defaultTimeoutMs()),
   });
   if (!response.ok) throw new Error(`Exit rejected: ${await response.text()}`);
   await response.body?.cancel();

@@ -4,7 +4,7 @@ import { Devnet } from "./api.ts";
 import { configuration } from "./config.ts";
 import { Controller } from "./controller.ts";
 import { Infrastructure, LABEL, ROLE } from "./docker.ts";
-import { json, rpc } from "./http.ts";
+import { defaultTimeoutMs, json, rpc } from "./http.ts";
 import { Network } from "./network.ts";
 
 const { flags, positional } = argumentsFor(Deno.args, ["profile", "bake"]);
@@ -71,7 +71,6 @@ async function down(): Promise<void> {
             ? true
             : undefined;
         },
-        90_000,
       );
       return;
     } catch (error) {
@@ -214,7 +213,7 @@ switch (command) {
             ? []
             : [command === "setAutomine" ? argument === "true" : Number(argument)],
         }),
-        signal: AbortSignal.timeout(3_600_000),
+        signal: AbortSignal.timeout(defaultTimeoutMs()),
       }),
     );
   }

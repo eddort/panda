@@ -65,7 +65,7 @@ Completed full local profile verification:
 
 Additional completed checks:
 
-- `actionlint`: all Panda workflows and the Lido consumer workflow passed.
+- `actionlint`: all Panda workflows passed.
 - `deno task smoke:docker`: passed in 4.60 seconds.
 - `test:baker` for Gloas and Pectra: **4/4 each**, including artifact reuse, archive restoration,
   rollback and protection of another owner.
@@ -76,15 +76,9 @@ Additional completed checks:
   readiness without mining, transaction/pause, public CL/VC, VC authentication after replacement
   during fast warp, client logs and graceful shutdown. Evidence: [Gloas](gloas-image.json),
   [Pectra](pectra-image.json).
-- Lido Node SDK: **8/8 passed**; `yarn typecheck` passed.
-
-- Lido `yarn test:integration:panda --bail`: **15/15 passed**, 314.55 seconds including a fresh
-  scratch deployment, against the newly built Gloas service and its directly exposed Beacon API.
-  [Service evidence](lido-container.json),
-  [verifier proof/transaction evidence](lido-verifiers.json).
 - Both `ci-main-merge` bakes report `verified: true` against the final suite fingerprints.
 
-[Docker and consumer command results](docker-and-consumer.json) include all successful stages.
+[Docker command results](docker-checks.json) include the successful Docker stages.
 Packaging reused cached native artifacts. Local package test images are unpublished; GitHub release
 jobs were not restarted by this verification.
 

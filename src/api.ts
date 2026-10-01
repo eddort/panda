@@ -1,6 +1,6 @@
 import { type Config } from "./config.ts";
 import { Controller } from "./controller.ts";
-import { json, rpc, waitFor } from "./http.ts";
+import { defaultTimeoutMs, json, rpc, waitFor } from "./http.ts";
 import type { WarpOptions } from "./time.ts";
 export type { WarpMode, WarpOptions } from "./time.ts";
 
@@ -22,7 +22,7 @@ export class Devnet {
     return (await json<{ result: T }>(`${this.url}/control`, {
       method: "POST",
       body: JSON.stringify({ method, params }),
-      signal: AbortSignal.timeout(3_600_000),
+      signal: AbortSignal.timeout(defaultTimeoutMs()),
     })).result;
   }
   status(): Promise<
@@ -82,7 +82,7 @@ export class Devnet {
     if (!Number.isSafeInteger(options.maxSlots) || options.maxSlots < 0) {
       throw new Error("maxSlots must be a non-negative integer");
     }
-    const deadline = performance.now() + (options.timeoutMs ?? 300_000);
+    const deadline = performance.now() + (options.timeoutMs ?? defaultTimeoutMs());
     for (let count = 0;; count++) {
       if (await predicate()) return count;
       if (count === options.maxSlots || performance.now() >= deadline) {
@@ -94,7 +94,7 @@ export class Devnet {
   waitForService<T>(
     description: string,
     probe: () => Promise<T | undefined>,
-    timeoutMs = 30_000,
+    timeoutMs = defaultTimeoutMs(),
   ): Promise<T> {
     return waitFor(description, probe, timeoutMs);
   }

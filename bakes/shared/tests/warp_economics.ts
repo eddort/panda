@@ -218,7 +218,22 @@ if (manifest.bake.recipe.directSync) {
   });
   assert.equal(deleted.data[0]?.status, "deleted");
   const started = performance.now();
-  await assert.rejects(net.advanceSlots(2), /sync_contributions_|Incomplete native barrier/);
+  const previousTimeout = Deno.env.get("PANDA_TIMEOUT_MS");
+  try {
+    // Deliberately broken signer: verify a strict failure budget independently of runtime defaults.
+    Deno.env.set("PANDA_TIMEOUT_MS", "30000");
+    await assert.rejects(
+      json(`${net.url}/control`, {
+        method: "POST",
+        body: JSON.stringify({ method: "advanceSlots", params: [2] }),
+        signal: AbortSignal.timeout(40_000),
+      }),
+      /sync_contributions_|Incomplete native barrier/,
+    );
+  } finally {
+    if (previousTimeout === undefined) Deno.env.delete("PANDA_TIMEOUT_MS");
+    else Deno.env.set("PANDA_TIMEOUT_MS", previousTimeout);
+  }
   const elapsedMs = performance.now() - started;
   assert(elapsedMs < 40_000, "missing-key failure must use a bounded real deadline");
   const stopped = await net.status();

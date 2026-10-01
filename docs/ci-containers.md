@@ -151,11 +151,9 @@ substituting the current controller's commit.
 GHCR packages must permit the repository's token to pull them. Client restore supports private GHCR
 images using `GITHUB_ACTOR` and `GHCR_TOKEN`; public images can be restored without credentials.
 
-## Lido core consumer
+## Use Panda as a CI service
 
-The existing Lido suite is `test/integration/panda/verifiers.integration.ts` in the
-`feat/devnet-gloas-verifier-e2e` checkout. Its workflow **Integration Tests Panda** accepts the
-published Gloas digest and uses:
+Start a fresh service for each test suite and pin its published image digest:
 
 ```yaml
 env:
@@ -168,29 +166,17 @@ services:
       - 127.0.0.1:18547:8545
       - 127.0.0.1:5052:5052
       - 127.0.0.1:5062:5062
-    options: --privileged --stop-timeout 120 --label io.panda.id=lido-ci
+    options: --privileged --stop-timeout 120 --label io.panda.id=protocol-ci
 ```
 
-After the existing Node/Foundry/just setup, it runs `yarn test:integration:panda --bail`. The suite
-performs its own warmup and scratch deployment. `PANDA_URL` connects to the service; `PANDA_ROOT`
-continues to start a local controller. The remote client reads no Panda files and never stops the
-externally owned service. Start a new service for every suite. For a private Panda package the
-consumer can use `PANDA_REGISTRY_TOKEN`.
-
-`PANDA_BEACON_URL` sends all SDK Beacon requests directly to CL. The SDK checks fresh CL genesis,
-matches it to the controller and EL configuration, binds each captured Gloas payload to canonical EL
-history, and confirms finalized checkpoints against EL. An explicit unavailable CL endpoint fails
-the suite; omitting the variable retains the Beacon proxy for local startup.
-
-The exit-eligibility and historical-summary transitions explicitly use
-`advanceTo(timestamp, { mode: "fast" })`. Voting, activation and finality recovery still execute
-complete slots. The Node client preserves Panda's honest default when the mode is omitted.
+Configure your test client to use these endpoints, wait for the service to become ready, then run
+its normal test command. For private images, configure registry credentials in the consuming
+workflow. The test client must not stop a service owned by the workflow.
 
 Ethereum RPC, the Beacon API proxy and `/control` share port 8545. Native Beacon and validator APIs
-are also available on separate ports, as described below. Importing validator keys through Panda
-uses the real Lighthouse keymanager; Lighthouse signs voluntary exits before submission to the
-Beacon API. The consumer patch is described in
-[integrations/lido-core](../integrations/lido-core/README.md).
+are available on separate ports. Importing validator keys through Panda uses the Lighthouse
+keymanager; Lighthouse signs voluntary exits before submission to the Beacon API. Time advancement
+is honest by default; request `{ mode: "fast" }` explicitly for scenarios that allow skipped duties.
 
 ## Client APIs and logs
 
@@ -255,8 +241,8 @@ before stopping or removing the outer service. In GitHub Actions, use the actual
     done
 ```
 
-The Lido consumer workflow uploads these files even when tests fail. A log collection error is
-retained in the corresponding file when the service or client has already stopped.
+Upload these files as workflow artifacts even when tests fail. A log collection error is retained in
+the corresponding file when the service or client has already stopped.
 
 ## Packaging and runtime
 
@@ -324,16 +310,13 @@ transport. Red/green evidence is under `.cache/ci-release-split-*.log`.
   upstream/baker identity checks are recorded separately below. The HTTP unit fixtures required
   permission to bind loopback; the initial sandbox-only attempt failed on those two fixtures, and
   the run with loopback access passed.
-- `actionlint`: passed for both publisher workflows and the existing Lido consumer workflow.
+- `actionlint`: passed for both publisher workflows.
 - The initial Git-tag regression run failed three assertions under the old manual revision behavior.
   After implementation all nine release/client unit checks passed.
 
 The following results predate the split and are historical evidence only:
 
-- Controller API and Lido HTTP client regressions passed; Lido `yarn typecheck` passed.
-- The existing Lido Gloas suite through port 18547 passed 15 tests in 8 minutes, including validator
-  import, signed exit and resumed real finality. The service remained running after client close.
-  Raw evidence: [Lido verifier report](../reports/ci/lido-gloas-verifiers.json).
+- Controller API regressions passed.
 - ARM service checks passed for Pectra (23.46 seconds) and Gloas (20.45 seconds): genesis, read-only
   readiness, Host protection, transaction inclusion, pause and SIGTERM shutdown.
 - A Gloas host run failed after its EL image was deleted during startup. The subsequent run in an

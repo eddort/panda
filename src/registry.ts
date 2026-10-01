@@ -1,3 +1,4 @@
+import { defaultTimeoutMs } from "./http.ts";
 import { assertMissingRevision } from "./release.ts";
 
 export function registryAuth() {
@@ -29,7 +30,7 @@ export async function publishedDigest(image: string): Promise<string | undefined
       headers: {
         authorization: `Basic ${btoa(`${credentials.username}:${credentials.password}`)}`,
       },
-      signal: AbortSignal.timeout(30_000),
+      signal: AbortSignal.timeout(defaultTimeoutMs()),
     },
   );
   if (!auth.ok) throw new Error(`Registry authentication failed: HTTP ${auth.status}`);
@@ -43,7 +44,7 @@ export async function publishedDigest(image: string): Promise<string | undefined
         "application/vnd.oci.image.index.v1+json,application/vnd.oci.image.manifest.v1+json,application/vnd.docker.distribution.manifest.v2+json",
     },
     redirect: "error",
-    signal: AbortSignal.timeout(30_000),
+    signal: AbortSignal.timeout(defaultTimeoutMs()),
   });
   const digest = registryDigest(response.status, response.headers.get("docker-content-digest"));
   return digest ? `ghcr.io/${repository}@${digest}` : undefined;

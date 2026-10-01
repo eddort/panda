@@ -1,7 +1,7 @@
 import { Automine } from "./automine.ts";
 import { Consensus } from "./consensus.ts";
 import { type Config, configuration } from "./config.ts";
-import { json, rpc } from "./http.ts";
+import { defaultTimeoutMs, json, rpc } from "./http.ts";
 import { type Manifest, Network } from "./network.ts";
 import { type Timeline, warpMode } from "./time.ts";
 import { cpuUsage } from "node:process";
@@ -110,7 +110,7 @@ export class Controller {
               body: request.method === "GET" || request.method === "HEAD"
                 ? undefined
                 : request.body,
-              signal: AbortSignal.timeout(30_000),
+              signal: AbortSignal.timeout(defaultTimeoutMs()),
             });
           }
           if (path !== "/" || request.method !== "POST") {
@@ -123,7 +123,7 @@ export class Controller {
             method: "POST",
             body,
             headers: { "content-type": "application/json" },
-            signal: AbortSignal.timeout(30_000),
+            signal: AbortSignal.timeout(defaultTimeoutMs()),
           });
           const response = await upstream.text();
           // Preserve upstream batch ordering, IDs, errors and notification responses verbatim.

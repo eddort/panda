@@ -1,3 +1,4 @@
+import { defaultTimeoutMs } from "./http.ts";
 export const SLOT_MS = 12_000;
 export const SLOTS_PER_EPOCH = 32;
 export const PHASES = [0, 4_000, 6_000, 8_000, 9_000, 11_500] as const;
@@ -140,7 +141,7 @@ export class Timeline {
     options: { maxSlots: number; timeoutMs?: number },
   ): Promise<number> {
     integer(options.maxSlots, "maxSlots");
-    const timeoutMs = options.timeoutMs ?? 300_000;
+    const timeoutMs = options.timeoutMs ?? defaultTimeoutMs();
     integer(timeoutMs, "timeoutMs", 1);
     return this.exclusive(async () => {
       const deadline = performance.now() + timeoutMs;
