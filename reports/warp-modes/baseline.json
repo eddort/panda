@@ -1,0 +1,40 @@
+{
+  "selectedGloasBake": "e41c863be72847fb1bec8e0b455e23f243cb27d8e73d3ce90ea8f5be6e78c0c8",
+  "clImage": "sha256:6964cab3bb40072d63e87cf08fa9b6e992195aeeeff9271f970bd931d14bfe08",
+  "nativeInputs": {
+    "bakes/gloas/lighthouse.patch": {
+      "expected": "9717ffa4a4d6cb94eadcb0dd5ce9a78736409be8401bffd8aad6700233c35274",
+      "actual": "9717ffa4a4d6cb94eadcb0dd5ce9a78736409be8401bffd8aad6700233c35274"
+    },
+    "bakes/shared/controlled_clock.rs": {
+      "expected": "87f9d148b720af705dd8d8deb3c22a4a3e1441c7af4bc988dee566101bf2c692",
+      "actual": "87f9d148b720af705dd8d8deb3c22a4a3e1441c7af4bc988dee566101bf2c692"
+    },
+    "bakes/shared/controlled_clock_test.rs": {
+      "expected": "5a36b0b2713c708bddefd7011a5f8c0fdd038974b149ad84baefd2fa11d89f9e",
+      "actual": "5a36b0b2713c708bddefd7011a5f8c0fdd038974b149ad84baefd2fa11d89f9e"
+    },
+    "bakes/shared/native/verified_signature.rs": {
+      "expected": "6746df67b0cf6893d889b36aad83183c21a21a3e46d135ce035cce52617ecf3e",
+      "actual": "6746df67b0cf6893d889b36aad83183c21a21a3e46d135ce035cce52617ecf3e"
+    },
+    "bakes/shared/native/sync_batch.rs": {
+      "expected": "0d421c3f1e4b23842cee5ee079347600dba316ea460cf070d768c88fab3f818f",
+      "actual": "0d421c3f1e4b23842cee5ee079347600dba316ea460cf070d768c88fab3f818f"
+    },
+    "bakes/gloas/native/weighted_selection.rs": {
+      "expected": "e38a847e71364f1baa5a742e81b00fbcf5f11c3252708d9a4881b16dfdc426b3",
+      "actual": "e38a847e71364f1baa5a742e81b00fbcf5f11c3252708d9a4881b16dfdc426b3"
+    },
+    "bakes/gloas/native/prepare_skip.rs": {
+      "expected": "c6979a20ac079ab0768ff6335b1c5a11d9cd939b807d0ff1a3482507f8d09166",
+      "actual": "c6979a20ac079ab0768ff6335b1c5a11d9cd939b807d0ff1a3482507f8d09166"
+    },
+    "bakes/shared/native/direct_sync_test.rs": {
+      "expected": "292afa5a59fa9e5f00bf12a92b01a51488903ae948455a08b311d52907b353c9",
+      "actual": "292afa5a59fa9e5f00bf12a92b01a51488903ae948455a08b311d52907b353c9"
+    }
+  },
+  "decision": "Retain direct-sync; isolated group-signing and other research prototypes are not integrated. Add explicit controller-only honest/fast modes.",
+  "historicalLongRun": "12m40s for failed full test, not exact warp-only timing; full pass not claimed."
+}

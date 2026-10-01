@@ -1,0 +1,33 @@
+{
+  "date": "2026-09-30",
+  "profileContext": "gloas",
+  "image": "sha256:9ad0c47880881464036f8b5779f49a15d058154581404d0d50a20f9d11f3436e",
+  "cpuLimit": 2,
+  "architecture": "linux/aarch64",
+  "clientModified": false,
+  "fullWarpProven": false,
+  "baselineExitCode": 2,
+  "workerPoolIsSchedulingSurrogate": true,
+  "candidateExitCode": 0,
+  "fullBaselineExitCode": 2,
+  "fullCandidateExitCode": 0,
+  "baselineManifestReconstruction": "Removed only direct zeroize and local package lock dependency; implementing agent confirmed this was the sole manifest change. zeroize 1.8.2 was already transitive.",
+  "sourceSha256": {
+    "baseline-source/Cargo.lock": "7c1ec1430f46b5a82db0b6a91e919b502f279e572deb8b9fe281038474041fac",
+    "baseline-source/Cargo.toml": "a7d7a1f0a2a643b5f1995ed15196737630a008fb1ef8b6801a5b876fbd72f7d6",
+    "baseline-source/src/lib.rs": "5271ad4c932e6da2968fdacc4e80a30316d507ffa0d6a50a1ada5418dd31063f",
+    "baseline-source/src/main.rs": "b8e383cdcdc54660091bb30ef19d3c26bc8668236a02d333a2617cbc5fa14d9c",
+    "candidate-source/Cargo.lock": "ab99fd4da0302864165a35d461e69a1c688c17b47ff0b2ecc55bb4b2cbffd4e9",
+    "candidate-source/Cargo.toml": "0e13e2f56ce07cf53d120a274568c232b16d63160c86b9be00aef63a307a95b0",
+    "candidate-source/src/lib.rs": "12d9cb9ad56c62bc531ee17bc296b87dd482ee6c488a079dc3521a55fcbf069e",
+    "candidate-source/src/main.rs": "123e03e02b79cd5a7bd7795c69e4f2db2792f271aceb213159fc3d97f942d5ed",
+    "full-baseline-source/Cargo.lock": "ab99fd4da0302864165a35d461e69a1c688c17b47ff0b2ecc55bb4b2cbffd4e9",
+    "full-baseline-source/Cargo.toml": "0e13e2f56ce07cf53d120a274568c232b16d63160c86b9be00aef63a307a95b0",
+    "full-baseline-source/src/lib.rs": "12d9cb9ad56c62bc531ee17bc296b87dd482ee6c488a079dc3521a55fcbf069e",
+    "full-baseline-source/src/main.rs": "3e219a8d488706e87b8605cc9a5a62adb4838b8af6ec89c3c30829afb45ed5ea",
+    "full-candidate-source/Cargo.lock": "ab99fd4da0302864165a35d461e69a1c688c17b47ff0b2ecc55bb4b2cbffd4e9",
+    "full-candidate-source/Cargo.toml": "0e13e2f56ce07cf53d120a274568c232b16d63160c86b9be00aef63a307a95b0",
+    "full-candidate-source/src/lib.rs": "12d9cb9ad56c62bc531ee17bc296b87dd482ee6c488a079dc3521a55fcbf069e",
+    "full-candidate-source/src/main.rs": "156363016d6d79f502926cabfa369895c576f5d950a39af61ff44c1285762689"
+  }
+}

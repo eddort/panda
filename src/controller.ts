@@ -3,7 +3,7 @@ import { Consensus } from "./consensus.ts";
 import { type Config, configuration } from "./config.ts";
 import { json, rpc } from "./http.ts";
 import { type Manifest, Network } from "./network.ts";
-import { type Timeline } from "./time.ts";
+import { type Timeline, warpMode } from "./time.ts";
 import { cpuUsage } from "node:process";
 
 export class Controller {
@@ -39,7 +39,8 @@ export class Controller {
       ),
     };
   }
-  async command(method: string, args: number[] | boolean[] = []): Promise<unknown> {
+  async command(method: string, args: unknown[] = []): Promise<unknown> {
+    if (!Array.isArray(args)) throw new Error("Control params must be an array");
     switch (method) {
       case "status":
         return await this.status();
@@ -55,10 +56,10 @@ export class Controller {
         await this.time.advanceEpochs(args[0] as number);
         break;
       case "advanceTime":
-        await this.time.advanceTime(args[0] as number);
+        await this.time.advanceTime(args[0] as number, { mode: warpMode(args[1]) });
         break;
       case "advanceTo":
-        await this.time.advanceTo(args[0] as number);
+        await this.time.advanceTo(args[0] as number, { mode: warpMode(args[1]) });
         break;
       case "skipSlots":
         await this.time.skipSlots(args[0] as number);

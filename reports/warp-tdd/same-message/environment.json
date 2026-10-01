@@ -1,0 +1,21 @@
+{
+  "date": "2026-09-30",
+  "profileContext": "gloas",
+  "image": "sha256:9ad0c47880881464036f8b5779f49a15d058154581404d0d50a20f9d11f3436e",
+  "cpuLimit": 2,
+  "architecture": "linux/aarch64",
+  "clientModified": false,
+  "fullWarpProven": false,
+  "baselineExitCode": 2,
+  "candidateExitCode": 2,
+  "sourceSha256": {
+    "baseline-source/Cargo.lock": "6d73fed1f76a185ceb50f01260109549c0051ced29f0708aca76dedb02aa92d3",
+    "baseline-source/Cargo.toml": "ca25ee39dad4a739d96f0a5856fe550afcefdb27a3ebf7288f2a1947d19b07c3",
+    "baseline-source/src/lib.rs": "869464504d0753a3144957f69398f2d01ae72792017e65255ae84f1df5d8ee98",
+    "baseline-source/src/main.rs": "0f89fa138f30374272bc67722b8952ef0982cc762d7e653d353f6eb81b7bb1e8",
+    "candidate-source/Cargo.lock": "6d73fed1f76a185ceb50f01260109549c0051ced29f0708aca76dedb02aa92d3",
+    "candidate-source/Cargo.toml": "ca25ee39dad4a739d96f0a5856fe550afcefdb27a3ebf7288f2a1947d19b07c3",
+    "candidate-source/src/lib.rs": "a96dc2108ec5a3085cf3f4721d130943b5505ef6efa72c23f3782ab277107103",
+    "candidate-source/src/main.rs": "47808d801c2d4cb08c4b2acf7ad6d748816feb458c6690f54cbb7c61377e0f67"
+  }
+}

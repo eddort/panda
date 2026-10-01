@@ -14,7 +14,7 @@ fn request(port: u16, path: &str) -> String {
 }
 
 #[tokio::test]
-async fn protocol_time_waits_for_commands_and_rejects_backwards_moves() {
+async fn protocol_time_waits_for_completion_and_rejects_invalid_commands() {
     let listener = TcpListener::bind(("127.0.0.1", 0)).unwrap();
     let port = listener.local_addr().unwrap().port();
     drop(listener);
@@ -37,6 +37,42 @@ async fn protocol_time_waits_for_commands_and_rejects_backwards_moves() {
     let response = tokio::task::spawn_blocking(move || request(port, "/advance/2000000000000")).await.unwrap();
     assert!(response.contains("409 Conflict"));
     assert_eq!(clock.now(), Some(Slot::new(1)));
+    // Waiting for actual work uses a notification, not a polling delay or advancing time.
+    let pending = tokio::task::spawn_blocking(move || request(port, "/wait/1/1000/proposal,execution"));
+    tokio::time::sleep(Duration::from_millis(20)).await;
+    assert!(!pending.is_finished(), "wait returned before either completion mark");
+    controlled::mark("proposal", 1);
+    tokio::time::sleep(Duration::from_millis(20)).await;
+    assert!(!pending.is_finished(), "wait returned before all completion marks");
+    controlled::mark("execution", 1);
+    let response = tokio::time::timeout(Duration::from_millis(100), pending).await.unwrap().unwrap();
+    assert!(response.contains("200 OK"));
+    assert_eq!(clock.now(), Some(Slot::new(1)));
+    // Already completed work must not miss a wakeup.
+    let response = tokio::task::spawn_blocking(move || request(port, "/wait/1/1000/proposal,execution")).await.unwrap();
+    assert!(response.contains("200 OK"));
+    // A missing mark expires in real time while protocol time remains frozen.
+    let started = std::time::Instant::now();
+    let response = tokio::task::spawn_blocking(move || request(port, "/wait/1/30/missing")).await.unwrap();
+    assert!(response.contains("408 Request Timeout"));
+    assert!(started.elapsed() >= Duration::from_millis(25));
+    assert!(started.elapsed() < Duration::from_secs(1));
+    assert_eq!(clock.now(), Some(Slot::new(1)));
+    // A later watermark cannot prove the requested phase was observed by the controller.
+    controlled::mark_root("sync_contributions", "0xaaa", 1);
+    controlled::mark_root("sync_contributions", "0xbbb", 1);
+    let response = tokio::task::spawn_blocking(move || request(port, "/wait/1/30/sync_contributions_0xaaa")).await.unwrap();
+    assert!(response.contains("408 Request Timeout"));
+    assert!(!response.contains("sync_contributions_0xaaa"), "obsolete roots must be evicted");
+    let response = tokio::task::spawn_blocking(move || request(port, "/wait/1/30/sync_contributions_0xbbb")).await.unwrap();
+    assert!(response.contains("200 OK"));
+    controlled::mark("proposal", 2);
+    let response = tokio::task::spawn_blocking(move || request(port, "/wait/1/30/proposal")).await.unwrap();
+    assert!(response.contains("409 Conflict"));
+    for path in ["/wait/1/0/proposal", "/wait/1/30001/proposal", "/wait/1/30/", "/wait/1/30/a%22b"] {
+        let response = tokio::task::spawn_blocking(move || request(port, path)).await.unwrap();
+        assert!(response.contains("400 Bad Request"));
+    }
     // A late subscriber sees the current time; a zero-delay retry waits rather than spinning.
     assert!(tokio::time::timeout(Duration::from_millis(20), controlled::sleep(Duration::ZERO)).await.is_err());
 }

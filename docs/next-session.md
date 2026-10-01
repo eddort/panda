@@ -1,5 +1,140 @@
 # Следующая сессия — 2026-09-30
 
+**Актуальный запрос:** остановить оптимизацию, зафиксировать все попытки и оставить минимальный
+проверенный `direct-sync`, дававший около 13 минут на 8192 слота. Добавить два режима на одном bake:
+медленный честный и быстрый с настоящими штрафами за пропуск. Slashing protection сохраняется в
+обоих; конфликтующие подписи не являются допустимым режимом.
+
+**Сделано:** `advanceTime/advanceTo(..., { mode: "honest" | "fast" })`; default honest. Fast
+восстанавливает старый skip→destination path для >32 slots. Только API/controller/time; все native
+hashes Gloas совпали с immutable `direct-sync`, CL не менялся и не пересобирался. Добавлен
+`warp-fast` в независимые profile suites. Историческая цель honest ≤60 с теперь архивная и не
+считается достигнутой. Full honest получает отдельный watchdog, без ослабления economics.
+
+TDD evidence находится в `reports/warp-modes/`: четыре behavior RED и GREEN time; localhost API
+GREEN; profile routing RED; historical-rewards pruning RED→GREEN. Ошибки sandbox bind/formatting
+сохранены отдельно и не считаются behavioral RED. Все прежние экспериментальные reports и staging
+сохранены; коммита нет. Итоговая таблица исполняемых проверок — [warp-modes.md](warp-modes.md).
+
+**Проверки завершены:** fast два ×8192 вместе с первой tx — Gloas 8,286/8,633 с, Pectra
+15,181/15,510 с; resumed finality, EL/CL и signing history PASS. Honest два ×96 на Gloas с live
+rewards и sync bits PASS; отдельная economics на обоих профилях PASS, включая последующий deploy. На
+Gloas также проверен ограниченный отказ при missing key. Unit: 42 passed, 13 opt-in ignored. Полный
+двухдиапазонный honest8192 run не запускался и не выдан за PASS; полная матрица приёмки остаётся
+незавершённой. Прототипы новых подписей не интегрировать, к оптимизациям не возвращаться без нового
+запроса пользователя.
+
+Ниже — история исследования, сохранённая как архив; её прежние цели не перекрывают это решение.
+
+## Что сохранено и что остановлено
+
+- [Общий журнал экспериментов](warp-experiments.md) — индекс измерений, отказов и гипотез.
+- [Фактический статус и RED/GREEN](warp-tdd-results.md), [матрица приёмки](warp-tdd-acceptance.md),
+  [новый исследовательский цикл](warp-one-minute-research.md).
+- Gloas `direct-sync`, key `e41c863be72847fb1bec8e0b455e23f243cb27d8e73d3ce90ea8f5be6e78c0c8`:
+  native tests и standalone economics прошли. Два диапазона по 96 слотов: 8,292/9,033 с; следующий
+  deploy: 0,109/0,099 с. Короткий замер 32 слотов: 2,956 с. Проверка ограниченного отказа при
+  отсутствующем ключе прошла. Независимый replay 64 блоков и envelopes чистым upstream CL подтвердил
+  BLS, каждый state root и побайтный post-state; плохие подписи отвергнуты.
+- Полный Gloas profile **остановлен**. Baseline/lifecycle/e2e прошли; большой тест FAILED после
+  12m40s при historical rewards HTTP 404 (удалённое историческое состояние слота 191), после первого
+  диапазона 8192 слотов и первой транзакции в блоке 8321. Второй диапазон не выполнен. Следующий
+  economics упал из-за исчезнувшего Geth image; причина этого исчезновения не установлена. Protocol
+  прерван SIGINT. Все контейнеры этого run удалены по точным id, дочерний процесс завершён. Логи
+  перенесены из `.cache` в `reports`.
+- Generated `verification.json` остался `passed:false,status:running` после SIGINT. Это устаревшая
+  запись незавершённой проверки, а не работающий процесс. Вручную его не переписывали.
+- На момент остановки в `bakes/shared/tests/warp.ts` стоял ошибочный 30-минутный watchdog. В новом
+  двухрежимном контракте он заменён: fast 25 с, honest Gloas 20 минут/Pectra 55 минут на sample.
+  Rewards теперь читаются до pruning; прежняя цель honest ≤60 с отменена пользователем.
+- Pectra direct-sync ещё **не собран и не запущен**. Shared fixture адаптирован под две старые API
+  сигнатуры; чистое применение патча прошло. Gloas GREEN не заменяет Pectra GREEN.
+- Старый staging сохранён; поздние файлы unstaged/untracked. Коммит не запрошен; будущий коммит
+  обязательно подписывать. Docker — только точные `io.panda.id`, без глобальных prune.
+
+## Исследование после остановки
+
+Пользователь разрешил loop с `warp_math`, `warp_pipeline`, `warp_adversarial`, затем уточнил:
+**только алгоритмы, без исследования потоков**. Старые сравнения сохранены как история. Дальнейшие
+probes сохраняют среду неизменной. Клиент не менялся в этом исследовательском цикле.
+
+Исполненные отдельные криптографические probes:
+
+1. Same-message verification: baseline 11 тестов PASS, 15,592/15,065 мс; кандидат MSM — 14 тестов
+   PASS, 3,329/4,229 мс (cold/warm success cache). Заранее выделенные ≤2 мс не достигнуты.
+   [Данные и обе версии исходников](../reports/warp-tdd/same-message/README.md).
+2. Shared public hash: baseline 4 теста PASS, кандидат 7 PASS. В одинаковом режиме двух workers
+   создание 64 подписей при меняющихся roots: 14,081 → 5,508 мс. В режиме одного worker: 20,234 →
+   10,731 мс. Все индивидуальные подписи сохранены и побайтно совпадают с обычными. Gate ≤1 мс
+   остался RED. Это историческое сравнение, дальнейшего подбора потоков нет.
+   [Данные и исходники](../reports/warp-tdd/shared-hash/README.md).
+3. Четыре ephemeral sync aggregates: baseline 9 тестов PASS, **26,020 мс**; candidate 12 PASS,
+   **2,331 мс**, p95 **2,458 мс**, cold preparation **0,307 мс**. Gate mean ≤3 мс — **GREEN**.
+4. Один full aggregate на 512 positions: baseline **27,816 мс** → candidate **1,563 мс**, p95
+   **1,612 мс**, cold preparation **0,266 мс**. 12 library + 2 CLI теста PASS у обоих запусков;
+   component gate **GREEN**. Baseline исполнен до включения candidate CLI. Среда/helper неизменны.
+   [Raw evidence, четыре версии исходников и adapter](../reports/warp-tdd/group-sync/README.md).
+   Первый candidate build error E0509 в test fixture сохранён отдельно; это не performance RED.
+
+Текущий алгоритмический кандидат: на каждом вызове разрешить все текущие локальные ключи,
+суммировать секретные scalar по точным позициям committee и подписать четыре subnet aggregates.
+Результат должен побайтно совпасть с обычной агрегацией индивидуальных подписей. Секретные суммы не
+кэшировать; scratch очищать при любом выходе. BN проверяет реальные подписи и membership из единого
+head snapshot, затем использует прежний pool. Slashable duties остаются прежними. Подробности:
+[group-sync research](warp-group-sync-research.md).
+
+Критические результаты peer review:
+
+- Промежуточный ноль при суммировании допустим. Если итог хотя бы одного subnet равен нулю, вернуть
+  **весь batch** в старый individual/direct-sync путь: его full SyncAggregate может быть ненулевым и
+  валидным, хотя новый subnet verifier отверг бы infinity.
+- Root и committee получать из одного snapshot: два отдельных root-check не исключают A→B→A. Перед
+  insertion/mark повторно проверить slot/root. Mark не заменяет EL/envelope barrier.
+- Учитывать membership по slot+1, domain по подписываемому slot, multiplicity и exited validators,
+  ещё входящих в committee. Disabled/missing keys и remote signer различать.
+- Required four-signature verification — прежний randomized general batch, не простая сумма,
+  способная скрыть компенсирующие ошибки. Независимые oracle checks держать вне perf-таймера, но
+  обязательную проверку новых входов включать в него.
+
+Криптографический вариант одного настоящего full SyncAggregate уже измерен, но его bounded pool
+entry ещё не интегрирован. Потеря transient entry при restart не должна превращаться в пустое
+участие: production должен отказать до выдачи unsigned block VC. Строгое исключение только для
+genesis+1; неожиданный gap тоже должен закрывать production. Явному `skipSlots` нужно разрешение на
+конкретный target/root: нынешний `prepare_controlled_skip` автоматически реагирует на lag и не
+доказывает явную команду. Нативные тесты этих контрактов ещё не выполнены.
+
+State содержит aggregate_pubkey для всех 512 позиций. Full-bits PK reuse и чтение exact positive BLS
+cache в batch verifier — дополнительные ещё неизмеренные резервы. Cache hit не заменяет
+membership/state checks. Не переносить лимит cache 512 на размер валидного upstream batch:
+потребуется regression на 513 sets. Исторический [worker/transport анализ](warp-worker-research.md)
+сохранён, но не является текущим направлением после ограничения пользователя. Следующий round:
+алгоритмический остаточный бюджет, PTC и ограничения slashable attestation aggregation. Production
+клиент не меняется.
+
+Для ≤60 с нужен полный слот ≤7,324 мс минус первая транзакция. Ни один компонентный probe этого ещё
+не доказал. До повторного 8192 нужны исправленный hard deadline, 32/256 полных слотов + tx,
+правдоподобный бюджет и вся матрица экономики, coverage, финальности, независимого replay, частичных
+отказов и операций после warp. Pectra проверяется отдельно перед выпуском.
+
+## Последний round и точка продолжения
+
+[Attestation research](warp-attestation-research.md): upstream уже умеет inclusion из naive pool без
+wrapper. Потенциально можно убрать controlled selection/aggregate wrappers, сохранив signer, DB
+pruning и обычный packing. ~5,243 мс/slot — затронутая наблюдаемая VC-работа, не измеренное
+ускорение. Нужен строгий BN guard: naive pool может заполниться после FC error, а stale insert может
+вернуть Ok без сохранения. Две initial BLS checks остаются; individual cache entries не подтверждают
+aggregate tuple.
+
+При продолжении реализации сначала native RED для нужной readiness/лишних jobs, затем минимальная
+правка и differential SSZ/state/rewards/FC. No-wrapper inclusion уже upstream PASS, не новый RED.
+Для group-sync integration нужны отдельные restart/explicit skip gates. Никаких 8192 запусков до
+коротких 32/256 и реального hard deadline ≤60 с с первой tx. Новые probe sources и все outputs
+сохранены в reports, их SHA-256 проверены. Reproduction adapter group-sync прошёл type-check;
+повторного benchmark ради adapter не делали. Итог поиска: доказанный sync component speedup есть,
+готового доказанного минутного warp пока нет. Клиент не изменялся в исследовательском цикле.
+
+## История до начала реализации
+
 Последнее уточнение: пользователь разрешил порог warp **25 с** вместо 20 с, включая следующую
 транзакцию. Общий тест обновлён; алгоритм не менялся. Исторические превышения прежнего порога ниже
 сохранены как факты предыдущих прогонов. Ошибка Docker при экспорте подписей не считается
@@ -8,7 +143,7 @@
 прошли. Полные profile-наборы после изменения критерия не повторялись; их старые suite fingerprints
 больше не совпадают с текущим.
 
-Текущий запрос: исследовать честное ускоренное выполнение обязанностей во время warp для всех
+Предыдущий запрос: исследовать честное ускоренное выполнение обязанностей во время warp для всех
 bake-профилей, без штрафов от искусственного пропуска и не медленнее текущего решения. **Реализацию
 нового warp пока не менять: по ней разрешено исследование и требуется TDD.** Отдельно пользователь
 явно разрешил выполнить перенос структуры бейкеров по TDD.

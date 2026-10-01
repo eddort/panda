@@ -38,6 +38,20 @@ export class Infrastructure {
     this.docker = docker;
     this.labels = { [LABEL]: id };
   }
+  /** Docker can return HTTP 200 with an operation error in its JSON progress stream. */
+  async progress(stream: NodeJS.ReadableStream): Promise<void> {
+    await new Promise<void>((resolve, reject) => {
+      this.docker.modem.followProgress(
+        stream,
+        (error: Error | null, events: { error?: string; errorDetail?: { message?: string } }[]) => {
+          const failure = events?.find((event) => event.error || event.errorDetail?.message);
+          if (error) reject(error);
+          else if (failure) reject(new Error(failure.errorDetail?.message ?? failure.error));
+          else resolve();
+        },
+      );
+    });
+  }
   async image(ref: string): Promise<void> {
     try {
       await this.docker.getImage(ref).inspect();
@@ -50,12 +64,7 @@ export class Infrastructure {
       throw new Error(`Local image ${ref} is missing`);
     }
     const stream = await this.docker.pull(ref);
-    await new Promise<void>((resolve, reject) => {
-      this.docker.modem.followProgress(
-        stream,
-        (error: Error | null) => error ? reject(error) : resolve(),
-      );
-    });
+    await this.progress(stream);
   }
   private imageArchive(id: string): string {
     if (!/^sha256:[a-f0-9]{64}$/.test(id)) throw new Error("Expected immutable image ID");
@@ -93,12 +102,7 @@ export class Infrastructure {
       throw error;
     }
     const stream = await this.docker.loadImage(createReadStream(path));
-    await new Promise<void>((resolve, reject) => {
-      this.docker.modem.followProgress(
-        stream,
-        (error: Error | null) => error ? reject(error) : resolve(),
-      );
-    });
+    await this.progress(stream);
     if ((await this.docker.getImage(id).inspect()).Id !== id) {
       throw new Error(`Restored bake image identity mismatch: ${id}`);
     }

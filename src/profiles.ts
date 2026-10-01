@@ -15,6 +15,10 @@ export interface Recipe {
   clockTest: string;
   /** Environment namespace compiled into the selected client's protocol clock. */
   clockEnvPrefix?: string;
+  /** Native, bounded completion notifications supported by this baked clock. */
+  clockWait?: boolean;
+  /** Complete, verified sync contributions are delivered locally without gossip aggregators. */
+  directSync?: boolean;
   patch: string;
   sourceFiles?: string[];
   nativeTests?: { package: string; target: string }[];

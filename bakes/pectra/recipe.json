@@ -6,6 +6,21 @@
   "clockSource": "bakes/shared/controlled_clock.rs",
   "clockTest": "bakes/shared/controlled_clock_test.rs",
   "clockEnvPrefix": "PANDA",
+  "sourceFiles": [
+    "bakes/shared/native/verified_signature.rs",
+    "bakes/shared/native/sync_batch.rs",
+    "bakes/shared/native/direct_sync_test.rs"
+  ],
+  "nativeTests": [
+    {
+      "package": "bls",
+      "target": "panda_verified_signature"
+    },
+    {
+      "package": "beacon_chain",
+      "target": "panda_direct_sync"
+    }
+  ],
   "runtime": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
   "clRepository": "https://github.com/sigp/lighthouse.git",
   "elRepository": "https://github.com/ethereum/go-ethereum.git",
@@ -15,6 +30,8 @@
     "lifecycle": "bakes/shared/tests/lifecycle.ts",
     "e2e": "bakes/shared/tests/e2e.ts",
     "warp": "bakes/shared/tests/warp.ts",
+    "warp-fast": "bakes/shared/tests/warp_fast.ts",
+    "warp-economics": "bakes/shared/tests/warp_economics.ts",
     "protocol": "bakes/shared/tests/protocol.ts",
     "withdrawal": "bakes/shared/tests/withdrawal.ts",
     "deploy": "bakes/shared/tests/deploy.ts"
@@ -50,5 +67,7 @@
     "GLOAS_FORK_EPOCH": "18446744073709551615",
     "HEZE_FORK_EPOCH": "18446744073709551615",
     "SLOT_DURATION_IN_SECONDS": "12"
-  }
+  },
+  "clockWait": true,
+  "directSync": true
 }

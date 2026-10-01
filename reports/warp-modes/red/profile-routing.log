@@ -1,0 +1,24 @@
+Check tests/profiles_test.ts
+running 1 test from ./tests/profiles_test.ts
+each hardfork's timeline executes its declared phases and completes a full slot ... FAILED (3ms)
+
+ ERRORS 
+
+each hardfork's timeline executes its declared phases and completes a full slot => ./tests/profiles_test.ts:26:6
+error: AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 'bakes/shared/tests/warp_fast.ts'
+
+    assert.equal(Reflect.get(profile.tests, "warp-fast"), "bakes/shared/tests/warp_fast.ts");
+           ^
+    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/profiles_test.ts:42:12
+
+ FAILURES 
+
+each hardfork's timeline executes its declared phases and completes a full slot => ./tests/profiles_test.ts:26:6
+
+FAILED | 0 passed | 1 failed | 5 filtered out (7ms)
+
+error: Test failed

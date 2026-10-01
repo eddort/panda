@@ -51,7 +51,7 @@ await using net = await Devnet.start({ id: "my-e2e", profile: "pectra", bake: "l
 const initial = await net.status();
 await net.stepSlot();
 await net.advanceEpochs(2);
-await net.advanceTime(3600); // Jump one protocol hour; produce a block at the destination.
+await net.advanceTime(3600); // Execute one protocol hour with continuous validator participation.
 await net.advanceTo(new Date((initial.now + 7200) * 1000));
 await net.setAutomine(true);
 // eth_sendRawTransaction returns the usual transaction hash; wait for the receipt separately.
@@ -68,17 +68,43 @@ not transfer ownership of its lifecycle.
 ## Protocol time
 
 `advanceTime` accepts seconds with millisecond precision. `advanceTo` accepts a Unix timestamp in
-seconds or a `Date`. Time only moves forward. Jumps larger than one epoch skip intermediate blocks
-and votes, then produce a real block in the destination slot. Smaller jumps execute every phase. If
-the target falls within a slot, later duties wait for the next advancement. `stepSlot` and
-`advanceSlots` finish slots at the 11.5-second phase. The initial pause is at genesis + 11.5
-seconds, before the first block proposal in slot 1. Protocol slots remain 12 seconds long.
+seconds or a `Date`. Time only moves forward. Choose the mode per call:
 
-`skipSlots(n)` explicitly skips slots without blocks or attestations. This can reduce participation,
-delay finality and incur inactivity penalties. The validator client restarts with its keys and
-slashing protection preserved. Lighthouse performs state transitions during subsequent state
-processing. Large `advanceTime`/`advanceTo` jumps have the same inactivity semantics, but include
-the destination block. Use `advanceSlots`/`advanceEpochs` when continuous participation is required.
+```ts
+await net.advanceTime(8192 * 12, { mode: "honest" }); // Default; produce every intervening slot.
+await net.advanceTime(8192 * 12, { mode: "fast" }); // Skip most slots; inactivity penalties apply.
+await net.advanceTo(new Date("2033-06-01T00:00:00Z"), { mode: "fast" });
+```
+
+Both modes preserve the exact target, including partial slots. Later duties within that slot wait
+for the next advancement. `stepSlot`, `advanceSlots`, `advanceEpochs` and automine always execute
+normal duties. All mutations share one serialized timeline, including mixed-mode calls.
+
+Honest mode executes every intervening phase; bakes declaring `directSync` use its direct delivery
+of verified individual sync messages. The older Pectra `panda` artifact uses ordinary delivery.
+Roughly 13 minutes for 8192 Gloas `direct-sync` slots is a historical estimate, not a full passing
+benchmark. Fast mode restores the earlier skip algorithm only when explicitly requested: jumps over
+32 slots complete current duties, restart the VC just before the destination with the same keys and
+slashing database, then produce the destination normally. Smaller jumps execute normally.
+`skipSlots(n)` still provides explicit downtime without the destination block.
+
+Fast mode permits missed-duty penalties, loss of rewards and stale finality at return. It does not
+permit conflicting signatures or disabled slashing protection. Finality recovers through subsequent
+honest slots. A test requiring normal validator economics or finality throughout the interval must
+use honest mode. Protocol slots stay 12 seconds long; real network deadlines are unchanged.
+
+The control endpoint accepts the same option:
+
+```json
+{ "method": "advanceTime", "params": [98304, { "mode": "fast" }] }
+```
+
+The fast regression budget is 25 seconds for 8192 slots **including the first next transaction**.
+Honest mode has separate economic assertions and a failure watchdog per 8192-slot sample: 20 minutes
+on Gloas and 55 minutes on the older Pectra artifact, not a one-minute performance promise. See
+[mode validation](warp-modes.md). A full honest test contains two such samples and is deliberately
+long. These are test budgets, not per-call API deadlines. For phase-by-phase execution, exact-target
+examples, VC restart and failure semantics, read [the algorithm walkthrough](warp-algorithm.md).
 
 ## Network parameters
 
@@ -95,6 +121,9 @@ deno task test                         # Fast unit checks; Docker and e2e tests 
 PANDA_DOCKER_TEST=1 deno task test        # Rollback and protection of unrelated resources.
 PANDA_E2E=1 deno task test                # Selected profile's real e2e scenarios; requires its images.
 deno task e2e                          # Time, automine, finality and a separate indexer.
+deno task e2e:warp-fast                # Two fast 8192-slot jumps, next tx, signing and resumed finality.
+deno task e2e:warp                     # Two long honest 8192-slot jumps with economic checks.
+deno task e2e:warp-economics           # Short honest economics/deployment regression.
 deno task e2e:withdrawal               # Real exit to withdrawal across hundreds of epochs.
 deno task e2e:protocol                 # Deposit, activation and consolidation with an explicit churn override.
 deno task e2e:deploy                   # 20 sequential deployments through RPC and ethers.

@@ -1,0 +1,37 @@
+   Compiling bls v0.2.0 (/source/crypto/bls)
+warning: function `verifier` is never used
+   --> crypto/bls/tests/../src/impls/panda_verified_signature.rs:115:4
+    |
+115 | fn verifier() -> &'static Verifier {
+    |    ^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` on by default
+
+warning: function `verify` is never used
+   --> crypto/bls/tests/../src/impls/panda_verified_signature.rs:120:8
+    |
+120 | pub fn verify(signature: &Signature, pubkey: &PublicKey, message: [u8; 32]) -> bool {
+    |        ^^^^^^
+
+warning: function `verify_batch` is never used
+   --> crypto/bls/tests/../src/impls/panda_verified_signature.rs:124:8
+    |
+124 | pub fn verify_batch(inputs: &[(Signature, PublicKey, [u8; 32])]) -> bool {
+    |        ^^^^^^^^^^^^
+
+warning: `bls` (test "panda_verified_signature") generated 3 warnings
+    Finished `release` profile [optimized] target(s) in 2.82s
+     Running tests/panda_verified_signature.rs (/target/release/deps/panda_verified_signature-054cd6172efe51f1)
+
+running 8 tests
+test verification::tests::a_failed_batch_cannot_warm_even_its_valid_prefix ... ok
+test verification::tests::identical_subnet_messages_are_verified_once ... ok
+test upstream_signature_sets_reject_swapped_signers_and_changed_roots ... ok
+test verification::tests::invalid_individual_signatures_cannot_cancel_inside_a_batch ... ok
+test verification::tests::cached_success_cannot_accept_another_key_root_domain_or_signature ... ok
+test verification::tests::concurrent_lookups_do_not_cross_contaminate_messages ... ok
+test verification::tests::valid_batch_verifies_once_and_warms_only_identical_inputs ... ok
+test verification::tests::old_successes_are_evicted_and_reverified ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.95s
+

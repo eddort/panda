@@ -1,0 +1,12 @@
+warning: unused import: `BTreeSet`
+ --> src/lib.rs:4:35
+  |
+4 | use std::{collections::{BTreeMap, BTreeSet}, sync::{mpsc, Arc}, time::Instant};
+  |                                   ^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: `panda-group-sync-proof` (lib) generated 1 warning (run `cargo fix --lib -p panda-group-sync-proof` to apply 1 suggestion)
+   Compiling panda-group-sync-proof v0.1.0 (/source)
+    Finished `release` profile [optimized] target(s) in 0.55s
+     Running `/target/batch-proof/release/panda-group-sync-proof --mode baseline`
