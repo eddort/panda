@@ -36,7 +36,7 @@
   "clFork": "gloas",
   "clRef": "2d281dfa1b407f7c81cd123954a9fd18ee8f02d2",
   "patch": "bakes/gloas/lighthouse.patch",
-  "rust": "rust:1.88.0-bookworm",
+  "rust": "rust@sha256:af306cfa71d987911a781c37b59d7d67d934f49684058f96cf72079c3626bfe0",
   "elImage": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
   "genesisImage": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
   "baselineImage": "ethpandaops/lighthouse@sha256:61ee7093e24598f93319322bed4b40a7f80614b1f3f584e97ad7a0f7d612bf75",
@@ -62,5 +62,7 @@
     "HEZE_FORK_EPOCH": "18446744073709551615",
     "SLOT_DURATION_IN_SECONDS": "12",
     "SLOT_DURATION_MS": "12000"
-  }
+  },
+  "clVersion": "8.2.2",
+  "bakerVersion": 1
 }

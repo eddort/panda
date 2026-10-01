@@ -4,6 +4,7 @@ import { Writable } from "node:stream";
 import { createReadStream, createWriteStream } from "node:fs";
 import { pipeline } from "node:stream/promises";
 import { createGzip } from "node:zlib";
+import type { BakedImage } from "./profiles.ts";
 
 export const LABEL = "io.panda.id";
 export const ROLE = "io.panda.role";
@@ -38,7 +39,7 @@ export class Infrastructure {
     this.docker = docker;
     this.labels = { [LABEL]: id };
   }
-  async image(ref: string): Promise<void> {
+  async image(ref: string, authconfig?: Docker.AuthConfig): Promise<void> {
     try {
       await this.docker.getImage(ref).inspect();
       return;
@@ -49,13 +50,46 @@ export class Infrastructure {
       if (await this.restoreImage(ref)) return;
       throw new Error(`Local image ${ref} is missing`);
     }
-    const stream = await this.docker.pull(ref);
+    const stream = await this.docker.pull(ref, { authconfig });
     await new Promise<void>((resolve, reject) => {
       this.docker.modem.followProgress(
         stream,
         (error: Error | null) => error ? reject(error) : resolve(),
       );
     });
+  }
+  async registryImage(image: BakedImage, authconfig?: Docker.AuthConfig): Promise<void> {
+    if (!image.digest || !/@sha256:[a-f0-9]{64}$/.test(image.digest)) {
+      throw new Error("Registry restore requires an immutable digest");
+    }
+    await this.image(image.digest, authconfig);
+    const found = await this.docker.getImage(image.digest).inspect();
+    if (found.Id !== image.id || `${found.Os}/${found.Architecture}` !== image.platform) {
+      throw new Error(`Published image identity/platform mismatch: ${image.digest}`);
+    }
+  }
+  async publishImage(id: string, ref: string, authconfig: Docker.AuthConfig): Promise<string> {
+    const image = this.docker.getImage(id);
+    if ((await image.inspect()).Config.Labels?.[LABEL] !== this.id) {
+      throw new Error(`Cannot publish an image not owned by ${this.id}`);
+    }
+    const separator = ref.lastIndexOf(":");
+    if (separator < 0 || ref.includes("@")) {
+      throw new Error("Publication requires a repository:tag");
+    }
+    const repo = ref.slice(0, separator);
+    await image.tag({ repo, tag: ref.slice(separator + 1) });
+    const stream = await this.docker.getImage(ref).push({ authconfig });
+    await new Promise<void>((resolve, reject) => {
+      this.docker.modem.followProgress(
+        stream,
+        (error: Error | null) => error ? reject(error) : resolve(),
+      );
+    });
+    const published = await this.docker.getImage(ref).inspect();
+    const digest = published.RepoDigests?.find((value) => value.startsWith(`${repo}@sha256:`));
+    if (published.Id !== id || !digest) throw new Error("Published image identity/digest mismatch");
+    return digest;
   }
   private imageArchive(id: string): string {
     if (!/^sha256:[a-f0-9]{64}$/.test(id)) throw new Error("Expected immutable image ID");

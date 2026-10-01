@@ -141,6 +141,7 @@ reports. Keep resource measurements separate from other devnet tests.
 ## Documentation
 
 - [Usage guide](docs/usage.md) — configuration, API details, ethers settings and troubleshooting.
+- [CI images](docs/ci-containers.md) — versioned hardfork images and Lido service integration.
 - [Architecture](docs/architecture.md) — clock boundaries, client patches and Engine API
   coordination.
 - [Project plan](docs/plan.md) — completed work and next steps.

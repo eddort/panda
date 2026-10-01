@@ -23,6 +23,9 @@ export interface Recipe {
   clRepository: string;
   elRepository: string;
   clRef: string;
+  /** Optional only for legacy immutable manifests. New native builds record both versions. */
+  clVersion?: string;
+  bakerVersion?: number;
   rust: string;
   goBuilder: string;
   elImage: string;
@@ -73,6 +76,13 @@ export interface Bake {
   hashes: Record<string, string>;
   images: { el: BakedImage; cl: BakedImage; genesis: BakedImage; baseline: BakedImage };
   builders: Record<string, BakedImage>;
+  lighthouse?: LighthouseBuild;
+}
+export interface LighthouseBuild {
+  upstream: { version: string; commit: string; repository: string };
+  baker: { version: number; hash: string };
+  platform: string;
+  key: string;
 }
 export function bakePath(profile: ProfileName, tag: string): string {
   return `bakes/${profileName(profile)}/tags/${bakeTag(tag)}.json`;

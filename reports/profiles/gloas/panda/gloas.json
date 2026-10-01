@@ -1,6 +1,6 @@
 {
   "event": "gloas-passed",
-  "elapsedMs": 13617.548542,
+  "elapsedMs": 12801.25588,
   "clocks": {
     "bn": {
       "nowMs": 2000000047500,
@@ -104,7 +104,7 @@
     }
   },
   "status": {
-    "id": "gloas-5bb2b334",
+    "id": "gloas-d48fcb02",
     "profile": "gloas",
     "bake": "panda",
     "bakeKey": "8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf",
@@ -260,6 +260,6 @@
   "profile": "gloas",
   "bake": "panda",
   "bakeKey": "8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf",
-  "runId": "328a44df-a88f-480e-9c2d-cc0dc994110d",
-  "recordedAt": "2026-09-30T10:02:53.360Z"
+  "runId": "10a59792-cfd0-49d8-a5da-0df996ae62d4",
+  "recordedAt": "2026-09-30T12:27:44.070Z"
 }

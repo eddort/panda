@@ -5,6 +5,7 @@ import { json, rpc } from "./http.ts";
 import { type Manifest, Network } from "./network.ts";
 import { type Timeline } from "./time.ts";
 import { cpuUsage } from "node:process";
+import { exitValidator, importValidator } from "./validators.ts";
 
 export class Controller {
   readonly automine: Automine;
@@ -39,12 +40,17 @@ export class Controller {
       ),
     };
   }
-  async command(method: string, args: number[] | boolean[] = []): Promise<unknown> {
+  async command(method: string, args: unknown[] = []): Promise<unknown> {
+    if (!Array.isArray(args)) throw new Error("Control params must be an array");
     switch (method) {
       case "status":
         return await this.status();
       case "resources":
         return { cpu: cpuUsage(), memory: Deno.memoryUsage() };
+      case "importValidator":
+        return await this.time.exclusive(() => importValidator(this.manifest, args[0], args[1]));
+      case "exitValidator":
+        return await this.time.exclusive(() => exitValidator(this.manifest, args[0]));
       case "stepSlot":
         await this.time.stepSlot();
         break;

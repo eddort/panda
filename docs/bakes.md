@@ -104,9 +104,18 @@ preserves the previous manifest. Locks protect tags and shared compiler caches a
 writes. Identical inputs under another tag reuse the built artifact. A running network keeps its own
 copy of the bake manifest.
 
-Locally built images are not published to a registry. A manifest alone cannot transfer binaries to
+The local `bake` command does not publish images. A manifest alone cannot transfer binaries to
 another machine. Use a separate build tag for another architecture; image identity and platform
 mismatches are rejected.
+
+The separate **Publish Lighthouse images** workflow publishes tested amd64 clients and emits a
+`clients.lock.json` containing the original bake plus registry transport identity. Select it with
+`deno task clients:pin <downloaded-file>` and commit the generated
+`bakes/<hardfork>/release/clients.lock.json`. `deno task clients:restore <hardfork>` restores that
+exact bake by registry digest and verifies image IDs; it never compiles or substitutes clients.
+Panda Git releases (`vX.Y.Z`) use independently versioned Lighthouse images
+(`v<upstream>-<commit>-b<bakerVersion>-<hash>`). See the [CI publication guide](ci-containers.md)
+for the full sequence.
 
 ## Test suites
 
@@ -191,3 +200,26 @@ checks.
 deno task up --profile gloas --bake stable
 deno task test:profile gloas --bake stable
 ```
+
+## Lighthouse upstream and baker identity
+
+Each current recipe declares `clVersion` and `bakerVersion` alongside the pinned `clRef`. The native
+builder checks `clVersion` against the source's Cargo package version. For an explicit `--cl-ref`
+override, it records the version actually found in that source. Old immutable manifests remain
+readable and are not rewritten.
+
+A native bake records `lighthouse.upstream` (version, full commit and repository),
+`lighthouse.baker` (version and input hash), platform and its own client build key. The baker hash
+covers the builder implementation/dependencies, selected patch, clock, native sources/tests and
+pinned build/runtime images. An explicit baker-version bump or changed baker inputs produces a new
+image identity. Panda controller changes and other profiles' native patches do not.
+
+The separate `.cache/baker/lighthouse/<key>.json` cache lets a new EL/genesis selection reuse an
+unchanged native Lighthouse image. Full bake identity still includes the entire selected recipe and
+all client identities. Existing local tags remain immutable; select a new tag for a new combination.
+
+CI derives a client image tag from upstream and baker versions. If that image already exists, it
+passes its immutable digest to `bake --reuse-cl <digest>`. The builder verifies the complete
+identity embedded in the image before accepting it, preserving native build provenance. This differs
+from `--import-cl`, which makes no claim that an arbitrary image was built and tested by this baker.
+The profile suite runs against the selected combination before publishing a new client lock.

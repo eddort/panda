@@ -3,6 +3,12 @@ export { atomicJson, BuildLock, requireImage } from "./artifacts.ts";
 import { dirname, resolve } from "node:path";
 import { Infrastructure } from "./docker.ts";
 import {
+  assertLighthouseImage,
+  lighthouseBuild,
+  lighthouseSourceVersion,
+} from "./lighthouse_build.ts";
+import { registryAuth } from "./registry.ts";
+import {
   type Bake,
   type BakedImage,
   bakeLocation,
@@ -197,6 +203,7 @@ async function compile(
   key: string,
   clockOnly = false,
   nativeTests: NonNullable<Recipe["nativeTests"]> = [],
+  labels: Record<string, string> = {},
 ): Promise<BakedImage> {
   const output = resolve(`.cache/baker/output/${key}/${kind}`);
   await Deno.mkdir(output, { recursive: true });
@@ -268,7 +275,7 @@ async function compile(
   const tag = `panda-${name}:bake-${key.slice(0, 24)}`;
   const stream = await infra.docker.buildImage({ context: output, src: ["Dockerfile", name] }, {
     t: tag,
-    labels: infra.labels,
+    labels: { ...labels, ...infra.labels },
   });
   await new Promise<void>((resolve, reject) =>
     infra.docker.modem.followProgress(
@@ -283,6 +290,8 @@ export interface BakeOptions {
   tag?: string;
   replace?: boolean;
   importCl?: string;
+  /** A published native build, verified against its complete upstream/baker identity. */
+  reuseCl?: string;
   clRef?: string;
   patch?: string;
   elImage?: string;
@@ -341,6 +350,7 @@ export async function bake(profile: ProfileName, options: BakeOptions = {}): Pro
     goBuilder: options.goImage ?? profiles[profile].goBuilder,
   };
   if (options.elImage && options.elRef) throw new Error("Choose --el-image or --el-ref");
+  if (options.importCl && options.reuseCl) throw new Error("Choose --import-cl or --reuse-cl");
   const hashes = await sourceHashes(recipe);
   const setup = new Infrastructure(`bake-${profile}-${(await sha256(tag)).slice(0, 8)}`);
   const runtime = await pinImage(setup, recipe.runtime);
@@ -348,6 +358,25 @@ export async function bake(profile: ProfileName, options: BakeOptions = {}): Pro
   const genesis = await pinImage(setup, recipe.genesisImage);
   const baseline = await pinImage(setup, recipe.baselineImage);
   const clSource = options.importCl ? undefined : await checkout(recipe.clRepository, recipe.clRef);
+  if (clSource) {
+    const version = lighthouseSourceVersion(
+      await Deno.readTextFile(`${clSource.root}/lighthouse/Cargo.toml`),
+      await Deno.readTextFile(`${clSource.root}/Cargo.toml`),
+    );
+    if (!options.clRef && recipe.clVersion !== version) {
+      throw new Error(`Declared Lighthouse ${recipe.clVersion} differs from upstream ${version}`);
+    }
+    recipe.clVersion = version;
+    recipe.clRef = clSource.commit;
+  }
+  const identityRecipe = {
+    ...recipe,
+    rust: /(?:^|@)sha256:[a-f0-9]{64}$/.test(recipe.rust) ? recipe.rust : rust.digest ?? rust.id,
+    runtime: /(?:^|@)sha256:[a-f0-9]{64}$/.test(recipe.runtime)
+      ? recipe.runtime
+      : runtime.digest ?? runtime.id,
+  };
+  const lighthouse = clSource ? await lighthouseBuild(identityRecipe, rust.platform) : undefined;
   const importedCl = options.importCl ? await pinImage(setup, options.importCl) : undefined;
   const elSource = options.elRef ? await checkout(recipe.elRepository, options.elRef) : undefined;
   const go = elSource ? await pinImage(setup, recipe.goBuilder) : undefined;
@@ -368,39 +397,92 @@ export async function bake(profile: ProfileName, options: BakeOptions = {}): Pro
       baseline,
       importedEl,
       importedCl,
-      recipeRevision: 2,
+      lighthouse,
+      recipeRevision: 3,
       elBuildRevision: elSource ? 2 : undefined,
     }),
   );
   await using _buildLock = await BuildLock.acquire(`.cache/baker/locks/${key}.lock`);
-  const inputs = await snapshotSources(hashes, `.cache/baker/inputs/${key}`);
+  await snapshotSources(hashes, `.cache/baker/inputs/${key}`);
   const infra = new Infrastructure(`bake-${key.slice(0, 24)}`);
   const artifactPath = `.cache/baker/artifacts/${key}.json`;
-  try {
-    const cached: Bake = JSON.parse(await Deno.readTextFile(artifactPath));
-    if (cached.key !== key) throw new Error("Build cache identity mismatch");
-    for (const image of Object.values(cached.images)) await requireImage(infra, image);
-    const result = { ...cached, tag };
-    await atomicJson(path, result);
-    console.log(JSON.stringify({ event: "artifact-reused", key }));
-    return result;
-  } catch (error) {
-    if (
-      !(error instanceof Deno.errors.NotFound) &&
-      !String(error).includes("Missing local bake image")
-    ) throw error;
+  if (!options.reuseCl) {
+    try {
+      const cached: Bake = JSON.parse(await Deno.readTextFile(artifactPath));
+      if (cached.key !== key) throw new Error("Build cache identity mismatch");
+      for (const image of Object.values(cached.images)) await requireImage(infra, image);
+      const result = { ...cached, tag };
+      await atomicJson(path, result);
+      console.log(JSON.stringify({ event: "artifact-reused", key }));
+      return result;
+    } catch (error) {
+      if (
+        !(error instanceof Deno.errors.NotFound) &&
+        !String(error).includes("Missing local bake image")
+      ) throw error;
+    }
   }
-  const cl = importedCl ??
-    await compile(
-      infra,
-      "cl",
-      await prepareCl(recipe, clSource!, key, inputs),
-      rust,
-      runtime,
-      key,
-      false,
-      recipe.nativeTests,
+  let cl = importedCl;
+  if (!cl) {
+    const selected = lighthouse!;
+    const clInfra = new Infrastructure(`bake-${selected.key.slice(0, 24)}`);
+    await using _clLock = await BuildLock.acquire(
+      `.cache/baker/locks/lighthouse-${selected.key}.lock`,
     );
+    const clArtifact = `.cache/baker/lighthouse/${selected.key}.json`;
+    if (options.reuseCl) {
+      if (!/^[a-z0-9][a-z0-9._:/-]*@sha256:[a-f0-9]{64}$/.test(options.reuseCl)) {
+        throw new Error("--reuse-cl requires a published registry digest");
+      }
+      await clInfra.image(
+        options.reuseCl,
+        options.reuseCl.startsWith("ghcr.io/") && Deno.env.get("GHCR_TOKEN")
+          ? registryAuth()
+          : undefined,
+      );
+      const info = await clInfra.docker.getImage(options.reuseCl).inspect();
+      assertLighthouseImage(selected, info);
+      cl = await pinImage(clInfra, options.reuseCl);
+    } else {
+      try {
+        const cached = JSON.parse(await Deno.readTextFile(clArtifact));
+        if (canonical(cached.build) !== canonical(selected)) {
+          throw new Error("Lighthouse cache identity mismatch");
+        }
+        await requireImage(clInfra, cached.image);
+        assertLighthouseImage(selected, await clInfra.docker.getImage(cached.image.id).inspect());
+        cl = cached.image as BakedImage;
+      } catch (error) {
+        if (
+          !(error instanceof Deno.errors.NotFound) &&
+          !String(error).includes("Missing local bake image")
+        ) throw error;
+      }
+    }
+    if (!cl) {
+      const clInputs = await snapshotSources(hashes, `.cache/baker/inputs/${selected.key}`);
+      cl = await compile(
+        clInfra,
+        "cl",
+        await prepareCl(recipe, clSource!, selected.key, clInputs),
+        rust,
+        runtime,
+        selected.key,
+        false,
+        recipe.nativeTests,
+        {
+          "io.panda.lighthouse.build": JSON.stringify(selected),
+          "io.panda.lighthouse.upstream.version": selected.upstream.version,
+          "io.panda.lighthouse.upstream.commit": selected.upstream.commit,
+          "io.panda.baker.version": String(selected.baker.version),
+          "io.panda.baker.hash": selected.baker.hash,
+          "org.opencontainers.image.source": "https://github.com/eddort/zap-net",
+          "org.opencontainers.image.revision": await git(["rev-parse", "HEAD"]),
+        },
+      );
+    }
+    await atomicJson(clArtifact, { build: selected, image: cl });
+  }
   const el = importedEl ?? await compile(infra, "el", elSource!.root, go!, runtime, key);
   const platforms = new Set(
     [cl, el, genesis, baseline, runtime, rust, ...(go ? [go] : [])].map((x) => x.platform),
@@ -410,6 +492,12 @@ export async function bake(profile: ProfileName, options: BakeOptions = {}): Pro
   }
   if (canonical(await sourceHashes(recipe)) !== canonical(hashes)) {
     throw new Error("Patch or clock sources changed during the build; previous tag was preserved");
+  }
+  if (
+    lighthouse &&
+    canonical(await lighthouseBuild(identityRecipe, rust.platform)) !== canonical(lighthouse)
+  ) {
+    throw new Error("Lighthouse baker changed during the build; previous tag was preserved");
   }
   for (const image of [cl, el, genesis, baseline]) await requireImage(infra, image);
   const result: Bake = {
@@ -423,6 +511,7 @@ export async function bake(profile: ProfileName, options: BakeOptions = {}): Pro
     hashes,
     images: { cl, el, genesis, baseline },
     builders,
+    ...(lighthouse ? { lighthouse } : {}),
   };
   await atomicJson(artifactPath, result);
   await atomicJson(path, result);

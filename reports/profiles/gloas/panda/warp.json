@@ -10,14 +10,14 @@
     "beaconCpuLimit": 2,
     "beaconHierarchy": "--hierarchy-exponents=9,13,16,18,21",
     "validators": 64,
-    "otherContainers": 10
+    "otherContainers": 0
   },
-  "elapsedMs": 125241.73341700001,
+  "elapsedMs": 121120.30609799999,
   "samples": [
     {
-      "advanceMs": 10306.651541,
+      "advanceMs": 8788.194254000002,
       "slots": 8192,
-      "readyMs": 10833.158624999996,
+      "readyMs": 9255.143379000001,
       "targetSlot": 8320,
       "receipt": {
         "blockHash": "0x7e98bace15828657961e90257c60d91ee8894f5a4d2b5bb687d987c506282d4c",
@@ -41,9 +41,9 @@
       }
     },
     {
-      "advanceMs": 9653.212583,
+      "advanceMs": 9017.23792,
       "slots": 8192,
-      "readyMs": 10204.810582999999,
+      "readyMs": 9356.528504000002,
       "targetSlot": 16576,
       "receipt": {
         "blockHash": "0xeb7c76f6adf6b0e68ba81f3af06d52a4f56257b877e9baea7a99d1a7c5da5255",
@@ -455,7 +455,7 @@
   ],
   "signedValidators": 64,
   "status": {
-    "id": "warp-2d901b5b",
+    "id": "warp-9b202db5",
     "profile": "gloas",
     "bake": "panda",
     "bakeKey": "8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf",
@@ -514,6 +514,6 @@
   "profile": "gloas",
   "bake": "panda",
   "bakeKey": "8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf",
-  "runId": "328a44df-a88f-480e-9c2d-cc0dc994110d",
-  "recordedAt": "2026-09-30T09:58:06.313Z"
+  "runId": "10a59792-cfd0-49d8-a5da-0df996ae62d4",
+  "recordedAt": "2026-09-30T12:23:00.902Z"
 }

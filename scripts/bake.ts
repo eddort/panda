@@ -4,6 +4,7 @@ import { profileName } from "../src/profiles.ts";
 const { flags, positional } = argumentsFor(Deno.args, [
   "tag",
   "import-cl",
+  "reuse-cl",
   "cl-ref",
   "patch",
   "el-image",
@@ -18,6 +19,7 @@ const result = await bake(profileName(positional[0] ?? "pectra"), {
   tag: flags.tag,
   replace: flags.replace === "true",
   importCl: flags["import-cl"],
+  reuseCl: flags["reuse-cl"],
   clRef: flags["cl-ref"],
   patch: flags.patch,
   elImage: flags["el-image"],
