@@ -1,0 +1,61 @@
+Check tests/time_test.ts
+running 12 tests from ./tests/time_test.ts
+forward time executes phase barriers, exact dates and partial slots ... ok (3ms)
+concurrent advances serialize and accumulate, rather than lose time ... ok (537µs)
+a partially failed clock update faults subsequent mutations ... ok (281µs)
+advanceUntil is bounded, detects existing success and processes epochs ... ok (369µs)
+skip has separate semantics and does not execute intervening duties ... ok (95µs)
+shutdown interrupts a long advance at the next phase boundary ... ok (73µs)
+large advanceTime/advanceTo execute every slot and preserve partial-slot targets ... ok (35ms)
+failed explicit skip faults the timeline and continuous advancement never skips ... ok (363µs)
+fast warp finishes current duties, skips the gap and produces the exact destination ... FAILED (9ms)
+fast warp preserves small jumps and mixed modes share one serialized timeline ... FAILED (3ms)
+invalid warp modes and unavailable fast backend fail before mutation ... FAILED (313µs)
+a failed fast warp faults both modes and cannot be retried over partial progress ... FAILED (3ms)
+
+ ERRORS
+
+fast warp finishes current duties, skips the gap and produces the exact destination => ./tests/time_test.ts:141:6
+error: AssertionError: Expected values to be strictly deep-equal:
++ actual - expected
+
++ []
+- [
+-   98303500
+- ]
+
+  assert.deepEqual(skips, [8191 * 12000 + 11500]);
+         ^
+    at file:///workspace/panda/tests/time_test.ts:151:10
+
+fast warp preserves small jumps and mixed modes share one serialized timeline => ./tests/time_test.ts:163:6
+error: AssertionError: Expected values to be strictly equal:
+
+0 !== 1
+
+  assert.equal(skips.length, 1);
+         ^
+    at file:///workspace/panda/tests/time_test.ts:180:10
+
+invalid warp modes and unavailable fast backend fail before mutation => ./tests/time_test.ts:184:6
+error: AssertionError: Missing expected rejection.
+    await assert.rejects(async () => await advance(1000, options), /mode|options/i);
+    ^
+    at async file:///workspace/panda/tests/time_test.ts:189:5
+
+a failed fast warp faults both modes and cannot be retried over partial progress => ./tests/time_test.ts:198:6
+error: AssertionError: Missing expected rejection.
+  await assert.rejects(advance(8192 * 12, { mode: "fast" }), /restart interrupted/);
+  ^
+    at async file:///workspace/panda/tests/time_test.ts:205:3
+
+ FAILURES
+
+fast warp finishes current duties, skips the gap and produces the exact destination => ./tests/time_test.ts:141:6
+fast warp preserves small jumps and mixed modes share one serialized timeline => ./tests/time_test.ts:163:6
+invalid warp modes and unavailable fast backend fail before mutation => ./tests/time_test.ts:184:6
+a failed fast warp faults both modes and cannot be retried over partial progress => ./tests/time_test.ts:198:6
+
+FAILED | 8 passed | 4 failed (61ms)
+
+error: Test failed

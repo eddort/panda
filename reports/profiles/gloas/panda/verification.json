@@ -1,0 +1,22 @@
+{
+  "profile": "gloas",
+  "tag": "panda",
+  "bakeKey": "8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf",
+  "runId": "10a59792-cfd0-49d8-a5da-0df996ae62d4",
+  "suiteHash": "b98e36e97ac0dded61d2a03da69cb66826e4b740ea2bed80dc0f75a096dbd6f4",
+  "startedAt": "2026-09-30T12:18:49.011Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "protocol",
+    "withdrawal",
+    "deploy",
+    "gloas"
+  ],
+  "finishedAt": "2026-09-30T12:27:45.232Z",
+  "elapsedMs": 536220.916827,
+  "passed": true,
+  "status": "passed"
+}

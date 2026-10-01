@@ -1,0 +1,20 @@
+Check tests/time_test.ts
+Check tests/warp_api_test.ts
+running 12 tests from ./tests/time_test.ts
+forward time executes phase barriers, exact dates and partial slots ... ok (3ms)
+concurrent advances serialize and accumulate, rather than lose time ... ok (391µs)
+a partially failed clock update faults subsequent mutations ... ok (142µs)
+advanceUntil is bounded, detects existing success and processes epochs ... ok (480µs)
+skip has separate semantics and does not execute intervening duties ... ok (100µs)
+shutdown interrupts a long advance at the next phase boundary ... ok (56µs)
+large advanceTime/advanceTo execute every slot and preserve partial-slot targets ... ok (32ms)
+failed explicit skip faults the timeline and continuous advancement never skips ... ok (406µs)
+fast warp finishes current duties, skips the gap and produces the exact destination ... ok (176µs)
+fast warp preserves small jumps and mixed modes share one serialized timeline ... ok (118µs)
+invalid warp modes and unavailable fast backend fail before mutation ... ok (912µs)
+a failed fast warp faults both modes and cannot be retried over partial progress ... ok (60µs)
+running 1 test from ./tests/warp_api_test.ts
+public API forwards warp modes through HTTP and defaults to honest advancement ... ok (15ms)
+
+ok | 13 passed | 0 failed (260ms)
+

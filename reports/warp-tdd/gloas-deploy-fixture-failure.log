@@ -1,0 +1,9 @@
+Task e2e:warp-economics ./scripts/deno run -A bakes/shared/tests/warp_economics.ts
+{"event":"network-started","id":"economics-f494d9e9","elapsedMs":9011.130417,"bake":{"profile":"gloas","tag":"panda","key":"8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf"},"config":{"profile":"gloas","bake":"panda","id":"economics-f494d9e9","mode":"controlled","genesisTime":2000000000,"validators":64,"chainId":1337,"churnLimitQuotient":32768,"consolidationChurnLimitQuotient":65536},"directory":"/workspace/panda/.panda/economics-f494d9e9","el":"http://127.0.0.1:54674","beacon":"http://127.0.0.1:54686","bnClock":"http://127.0.0.1:54687","vcClock":"http://127.0.0.1:54715","vc":"http://127.0.0.1:54716"}
+error: Uncaught (in promise) AssertionError: Expected values to be strictly equal:
+
+'0x0' !== '0x1'
+
+  assert.equal(receipt.status, "0x1");
+         ^
+    at file:///workspace/panda/bakes/shared/tests/warp_economics.ts:171:10

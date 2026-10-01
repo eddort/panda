@@ -1,0 +1,23 @@
+Check tests/warp_api_test.ts
+running 1 test from ./tests/warp_api_test.ts
+public API forwards warp modes through HTTP and defaults to honest advancement ... FAILED (6ms)
+
+ ERRORS
+
+public API forwards warp modes through HTTP and defaults to honest advancement => ./tests/warp_api_test.ts:7:6
+error: PermissionDenied: Operation not permitted (os error 1)
+    this.server = Deno.serve(
+                       ^
+    at listen (ext:deno_net/01_net.js:1:7011)
+    at serveInner (ext:deno_http/00_serve.ts:1:16770)
+    at Object.serve (ext:deno_http/00_serve.ts:1:15240)
+    at Controller.serve (file:///workspace/panda/src/controller.ts:77:24)
+    at file:///workspace/panda/tests/warp_api_test.ts:17:37
+
+ FAILURES
+
+public API forwards warp modes through HTTP and defaults to honest advancement => ./tests/warp_api_test.ts:7:6
+
+FAILED | 0 passed | 1 failed (9ms)
+
+error: Test failed

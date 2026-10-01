@@ -1,0 +1,24 @@
+{
+  "profile": "gloas",
+  "tag": "ci-main-merge",
+  "bakeKey": "d769395a4ea4f4f4d3290b54aefa32780d32410248518ea319648353ab18fb86",
+  "runId": "c030cd11-8153-49ba-b837-7e5d4e79df42",
+  "suiteHash": "5d97ef047f0a35b9ff8d7786f442045d1d73978eab97a2b4cc3d771c4ca68fc1",
+  "startedAt": "2026-10-01T10:37:46.869Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "warp-fast",
+    "warp-economics",
+    "protocol",
+    "withdrawal",
+    "deploy",
+    "gloas"
+  ],
+  "finishedAt": "2026-10-01T10:47:36.672Z",
+  "elapsedMs": 589840.354334,
+  "passed": true,
+  "status": "passed"
+}

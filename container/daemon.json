@@ -1,0 +1,6 @@
+{
+  "features": { "containerd-snapshotter": false },
+  "storage-driver": "overlay2",
+  "bip": "10.240.0.1/24",
+  "default-address-pools": [{ "base": "10.241.0.0/16", "size": 24 }]
+}

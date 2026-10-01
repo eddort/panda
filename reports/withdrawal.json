@@ -1,0 +1,107 @@
+{
+  "event": "withdrawal-passed",
+  "elapsedMs": 99878.09825,
+  "exiting": {
+    "index": "0",
+    "balance": "31719676731",
+    "status": "active_exiting",
+    "validator": {
+      "pubkey": "0xa39882700ed7f72fcdbac07081b7c0c912cb8647ed8494926e6c9c2fc1a7415c7c60e3afcc3d3278fe25b50b851c3ad5",
+      "withdrawal_credentials": "0x010000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "effective_balance": "31000000000",
+      "slashed": false,
+      "activation_eligibility_epoch": "0",
+      "activation_epoch": "0",
+      "exit_epoch": "261",
+      "withdrawable_epoch": "517"
+    }
+  },
+  "afterFirstWithdrawal": {
+    "index": "0",
+    "balance": "0",
+    "status": "withdrawal_possible",
+    "validator": {
+      "pubkey": "0xa39882700ed7f72fcdbac07081b7c0c912cb8647ed8494926e6c9c2fc1a7415c7c60e3afcc3d3278fe25b50b851c3ad5",
+      "withdrawal_credentials": "0x010000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "effective_balance": "31000000000",
+      "slashed": false,
+      "activation_eligibility_epoch": "0",
+      "activation_epoch": "0",
+      "exit_epoch": "261",
+      "withdrawable_epoch": "517"
+    }
+  },
+  "exited": {
+    "index": "0",
+    "balance": "0",
+    "status": "withdrawal_done",
+    "validator": {
+      "pubkey": "0xa39882700ed7f72fcdbac07081b7c0c912cb8647ed8494926e6c9c2fc1a7415c7c60e3afcc3d3278fe25b50b851c3ad5",
+      "withdrawal_credentials": "0x010000000000000000000000f39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "effective_balance": "0",
+      "slashed": false,
+      "activation_eligibility_epoch": "0",
+      "activation_epoch": "0",
+      "exit_epoch": "261",
+      "withdrawable_epoch": "517"
+    }
+  },
+  "withdrawal": {
+    "index": "0x7d1",
+    "validatorIndex": "0x0",
+    "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+    "amount": "0x762289be3"
+  },
+  "status": {
+    "id": "withdrawal-b7e79e59",
+    "now": 2000294923.5,
+    "slot": 24576,
+    "automine": false,
+    "el": {
+      "baseFeePerGas": "0x1a",
+      "blobGasUsed": "0x0",
+      "difficulty": "0x0",
+      "excessBlobGas": "0x0",
+      "extraData": "0xd883010f0b846765746888676f312e32342e32856c696e7578",
+      "gasLimit": "0x1b1ec53",
+      "gasUsed": "0x0",
+      "hash": "0xab2c6450a148d81a1037003728c3ea1743dfe919fb8601f3fcb8a6bba8dc3d7b",
+      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "miner": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "mixHash": "0x44c2fdc065c0743d252505f91f795e03449d521dccdbb5f2f32875287fb00d8a",
+      "nonce": "0x0000000000000000",
+      "number": "0x84",
+      "parentBeaconBlockRoot": "0xb634bb2b5ff1d14b5e8bc6b441d417fd8fbec96e863f1ea41f56e66596f983c0",
+      "parentHash": "0xd38e02a9f66a97c21a64d00e854cfe9940f7beceb76357bf46f778e05cdc5f5c",
+      "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+      "size": "0x27e",
+      "stateRoot": "0xbf1454086ddc679bcc2f68ca645be71618e967be5142bf98a47f0f95ecc58b12",
+      "timestamp": "0x773a1400",
+      "transactions": [],
+      "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      "uncles": [],
+      "withdrawals": [],
+      "withdrawalsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"
+    },
+    "finality": {
+      "execution_optimistic": false,
+      "finalized": false,
+      "data": {
+        "previous_justified": {
+          "epoch": "3",
+          "root": "0xafe89f97c2e22634a4af14f1a91ae34ac7dc528b07b9ba81b51535d49c30217c"
+        },
+        "current_justified": {
+          "epoch": "3",
+          "root": "0xafe89f97c2e22634a4af14f1a91ae34ac7dc528b07b9ba81b51535d49c30217c"
+        },
+        "finalized": {
+          "epoch": "2",
+          "root": "0x10e79d205b5d2c4cac57308b0426cbed78a0ccdd9360c6c766ab11e657bb906b"
+        }
+      }
+    }
+  }
+}

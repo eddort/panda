@@ -1,0 +1,14 @@
+{
+  "event": "lifecycle-passed",
+  "elapsedMs": 16963.669923999998,
+  "repeatedUp": true,
+  "repeatedDown": true,
+  "resetGenesis": "0x0ba7a8ae75439088094d035dfa9d54b49eb6e9c4de716f356d8dc0d97fdb9886",
+  "duplicateOwnerRejected": true,
+  "differentProfileRejected": true,
+  "profile": "gloas",
+  "bake": "panda",
+  "bakeKey": "8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf",
+  "runId": "10a59792-cfd0-49d8-a5da-0df996ae62d4",
+  "recordedAt": "2026-09-30T12:19:45.717Z"
+}

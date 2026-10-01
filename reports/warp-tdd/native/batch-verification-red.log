@@ -1,0 +1,110 @@
+     Locking 26 packages to latest compatible versions
+      Adding rand v0.9.2 (available: v0.10.1)
+   Compiling libc v0.2.186
+   Compiling proc-macro2 v1.0.103
+   Compiling unicode-ident v1.0.22
+   Compiling quote v1.0.42
+   Compiling zerocopy v0.8.31
+   Compiling getrandom v0.3.4
+   Compiling shlex v1.3.0
+   Compiling find-msvc-tools v0.1.5
+   Compiling cfg-if v1.0.4
+   Compiling cc v1.2.49
+   Compiling syn v2.0.117
+   Compiling ppv-lite86 v0.2.21
+   Compiling blst v0.3.17
+   Compiling rand_core v0.9.3
+   Compiling num_cpus v1.17.0
+   Compiling zeroize_derive v1.4.2
+   Compiling threadpool v1.8.1
+   Compiling zeroize v1.8.2
+   Compiling rand_chacha v0.9.0
+   Compiling rand v0.9.2
+   Compiling panda-batch-proof v0.1.0 (/source)
+warning: constant `CAPACITY` is never used
+  --> src/verified_signature.rs:11:7
+   |
+11 | const CAPACITY: usize = 512;
+   |       ^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: fields `keys` and `order` are never read
+  --> src/verified_signature.rs:16:5
+   |
+15 | struct Successes {
+   |        --------- fields in this struct
+16 |     keys: BTreeSet<Input>,
+   |     ^^^^
+17 |     order: VecDeque<Input>,
+   |     ^^^^^
+   |
+   = note: `Successes` has a derived impl for the trait `Default`, but this is intentionally ignored during dead code analysis
+
+warning: field `successes` is never read
+  --> src/verified_signature.rs:22:5
+   |
+21 | pub struct Verifier {
+   |            -------- field in this struct
+22 |     successes: Mutex<Successes>,
+   |     ^^^^^^^^^
+
+warning: methods `verify_batch` and `verify` are never used
+  --> src/verified_signature.rs:30:12
+   |
+29 | impl Verifier {
+   | ------------- methods in this implementation
+30 |     pub fn verify_batch(&self, inputs: &[(Signature, PublicKey, [u8; 32])]) -> bool {
+   |            ^^^^^^^^^^^^
+...
+38 |     pub fn verify(&self, signature: &Signature, pubkey: &PublicKey, message: [u8; 32]) -> bool {
+   |            ^^^^^^
+
+warning: function `verify` is never used
+  --> src/verified_signature.rs:73:8
+   |
+73 | pub fn verify(signature: &Signature, pubkey: &PublicKey, message: [u8; 32]) -> bool {
+   |        ^^^^^^
+
+warning: `panda-batch-proof` (lib) generated 5 warnings
+warning: function `verify` is never used
+  --> src/verified_signature.rs:73:8
+   |
+73 | pub fn verify(signature: &Signature, pubkey: &PublicKey, message: [u8; 32]) -> bool {
+   |        ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `panda-batch-proof` (lib test) generated 1 warning
+    Finished `release` profile [optimized] target(s) in 8.72s
+     Running unittests src/lib.rs (/target/batch-proof/release/deps/panda_batch_proof-1907df19fe990ec0)
+
+running 7 tests
+test verified_signature::tests::identical_subnet_messages_are_verified_once ... ok
+test verified_signature::tests::invalid_individual_signatures_cannot_cancel_inside_a_batch ... ok
+test verified_signature::tests::cached_success_cannot_accept_another_key_root_domain_or_signature ... ok
+test verified_signature::tests::a_failed_batch_cannot_warm_even_its_valid_prefix ... ok
+test verified_signature::tests::concurrent_lookups_do_not_cross_contaminate_messages ... ok
+
+thread 'verified_signature::tests::valid_batch_verifies_once_and_warms_only_identical_inputs' panicked at src/verified_signature.rs:176:9:
+assertion `left == right` failed
+  left: 0
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test verified_signature::tests::valid_batch_verifies_once_and_warms_only_identical_inputs ... FAILED
+test verified_signature::tests::old_successes_are_evicted_and_reverified ... ok
+
+failures:
+
+failures:
+    verified_signature::tests::valid_batch_verifies_once_and_warms_only_identical_inputs
+
+test result: FAILED. 6 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s
+
+error: test failed, to rerun pass `--lib`
+error: Uncaught (in promise) Error: Native tests exited 101
+ if(StatusCode) throw Error(`Native tests exited ${StatusCode}`);
+                      ^
+    at file:///workspace/panda/.cache/warp-native/run_batch_test.ts:25:23
+    at processTicksAndRejections (ext:core/01_core.js:405:7)
+    at drainTicks (ext:core/01_core.js:432:5)

@@ -1,0 +1,14 @@
+{
+  "event": "lifecycle-passed",
+  "elapsedMs": 23141.591844,
+  "repeatedUp": true,
+  "repeatedDown": true,
+  "resetGenesis": "0x3fdcb0a7bf00d151bd1dc945be5a3215c17c15e73c6a3eb1fbbe245154758b68",
+  "duplicateOwnerRejected": true,
+  "differentProfileRejected": true,
+  "profile": "pectra",
+  "bake": "panda",
+  "bakeKey": "96b5d5a260d902e7a6abacbd745c89072a7f17407ac3d526d8240fd32dd884da",
+  "runId": "3b4b5562-27d8-4b4b-a119-5372ad7242b5",
+  "recordedAt": "2026-09-30T12:29:51.999Z"
+}

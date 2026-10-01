@@ -1,0 +1,11 @@
+{
+  "profile": "gloas",
+  "tag": "fast-warp-v2",
+  "bakeKey": "2bf42c2f76a3d3ddf97c9d71e5cf4003b97bc86b37c9e2081b3e38919ee761e6",
+  "passed": false,
+  "networkId": "warp-ea4c44e4",
+  "scenario": "warp",
+  "failure": "First destination block at slot 8320: LoadingHotHdiffBufferError / MissingHotStateSummary; BN shut down during import. Cached skipped states lacked persisted summaries and HDiff bases.",
+  "logs": ".zap/warp-ea4c44e4/",
+  "resolution": "Next bake persists each authentic skipped state through store.put_state; duty endpoints reuse the prepared states."
+}

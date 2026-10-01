@@ -1,0 +1,68 @@
+{
+  "recordedAt": "2026-10-01T11:59:38.322314+00:00",
+  "baseCommit": "be1001ad169c4856df17f0c01029501a914882a9",
+  "change": {
+    "barrier": "payload_attestations",
+    "scope": "First completed Gloas slot after VC restart",
+    "budgetMs": 120000,
+    "nativeWaitMs": 30000,
+    "maxNativeRequests": 4,
+    "retryStatus": 408,
+    "nativeSourcesChanged": false,
+    "workflowsChanged": false
+  },
+  "tdd": {
+    "before": {
+      "passed": 7,
+      "failed": 2,
+      "failures": [
+        "Late PTC completion rejected on first HTTP 408",
+        "Only one native wait instead of four"
+      ]
+    },
+    "deadlineDiagnosticBefore": {
+      "passed": 0,
+      "failed": 1,
+      "failure": "Generic timeout omitted slot, barrier and budget"
+    },
+    "after": {
+      "consensusTestsPassed": 10,
+      "unitTestsPassed": 101,
+      "failed": 0,
+      "optInTestsIgnored": 13
+    }
+  },
+  "validation": {
+    "checkPassed": true,
+    "unitPassed": true,
+    "integration": [
+      {
+        "profile": "gloas",
+        "scenario": "withdrawal",
+        "passed": true,
+        "elapsedMs": 130098.76237499999,
+        "bake": "ci-main-merge",
+        "bakeKey": "d769395a4ea4f4f4d3290b54aefa32780d32410248518ea319648353ab18fb86",
+        "platform": "linux/arm64",
+        "clientCpuSet": "0,1",
+        "report": "gloas-withdrawal.json"
+      },
+      {
+        "profile": "pectra",
+        "scenario": "withdrawal",
+        "passed": true,
+        "elapsedMs": 113672.316208,
+        "bake": "ci-main-merge",
+        "bakeKey": "5ef3ac09acd8852fb5eecd18b081a13400f69d6c6dff3bbb8ef7100d44fbeed9",
+        "platform": "linux/arm64",
+        "clientCpuSet": "0,1",
+        "report": "pectra-withdrawal.json"
+      }
+    ],
+    "testResourcesRemoved": true
+  },
+  "limitations": [
+    "The original GitHub amd64 failure was not reproduced or rerun in this change.",
+    "These are targeted withdrawal checks, not a new full profile-suite certification."
+  ]
+}

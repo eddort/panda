@@ -1,0 +1,7 @@
+block 129 verification: BulkSignatureVerificationFailed
+error: Uncaught (in promise) Error: Native tests exited 1
+ if(StatusCode) throw Error(`Native tests exited ${StatusCode}`);
+                      ^
+    at file:///workspace/panda/.cache/warp-native/run_oracle.ts:26:23
+    at processTicksAndRejections (ext:core/01_core.js:405:7)
+    at drainTicks (ext:core/01_core.js:432:5)

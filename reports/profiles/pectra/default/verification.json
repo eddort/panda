@@ -1,0 +1,22 @@
+{
+  "profile": "pectra",
+  "tag": "default",
+  "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
+  "runId": "3280f20f-4dd3-42d0-82cd-6138671fceea",
+  "suiteHash": "a385c806f95af01463ffa0b82970cf1bd4d5491f57aa81fb64e876ac02a22768",
+  "startedAt": "2026-09-30T05:45:49.710Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "protocol",
+    "withdrawal",
+    "deploy"
+  ],
+  "finishedAt": "2026-09-30T05:56:22.356Z",
+  "elapsedMs": 632674.1085000001,
+  "passed": false,
+  "status": "failed",
+  "error": "Error: Test process exited 1"
+}

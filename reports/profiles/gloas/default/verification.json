@@ -1,0 +1,21 @@
+{
+  "profile": "gloas",
+  "tag": "default",
+  "bakeKey": "0952c64a32289e266bc55ae3c793af7804f2662b36a176b0878f45301de09c03",
+  "runId": "8fb9da5b-e8d1-48d3-ac67-ab21b93f2d09",
+  "suiteHash": "260b7fc8f0f25fe2a47ae0cd2c53a965cee34c56229ee1bd96df820ec9c47b52",
+  "startedAt": "2026-09-29T14:23:55.767Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "protocol",
+    "withdrawal",
+    "deploy",
+    "gloas"
+  ],
+  "passed": false,
+  "status": "interrupted",
+  "stoppedAt": "2026-09-29T14:47:34.184063+00:00",
+  "error": "Stopped at user's request during withdrawal; remaining scenarios unverified."
+}

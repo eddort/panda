@@ -1,0 +1,22 @@
+{
+  "profile": "pectra",
+  "tag": "panda",
+  "bakeKey": "96b5d5a260d902e7a6abacbd745c89072a7f17407ac3d526d8240fd32dd884da",
+  "runId": "3b4b5562-27d8-4b4b-a119-5372ad7242b5",
+  "suiteHash": "09cd02aa2246acd134cb03757ceda8cc20b0c59a745d1bc68ff6f32de7630107",
+  "startedAt": "2026-09-30T12:28:49.276Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "protocol",
+    "withdrawal",
+    "deploy"
+  ],
+  "finishedAt": "2026-09-30T12:29:56.654Z",
+  "elapsedMs": 67412.981323,
+  "passed": false,
+  "status": "failed",
+  "error": "Error: Test process exited 1"
+}

@@ -1,0 +1,25 @@
+   Compiling slot_clock v0.2.0 (/source/common/slot_clock)
+    Finished `release` profile [optimized] target(s) in 2.94s
+     Running tests/controlled.rs (/target/release/deps/controlled-ca85e5187e4b710d)
+
+running 1 test
+
+thread 'protocol_time_waits_for_completion_and_rejects_invalid_commands' panicked at common/slot_clock/tests/controlled.rs:43:5:
+wait returned before either completion mark
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test protocol_time_waits_for_completion_and_rejects_invalid_commands ... FAILED
+
+failures:
+
+failures:
+    protocol_time_waits_for_completion_and_rejects_invalid_commands
+
+test result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s
+
+error: test failed, to rerun pass `-p slot_clock --test controlled`
+error: Uncaught (in promise) Error: Native tests exited 101
+ if(StatusCode) throw Error(`Native tests exited ${StatusCode}`);
+                      ^
+    at file:///workspace/panda/.cache/warp-native/run_clock_test.ts:25:23
+    at processTicksAndRejections (ext:core/01_core.js:405:7)
+    at drainTicks (ext:core/01_core.js:432:5)

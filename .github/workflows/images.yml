@@ -1,0 +1,116 @@
+name: Publish Panda images
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Registered hardfork name, or all. Run this workflow on a vX.Y.Z Git tag.
+        required: true
+        default: all
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+      revision: ${{ steps.select.outputs.revision }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: sh scripts/bootstrap.sh
+      - id: select
+        env:
+          PROFILE: ${{ inputs.profile || 'all' }}
+        run: ./scripts/deno run -A scripts/release_ci.ts matrix "$PROFILE"
+      - name: Require committed published client locks
+        env:
+          MATRIX: ${{ steps.select.outputs.matrix }}
+        run: |
+          while IFS= read -r profile; do
+            ./scripts/deno run -A scripts/clients.ts check "$profile"
+            git ls-files --error-unmatch "bakes/$profile/release/clients.lock.json"
+          done < <(jq -r '.include[].profile' <<< "$MATRIX")
+
+  image:
+    needs: select
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
+    runs-on: ubuntu-24.04
+    # The full profile includes two honest 1000-slot jumps, separately from fast checks.
+    timeout-minutes: 180
+    concurrency:
+      group: panda-image-${{ matrix.profile }}-${{ needs.select.outputs.revision }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: write
+    env:
+      PROFILE: ${{ matrix.profile }}
+      REVISION: ${{ needs.select.outputs.revision }}
+      IMAGE: ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: sh scripts/bootstrap.sh
+      - name: Refuse an existing Panda version
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/deno run -A scripts/release_ci.ts check "$PROFILE"
+      - run: ./scripts/deno task check && ./scripts/deno task test
+      - name: Restore published clients by digest (no compilation)
+        id: clients
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/deno task clients:restore "$PROFILE"
+      - name: Verify this controller with the selected clients
+        env:
+          BAKE: ${{ steps.clients.outputs.bake }}
+        run: ./scripts/deno task test:profile "$PROFILE" --bake "$BAKE"
+      - name: Package exact published client images
+        run: ./scripts/deno run -A scripts/package_image.ts "$PROFILE" --published "$REVISION" "$GITHUB_REPOSITORY_OWNER" "$(git rev-parse HEAD)"
+      - uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e
+      - name: Build service image
+        run: |
+          CONTEXT=".cache/containers/$PROFILE/$REVISION"
+          BAKE_KEY=$(jq -r .bakeKey "$CONTEXT/release.json")
+          test "$(jq -r .platform "$CONTEXT/release.json")" = linux/amd64
+          docker buildx build --platform linux/amd64 --load --tag "$IMAGE" \
+            --build-arg SOURCE_COMMIT="$(git rev-parse HEAD)" --build-arg PROFILE="$PROFILE" \
+            --build-arg REVISION="$REVISION" --build-arg BAKE_KEY="$BAKE_KEY" \
+            --file "$CONTEXT/container/Dockerfile" "$CONTEXT"
+      - name: Verify service, CL/VC access, client logs and transaction
+        run: ./scripts/deno run -A scripts/test_image.ts "$IMAGE" "$PROFILE"
+      - uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish verified image and record digest
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ./scripts/deno run -A scripts/release_ci.ts check "$PROFILE"
+          docker push "$IMAGE"
+          DIGEST=$(docker image inspect "$IMAGE" --format '{{index .RepoDigests 0}}')
+          jq --arg digest "$DIGEST" '. + {digest: $digest}' \
+            ".cache/containers/$PROFILE/$REVISION/release.json" > ".cache/container-reports/release-$PROFILE.json"
+          echo "Use in services: \`$DIGEST\`" >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload verification and release identity
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: panda-${{ matrix.profile }}-${{ needs.select.outputs.revision }}
+          include-hidden-files: true
+          path: |
+            .cache/container-reports/
+            reports/profiles/${{ matrix.profile }}/${{ steps.clients.outputs.bake }}/
+            bakes/${{ matrix.profile }}/release/clients.lock.json

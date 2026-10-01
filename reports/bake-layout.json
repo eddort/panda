@@ -1,0 +1,331 @@
+{
+  "recordedAt": "2026-09-30T06:00:33.647501+00:00",
+  "scope": "bake directory migration; no client algorithm changes",
+  "unchangedFiles": [
+    {
+      "from": "clients/controlled_clock.rs",
+      "to": "bakes/shared/controlled_clock.rs",
+      "beforeSha256": "ac7172ce05b01a5cd51aa946855734bde7afcdd429d2332f4863ae5979d525c3",
+      "afterSha256": "ac7172ce05b01a5cd51aa946855734bde7afcdd429d2332f4863ae5979d525c3"
+    },
+    {
+      "from": "clients/controlled_clock_test.rs",
+      "to": "bakes/shared/controlled_clock_test.rs",
+      "beforeSha256": "4ad5e9a0bcd57b15cc9bd52f901f821edf9d640017a9b2e45532a7d2e63a78b8",
+      "afterSha256": "4ad5e9a0bcd57b15cc9bd52f901f821edf9d640017a9b2e45532a7d2e63a78b8"
+    },
+    {
+      "from": "clients/lighthouse.patch",
+      "to": "bakes/pectra/lighthouse.patch",
+      "beforeSha256": "729cfb395a2381f46475d1317cc83af203b2188d8757443b2b3da2417e9a6fef",
+      "afterSha256": "729cfb395a2381f46475d1317cc83af203b2188d8757443b2b3da2417e9a6fef"
+    },
+    {
+      "from": "clients/lighthouse-gloas.patch",
+      "to": "bakes/gloas/lighthouse.patch",
+      "beforeSha256": "967824e8786a06e2e0da8f9bc14f61c13380ba3a56c5b942bcbb2403d6492472",
+      "afterSha256": "967824e8786a06e2e0da8f9bc14f61c13380ba3a56c5b942bcbb2403d6492472"
+    },
+    {
+      "from": "clients/gloas_prepare_skip.rs",
+      "to": "bakes/gloas/native/prepare_skip.rs",
+      "beforeSha256": "9c2b091c6e9765d97b4b7e567111290dba44286dce798e862e093ed439e3681b",
+      "afterSha256": "9c2b091c6e9765d97b4b7e567111290dba44286dce798e862e093ed439e3681b"
+    },
+    {
+      "from": "clients/gloas_weighted_selection.rs",
+      "to": "bakes/gloas/native/weighted_selection.rs",
+      "beforeSha256": "e38a847e71364f1baa5a742e81b00fbcf5f11c3252708d9a4881b16dfdc426b3",
+      "afterSha256": "e38a847e71364f1baa5a742e81b00fbcf5f11c3252708d9a4881b16dfdc426b3"
+    },
+    {
+      "from": "bakes/pectra/geth-source.json",
+      "to": "bakes/pectra/tags/geth-source.json",
+      "beforeSha256": "cb21087399aafc19fd0208d7e837454d01d6499ebdd5b94369eb39bbed6eeab5",
+      "afterSha256": "cb21087399aafc19fd0208d7e837454d01d6499ebdd5b94369eb39bbed6eeab5"
+    },
+    {
+      "from": "bakes/pectra/default.json",
+      "to": "bakes/pectra/tags/default.json",
+      "beforeSha256": "94b4a86483ed7eddf8dbc306109fbe78aa174cb8efc16f7d36449def5131fe27",
+      "afterSha256": "94b4a86483ed7eddf8dbc306109fbe78aa174cb8efc16f7d36449def5131fe27"
+    },
+    {
+      "from": "bakes/gloas/fast-warp-v2.json",
+      "to": "bakes/gloas/tags/fast-warp-v2.json",
+      "beforeSha256": "1c9108beda1178a7e5c107db157029e28bae73ae9a3ae0a53da59c819b563d6e",
+      "afterSha256": "1c9108beda1178a7e5c107db157029e28bae73ae9a3ae0a53da59c819b563d6e"
+    },
+    {
+      "from": "bakes/gloas/fast-warp-v3.json",
+      "to": "bakes/gloas/tags/fast-warp-v3.json",
+      "beforeSha256": "c28c241525791335f85d081750a6b48dfc31b43e275436e7b572ad03dadd50d9",
+      "afterSha256": "c28c241525791335f85d081750a6b48dfc31b43e275436e7b572ad03dadd50d9"
+    },
+    {
+      "from": "bakes/gloas/stable.json",
+      "to": "bakes/gloas/tags/stable.json",
+      "beforeSha256": "1d9986c6c67db24fe9a88aa2fccd8b45e01e2f916b53c8bef487cdf80c973c6d",
+      "afterSha256": "1d9986c6c67db24fe9a88aa2fccd8b45e01e2f916b53c8bef487cdf80c973c6d"
+    },
+    {
+      "from": "bakes/gloas/fast-warp-v4.json",
+      "to": "bakes/gloas/tags/fast-warp-v4.json",
+      "beforeSha256": "f9b968c7e8e5d59d908763710a0cf52ff5c26282dbc2b538f29abd86d7651534",
+      "afterSha256": "f9b968c7e8e5d59d908763710a0cf52ff5c26282dbc2b538f29abd86d7651534"
+    },
+    {
+      "from": "bakes/gloas/compiled.json",
+      "to": "bakes/gloas/tags/compiled.json",
+      "beforeSha256": "4fea534f993254cf0977be717646f811a183beb700d41f10342b04c71d43a500",
+      "afterSha256": "4fea534f993254cf0977be717646f811a183beb700d41f10342b04c71d43a500"
+    },
+    {
+      "from": "bakes/gloas/fast-warp.json",
+      "to": "bakes/gloas/tags/fast-warp.json",
+      "beforeSha256": "f403441a8cc6aedaf4b884d9baf3b8f3217d06f4679c832f0ea890a10b50d317",
+      "afterSha256": "f403441a8cc6aedaf4b884d9baf3b8f3217d06f4679c832f0ea890a10b50d317"
+    },
+    {
+      "from": "bakes/gloas/default.json",
+      "to": "bakes/gloas/tags/default.json",
+      "beforeSha256": "19665e1d0bd6a942f5b030f70e603b16ca8427bb41a41c81e5e61f8ed7401473",
+      "afterSha256": "19665e1d0bd6a942f5b030f70e603b16ca8427bb41a41c81e5e61f8ed7401473"
+    }
+  ],
+  "tdd": {
+    "initialRed": {
+      "passed": 5,
+      "failed": 6
+    },
+    "initialGreen": {
+      "passed": 12,
+      "failed": 0
+    },
+    "scenarioRoutingRed": {
+      "passed": 0,
+      "failed": 1
+    }
+  },
+  "unit": {
+    "passed": 24,
+    "failed": 0,
+    "ignored": 10
+  },
+  "dockerBaker": {
+    "passed": 3,
+    "failed": 0
+  },
+  "profiles": {
+    "gloas/stable": {
+      "profile": "gloas",
+      "tag": "stable",
+      "bakeKey": "8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9",
+      "runId": "1a37152e-768e-4ae9-a748-4afca8b3f2ae",
+      "suiteHash": "6fe0814e0b119f32e3d2b464eeba7af60cfd7bd14dfa1d6242d54a3bc61b3c9e",
+      "startedAt": "2026-09-30T05:35:01.308Z",
+      "scenarios": [
+        "baseline",
+        "lifecycle",
+        "e2e",
+        "warp",
+        "protocol",
+        "withdrawal",
+        "deploy",
+        "gloas"
+      ],
+      "finishedAt": "2026-09-30T05:44:28.151Z",
+      "elapsedMs": 566868.3450839999,
+      "passed": true,
+      "status": "passed",
+      "passedScenarios": 8,
+      "failedScenarios": 0
+    },
+    "pectra/default": {
+      "profile": "pectra",
+      "tag": "default",
+      "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
+      "runId": "3280f20f-4dd3-42d0-82cd-6138671fceea",
+      "suiteHash": "a385c806f95af01463ffa0b82970cf1bd4d5491f57aa81fb64e876ac02a22768",
+      "startedAt": "2026-09-30T05:45:49.710Z",
+      "scenarios": [
+        "baseline",
+        "lifecycle",
+        "e2e",
+        "warp",
+        "protocol",
+        "withdrawal",
+        "deploy"
+      ],
+      "finishedAt": "2026-09-30T05:56:22.356Z",
+      "elapsedMs": 632674.1085000001,
+      "passed": false,
+      "status": "failed",
+      "error": "Error: Test process exited 1",
+      "passedScenarios": 6,
+      "failedScenarios": 1
+    }
+  },
+  "nativeBuildRepeated": false,
+  "pectraWarpFailure": {
+    "runId": "3280f20f-4dd3-42d0-82cd-6138671fceea",
+    "networkId": "warp-892dfa07",
+    "firstJumpWithNextTransactionMs": 22242.966,
+    "budgetMs": 20000,
+    "error": "Docker HTTP 409: container paused during signing-history export exec",
+    "rootCause": "unconfirmed",
+    "testLogicUnchangedFromHead": true,
+    "remainingContainersAfterCleanup": 0,
+    "validatorContainerEvents": [
+      {
+        "timeNano": 1790747324131568426,
+        "Action": "create"
+      },
+      {
+        "timeNano": 1790747324402312009,
+        "Action": "start"
+      },
+      {
+        "timeNano": 1790747382203417800,
+        "Action": "pause"
+      },
+      {
+        "timeNano": 1790747382218963342,
+        "Action": "unpause"
+      },
+      {
+        "timeNano": 1790747382224462842,
+        "Action": "exec_create: env -u ZAP_CLOCK_START_MS -u ZAP_CLOCK_PORT lighthouse --testnet-dir=/shared/metadata account validator --validators-dir=/shared/warp-slashing-snapshot slashing-protection export /shared/warp-signing-history.json"
+      },
+      {
+        "timeNano": 1790747382226170758,
+        "Action": "exec_start: env -u ZAP_CLOCK_START_MS -u ZAP_CLOCK_PORT lighthouse --testnet-dir=/shared/metadata account validator --validators-dir=/shared/warp-slashing-snapshot slashing-protection export /shared/warp-signing-history.json"
+      },
+      {
+        "timeNano": 1790747382759671925,
+        "Action": "exec_die"
+      },
+      {
+        "timeNano": 1790747382783088383,
+        "Action": "kill"
+      },
+      {
+        "timeNano": 1790747383219021800,
+        "Action": "stop"
+      },
+      {
+        "timeNano": 1790747383221324550,
+        "Action": "die"
+      },
+      {
+        "timeNano": 1790747383246409384,
+        "Action": "destroy"
+      },
+      {
+        "timeNano": 1790747383277579842,
+        "Action": "create"
+      },
+      {
+        "timeNano": 1790747383403106800,
+        "Action": "start"
+      },
+      {
+        "timeNano": 1790747430695427461,
+        "Action": "pause"
+      },
+      {
+        "timeNano": 1790747430782235003,
+        "Action": "unpause"
+      },
+      {
+        "timeNano": 1790747430851832503,
+        "Action": "pause"
+      },
+      {
+        "timeNano": 1790747430859198878,
+        "Action": "unpause"
+      },
+      {
+        "timeNano": 1790747430923598544,
+        "Action": "kill"
+      },
+      {
+        "timeNano": 1790747431368079836,
+        "Action": "stop"
+      },
+      {
+        "timeNano": 1790747431371511128,
+        "Action": "die"
+      },
+      {
+        "timeNano": 1790747431392835045,
+        "Action": "destroy"
+      }
+    ]
+  },
+  "pectraWarpRecheck": {
+    "runId": "bake-layout-warp-recheck",
+    "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
+    "exitCode": 1,
+    "passed": false,
+    "elapsedMs": 160738.026083,
+    "budgetMs": 20000,
+    "jumpsWithNextTransactionMs": [
+      17195.304082999995,
+      20678.626915999994
+    ],
+    "signedValidators": 64,
+    "activeUnslashedValidators": 64,
+    "finalityAndSigningHistoryAssertionsPassed": true,
+    "docker409Reproduced": false,
+    "error": "Time travel exceeded 20 seconds including the next transaction"
+  },
+  "finalCatalog": {
+    "artifactCount": 9,
+    "gloas/stable/verified": true,
+    "pectra/default/verified": false
+  },
+  "remainingZapContainersAfterTests": 0,
+  "finalChecks": {
+    "format": true,
+    "lint": true,
+    "types": true,
+    "workingTreeWhitespace": true,
+    "stagedWhitespace": true
+  },
+  "warpBudgetAdjustment": {
+    "recordedAt": "2026-09-30T06:12:22.061604+00:00",
+    "userApprovedBudgetMs": 25000,
+    "runtimeChanged": false,
+    "checkPassed": true,
+    "unitPassed": 24,
+    "unitIgnored": 10,
+    "fullProfileSuitesRepeated": false,
+    "runs": {
+      "pectra/default": {
+        "runId": "warp-budget-25-pectra",
+        "bakeKey": "0e6443c88e305433e47527de8e4578a95362dd80a486be0775e53078d6a7bbc4",
+        "passed": true,
+        "elapsedMs": 155085.011583,
+        "budgetMs": 25000,
+        "signedValidators": 64,
+        "jumpsWithNextTransactionMs": [
+          18384.635500000004,
+          17613.07583300001
+        ]
+      },
+      "gloas/stable": {
+        "runId": "warp-budget-25-gloas",
+        "bakeKey": "8b1fa94aaf9f1719d3c61793bd960344531335270ab88b82c908ca2184b094f9",
+        "passed": true,
+        "elapsedMs": 138804.60624999998,
+        "budgetMs": 25000,
+        "signedValidators": 64,
+        "jumpsWithNextTransactionMs": [
+          11860.687166000003,
+          10684.595291999998
+        ]
+      }
+    }
+  }
+}

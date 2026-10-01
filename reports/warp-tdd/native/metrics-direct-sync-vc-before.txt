@@ -1,0 +1,1325 @@
+# HELP async_tasks_count Total number of async tasks spawned using spawn
+# TYPE async_tasks_count gauge
+async_tasks_count{async_task_count="aggregate publish"} 0
+async_tasks_count{async_task_count="attestation and aggregate publish"} 0
+async_tasks_count{async_task_count="attestation_service"} 1
+async_tasks_count{async_task_count="block service"} 0
+async_tasks_count{async_task_count="block_service"} 1
+async_tasks_count{async_task_count="builder_preferences_service"} 1
+async_tasks_count{async_task_count="duties_service_attesters"} 1
+async_tasks_count{async_task_count="duties_service_indices"} 1
+async_tasks_count{async_task_count="duties_service_proposers"} 1
+async_tasks_count{async_task_count="duties_service_ptc"} 1
+async_tasks_count{async_task_count="duties_service_selection_proofs_background"} 2
+async_tasks_count{async_task_count="duties_service_sync_committee"} 1
+async_tasks_count{async_task_count="duties_service_sync_selection_proofs"} 0
+async_tasks_count{async_task_count="fallback"} 2
+async_tasks_count{async_task_count="head_monitoring"} 1
+async_tasks_count{async_task_count="http-api"} 1
+async_tasks_count{async_task_count="latency"} 1
+async_tasks_count{async_task_count="metrics-api"} 1
+async_tasks_count{async_task_count="payload_attestation_producer"} 0
+async_tasks_count{async_task_count="payload_attestation_service"} 1
+async_tasks_count{async_task_count="payload_available_monitoring"} 1
+async_tasks_count{async_task_count="preparation_service"} 1
+async_tasks_count{async_task_count="proposer_preferences_service"} 1
+async_tasks_count{async_task_count="slashing_protection_pre_pruning"} 0
+async_tasks_count{async_task_count="sync_committee_aggregate_publish"} 0
+async_tasks_count{async_task_count="sync_committee_service"} 1
+async_tasks_count{async_task_count="sync_committee_signature_publish"} 0
+async_tasks_count{async_task_count="sync_committee_subscription_publish"} 0
+async_tasks_count{async_task_count="unaggregated attestation publication"} 0
+async_tasks_count{async_task_count="validator_client"} 0
+async_tasks_count{async_task_count="validator_notifier"} 1
+async_tasks_count{async_task_count="validator_registration_service"} 1
+# HELP async_tasks_time_histogram Time taken by async tasks
+# TYPE async_tasks_time_histogram histogram
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="0.025"} 38
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="0.05"} 62
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="aggregate publish",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="aggregate publish"} 1.504585372
+async_tasks_time_histogram_count{async_task_hist="aggregate publish"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="0.01"} 2
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="0.025"} 19
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="0.05"} 63
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation and aggregate publish",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="attestation and aggregate publish"} 2.171883173
+async_tasks_time_histogram_count{async_task_hist="attestation and aggregate publish"} 64
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="attestation_service",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="attestation_service"} 0
+async_tasks_time_histogram_count{async_task_hist="attestation_service"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="0.05"} 49
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="block service",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="block service"} 3.1148490389999988
+async_tasks_time_histogram_count{async_task_hist="block service"} 64
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="block_service",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="block_service"} 0
+async_tasks_time_histogram_count{async_task_hist="block_service"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="builder_preferences_service",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="builder_preferences_service"} 0
+async_tasks_time_histogram_count{async_task_hist="builder_preferences_service"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_attesters",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="duties_service_attesters"} 0
+async_tasks_time_histogram_count{async_task_hist="duties_service_attesters"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_indices",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="duties_service_indices"} 0
+async_tasks_time_histogram_count{async_task_hist="duties_service_indices"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_proposers",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="duties_service_proposers"} 0
+async_tasks_time_histogram_count{async_task_hist="duties_service_proposers"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_ptc",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="duties_service_ptc"} 0
+async_tasks_time_histogram_count{async_task_hist="duties_service_ptc"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="2.5"} 1
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="5"} 1
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="10"} 2
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_selection_proofs_background",le="+Inf"} 2
+async_tasks_time_histogram_sum{async_task_hist="duties_service_selection_proofs_background"} 7.170751336
+async_tasks_time_histogram_count{async_task_hist="duties_service_selection_proofs_background"} 2
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_committee",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="duties_service_sync_committee"} 0
+async_tasks_time_histogram_count{async_task_hist="duties_service_sync_committee"} 0
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="0.005"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="0.01"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="0.025"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="0.05"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="duties_service_sync_selection_proofs",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="duties_service_sync_selection_proofs"} 0.004225376
+async_tasks_time_histogram_count{async_task_hist="duties_service_sync_selection_proofs"} 64
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="fallback",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="fallback"} 0
+async_tasks_time_histogram_count{async_task_hist="fallback"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="head_monitoring",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="head_monitoring"} 0
+async_tasks_time_histogram_count{async_task_hist="head_monitoring"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="latency",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="latency"} 0
+async_tasks_time_histogram_count{async_task_hist="latency"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="0.005"} 38
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="0.01"} 44
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="0.025"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="0.05"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_producer",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="payload_attestation_producer"} 0.4199234150000001
+async_tasks_time_histogram_count{async_task_hist="payload_attestation_producer"} 64
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_attestation_service",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="payload_attestation_service"} 0
+async_tasks_time_histogram_count{async_task_hist="payload_attestation_service"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="payload_available_monitoring",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="payload_available_monitoring"} 0
+async_tasks_time_histogram_count{async_task_hist="payload_available_monitoring"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="preparation_service",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="preparation_service"} 0
+async_tasks_time_histogram_count{async_task_hist="preparation_service"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="proposer_preferences_service",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="proposer_preferences_service"} 0
+async_tasks_time_histogram_count{async_task_hist="proposer_preferences_service"} 0
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="0.05"} 17
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pre_pruning",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="slashing_protection_pre_pruning"} 3.442853126000001
+async_tasks_time_histogram_count{async_task_hist="slashing_protection_pre_pruning"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="0.005"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="0.01"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="0.025"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="0.05"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="slashing_protection_pruning",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="slashing_protection_pruning"} 0.007975126999999999
+async_tasks_time_histogram_count{async_task_hist="slashing_protection_pruning"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="0.005"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="0.01"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="0.025"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="0.05"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_aggregate_publish",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="sync_committee_aggregate_publish"} 0.000098747
+async_tasks_time_histogram_count{async_task_hist="sync_committee_aggregate_publish"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_service",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="sync_committee_service"} 0
+async_tasks_time_histogram_count{async_task_hist="sync_committee_service"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="0.05"} 60
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_signature_publish",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="sync_committee_signature_publish"} 2.8398385449999997
+async_tasks_time_histogram_count{async_task_hist="sync_committee_signature_publish"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="0.005"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="0.01"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="0.025"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="0.05"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="0.1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="0.25"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="0.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="1"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="2.5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="5"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="10"} 64
+async_tasks_time_histogram_bucket{async_task_hist="sync_committee_subscription_publish",le="+Inf"} 64
+async_tasks_time_histogram_sum{async_task_hist="sync_committee_subscription_publish"} 0.004832670000000002
+async_tasks_time_histogram_count{async_task_hist="sync_committee_subscription_publish"} 64
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="1"} 1
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="2.5"} 1
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="5"} 1
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="10"} 1
+async_tasks_time_histogram_bucket{async_task_hist="validator_client",le="+Inf"} 1
+async_tasks_time_histogram_sum{async_task_hist="validator_client"} 0.943888668
+async_tasks_time_histogram_count{async_task_hist="validator_client"} 1
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_notifier",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="validator_notifier"} 0
+async_tasks_time_histogram_count{async_task_hist="validator_notifier"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="0.005"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="0.01"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="0.025"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="0.05"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="0.1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="0.25"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="0.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="1"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="2.5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="5"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="10"} 0
+async_tasks_time_histogram_bucket{async_task_hist="validator_registration_service",le="+Inf"} 0
+async_tasks_time_histogram_sum{async_task_hist="validator_registration_service"} 0
+async_tasks_time_histogram_count{async_task_hist="validator_registration_service"} 0
+# HELP blocking_tasks_count Total number of async tasks spawned using spawn_blocking
+# TYPE blocking_tasks_count gauge
+blocking_tasks_count{blocking_task_count="slashing_protect_attestations"} 0
+blocking_tasks_count{blocking_task_count="slashing_protection_pruning"} 0
+# HELP blocking_tasks_histogram Time taken by blocking tasks
+# TYPE blocking_tasks_histogram histogram
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="0.005"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="0.01"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="0.025"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="0.05"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="0.1"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="0.25"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="0.5"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="1"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="2.5"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="5"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="10"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protect_attestations",le="+Inf"} 64
+blocking_tasks_histogram_sum{blocking_task_hist="slashing_protect_attestations"} 0.09680779999999997
+blocking_tasks_histogram_count{blocking_task_hist="slashing_protect_attestations"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="0.005"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="0.01"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="0.025"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="0.05"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="0.1"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="0.25"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="0.5"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="1"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="2.5"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="5"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="10"} 64
+blocking_tasks_histogram_bucket{blocking_task_hist="slashing_protection_pruning",le="+Inf"} 64
+blocking_tasks_histogram_sum{blocking_task_hist="slashing_protection_pruning"} 0.010086294999999999
+blocking_tasks_histogram_count{blocking_task_hist="slashing_protection_pruning"} 64
+# HELP bn_endpoint_errors The number of beacon node request errors for each endpoint
+# TYPE bn_endpoint_errors counter
+bn_endpoint_errors{endpoint="http://bn:5052/"} 116
+# HELP bn_endpoint_requests The number of beacon node requests for each endpoint
+# TYPE bn_endpoint_requests counter
+bn_endpoint_requests{endpoint="http://bn:5052/"} 1403
+# HELP cpu_cores Number of physical cpu cores
+# TYPE cpu_cores gauge
+cpu_cores 2
+# HELP cpu_idle_seconds_total Total time spent idle
+# TYPE cpu_idle_seconds_total gauge
+cpu_idle_seconds_total 3011351
+# HELP cpu_iowait_seconds_total Total time spent waiting for io
+# TYPE cpu_iowait_seconds_total gauge
+cpu_iowait_seconds_total 2099
+# HELP cpu_system_seconds_total Total time spent in kernel mode
+# TYPE cpu_system_seconds_total gauge
+cpu_system_seconds_total 36991
+# HELP cpu_threads Number of logical cpu cores
+# TYPE cpu_threads gauge
+cpu_threads 2
+# HELP cpu_user_seconds_total Total time spent in user mode
+# TYPE cpu_user_seconds_total gauge
+cpu_user_seconds_total 129237
+# HELP dep_error_total Count of errors logged per enabled dependency
+# TYPE dep_error_total counter
+dep_error_total{target="validator_services"} 29
+# HELP dep_info_total Count of infos logged per enabled dependency
+# TYPE dep_info_total counter
+dep_info_total{target="beacon_node_fallback"} 1
+dep_info_total{target="initialized_validators"} 65
+dep_info_total{target="lighthouse"} 2
+dep_info_total{target="lighthouse_validator_store"} 4
+dep_info_total{target="validator_client"} 6
+dep_info_total{target="validator_http_api"} 1
+dep_info_total{target="validator_http_metrics"} 1
+dep_info_total{target="validator_services"} 970
+# HELP disk_node_bytes_free Free space in disk
+# TYPE disk_node_bytes_free gauge
+disk_node_bytes_free 3175731200
+# HELP disk_node_bytes_total Total capacity of disk
+# TYPE disk_node_bytes_total gauge
+disk_node_bytes_total 62671097856
+# HELP disk_node_reads_total Number of disk reads
+# TYPE disk_node_reads_total gauge
+disk_node_reads_total 4750648
+# HELP disk_node_writes_total Number of disk writes
+# TYPE disk_node_writes_total gauge
+disk_node_writes_total 13884398
+# HELP jemalloc_arenas_large_ndalloc Equivalent to stats.arenas.<i>.large.ndalloc
+# TYPE jemalloc_arenas_large_ndalloc gauge
+jemalloc_arenas_large_ndalloc{arena="arena_0"} 8
+jemalloc_arenas_large_ndalloc{arena="arena_1"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_10"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_11"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_12"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_16"} 1
+jemalloc_arenas_large_ndalloc{arena="arena_2"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_3"} 95
+jemalloc_arenas_large_ndalloc{arena="arena_4"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_5"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_6"} 105
+jemalloc_arenas_large_ndalloc{arena="arena_7"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_8"} 0
+jemalloc_arenas_large_ndalloc{arena="arena_9"} 0
+# HELP jemalloc_arenas_large_nmalloc Equivalent to stats.arenas.<i>.large.nmalloc
+# TYPE jemalloc_arenas_large_nmalloc gauge
+jemalloc_arenas_large_nmalloc{arena="arena_0"} 34
+jemalloc_arenas_large_nmalloc{arena="arena_1"} 0
+jemalloc_arenas_large_nmalloc{arena="arena_10"} 0
+jemalloc_arenas_large_nmalloc{arena="arena_11"} 0
+jemalloc_arenas_large_nmalloc{arena="arena_12"} 0
+jemalloc_arenas_large_nmalloc{arena="arena_16"} 1
+jemalloc_arenas_large_nmalloc{arena="arena_2"} 0
+jemalloc_arenas_large_nmalloc{arena="arena_3"} 108
+jemalloc_arenas_large_nmalloc{arena="arena_4"} 0
+jemalloc_arenas_large_nmalloc{arena="arena_5"} 0
+jemalloc_arenas_large_nmalloc{arena="arena_6"} 112
+jemalloc_arenas_large_nmalloc{arena="arena_7"} 1
+jemalloc_arenas_large_nmalloc{arena="arena_8"} 0
+jemalloc_arenas_large_nmalloc{arena="arena_9"} 0
+# HELP jemalloc_arenas_small_ndalloc Equivalent to stats.arenas.<i>.small.ndalloc
+# TYPE jemalloc_arenas_small_ndalloc gauge
+jemalloc_arenas_small_ndalloc{arena="arena_0"} 792
+jemalloc_arenas_small_ndalloc{arena="arena_1"} 99
+jemalloc_arenas_small_ndalloc{arena="arena_10"} 0
+jemalloc_arenas_small_ndalloc{arena="arena_11"} 862
+jemalloc_arenas_small_ndalloc{arena="arena_12"} 29
+jemalloc_arenas_small_ndalloc{arena="arena_16"} 0
+jemalloc_arenas_small_ndalloc{arena="arena_2"} 99
+jemalloc_arenas_small_ndalloc{arena="arena_3"} 516589
+jemalloc_arenas_small_ndalloc{arena="arena_4"} 0
+jemalloc_arenas_small_ndalloc{arena="arena_5"} 18
+jemalloc_arenas_small_ndalloc{arena="arena_6"} 15520
+jemalloc_arenas_small_ndalloc{arena="arena_7"} 140
+jemalloc_arenas_small_ndalloc{arena="arena_8"} 0
+jemalloc_arenas_small_ndalloc{arena="arena_9"} 0
+# HELP jemalloc_arenas_small_nmalloc Equivalent to stats.arenas.<i>.small.nmalloc
+# TYPE jemalloc_arenas_small_nmalloc gauge
+jemalloc_arenas_small_nmalloc{arena="arena_0"} 3266
+jemalloc_arenas_small_nmalloc{arena="arena_1"} 264
+jemalloc_arenas_small_nmalloc{arena="arena_10"} 1066
+jemalloc_arenas_small_nmalloc{arena="arena_11"} 886
+jemalloc_arenas_small_nmalloc{arena="arena_12"} 670
+jemalloc_arenas_small_nmalloc{arena="arena_16"} 0
+jemalloc_arenas_small_nmalloc{arena="arena_2"} 200
+jemalloc_arenas_small_nmalloc{arena="arena_3"} 520882
+jemalloc_arenas_small_nmalloc{arena="arena_4"} 52
+jemalloc_arenas_small_nmalloc{arena="arena_5"} 184
+jemalloc_arenas_small_nmalloc{arena="arena_6"} 19178
+jemalloc_arenas_small_nmalloc{arena="arena_7"} 1128
+jemalloc_arenas_small_nmalloc{arena="arena_8"} 374
+jemalloc_arenas_small_nmalloc{arena="arena_9"} 32
+# HELP jemalloc_bytes_active Equivalent to stats.active
+# TYPE jemalloc_bytes_active gauge
+jemalloc_bytes_active 21204992
+# HELP jemalloc_bytes_allocated Equivalent to stats.allocated
+# TYPE jemalloc_bytes_allocated gauge
+jemalloc_bytes_allocated 19175680
+# HELP jemalloc_bytes_mapped Equivalent to stats.mapped
+# TYPE jemalloc_bytes_mapped gauge
+jemalloc_bytes_mapped 63070208
+# HELP jemalloc_bytes_metadata Equivalent to stats.metadata
+# TYPE jemalloc_bytes_metadata gauge
+jemalloc_bytes_metadata 6811024
+# HELP jemalloc_bytes_resident Equivalent to stats.resident
+# TYPE jemalloc_bytes_resident gauge
+jemalloc_bytes_resident 29696000
+# HELP jemalloc_bytes_retained Equivalent to stats.retained
+# TYPE jemalloc_bytes_retained gauge
+jemalloc_bytes_retained 394108928
+# HELP jemalloc_num_arenas The number of arenas in use
+# TYPE jemalloc_num_arenas gauge
+jemalloc_num_arenas 17
+# HELP lighthouse_info The build of Lighthouse running on the server
+# TYPE lighthouse_info gauge
+lighthouse_info{version="Lighthouse/v8.2.2-2d281df"} 1
+# HELP network_node_bytes_total_received Total bytes received over all network interfaces
+# TYPE network_node_bytes_total_received gauge
+network_node_bytes_total_received 3200128
+# HELP network_node_bytes_total_transmit Total bytes sent over all network interfaces
+# TYPE network_node_bytes_total_transmit gauge
+network_node_bytes_total_transmit 4297390
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 3
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 1048576
+# HELP process_num_threads Number of threads used by the current process
+# TYPE process_num_threads gauge
+process_num_threads 19
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 91
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 64225280
+# HELP process_shared_memory_bytes Shared memory used by the current process
+# TYPE process_shared_memory_bytes gauge
+process_shared_memory_bytes 35688448
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1790777668
+# HELP process_threads Number of OS threads in the process.
+# TYPE process_threads gauge
+process_threads 19
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 1611051008
+# HELP sync_eth2_fallback_configured The number of configured eth2 fallbacks
+# TYPE sync_eth2_fallback_configured gauge
+sync_eth2_fallback_configured 0
+# HELP sync_eth2_fallback_connected Set to 1 if connected to atleast one synced eth2 fallback node, otherwise set to 0
+# TYPE sync_eth2_fallback_connected gauge
+sync_eth2_fallback_connected 0
+# HELP system_loadavg_1 Loadavg over 1 minute
+# TYPE system_loadavg_1 gauge
+system_loadavg_1 4.2
+# HELP system_loadavg_15 Loadavg over 15 minutes
+# TYPE system_loadavg_15 gauge
+system_loadavg_15 3.25
+# HELP system_loadavg_5 Loadavg over 5 minutes
+# TYPE system_loadavg_5 gauge
+system_loadavg_5 3.62
+# HELP system_virt_mem_available_bytes Available system virtual memory
+# TYPE system_virt_mem_available_bytes gauge
+system_virt_mem_available_bytes 6634123264
+# HELP system_virt_mem_free_bytes Free system virtual memory
+# TYPE system_virt_mem_free_bytes gauge
+system_virt_mem_free_bytes 2467880960
+# HELP system_virt_mem_percentage Percentage of used virtual memory
+# TYPE system_virt_mem_percentage gauge
+system_virt_mem_percentage 20.287782669067383
+# HELP system_virt_mem_total_bytes Total system virtual memory
+# TYPE system_virt_mem_total_bytes gauge
+system_virt_mem_total_bytes 8322592768
+# HELP system_virt_mem_used_bytes Used system virtual memory
+# TYPE system_virt_mem_used_bytes gauge
+system_virt_mem_used_bytes 1479839744
+# HELP vc_attestation_duty_slot Attestation duty slot for all managed validators
+# TYPE vc_attestation_duty_slot gauge
+vc_attestation_duty_slot{validator="0"} 67
+vc_attestation_duty_slot{validator="1"} 90
+vc_attestation_duty_slot{validator="10"} 68
+vc_attestation_duty_slot{validator="11"} 79
+vc_attestation_duty_slot{validator="12"} 65
+vc_attestation_duty_slot{validator="13"} 73
+vc_attestation_duty_slot{validator="14"} 70
+vc_attestation_duty_slot{validator="15"} 84
+vc_attestation_duty_slot{validator="16"} 74
+vc_attestation_duty_slot{validator="17"} 89
+vc_attestation_duty_slot{validator="18"} 83
+vc_attestation_duty_slot{validator="19"} 77
+vc_attestation_duty_slot{validator="2"} 65
+vc_attestation_duty_slot{validator="20"} 94
+vc_attestation_duty_slot{validator="21"} 87
+vc_attestation_duty_slot{validator="22"} 80
+vc_attestation_duty_slot{validator="23"} 88
+vc_attestation_duty_slot{validator="24"} 89
+vc_attestation_duty_slot{validator="25"} 75
+vc_attestation_duty_slot{validator="26"} 76
+vc_attestation_duty_slot{validator="27"} 66
+vc_attestation_duty_slot{validator="28"} 68
+vc_attestation_duty_slot{validator="29"} 78
+vc_attestation_duty_slot{validator="3"} 86
+vc_attestation_duty_slot{validator="30"} 76
+vc_attestation_duty_slot{validator="31"} 91
+vc_attestation_duty_slot{validator="32"} 82
+vc_attestation_duty_slot{validator="33"} 92
+vc_attestation_duty_slot{validator="34"} 93
+vc_attestation_duty_slot{validator="35"} 87
+vc_attestation_duty_slot{validator="36"} 79
+vc_attestation_duty_slot{validator="37"} 69
+vc_attestation_duty_slot{validator="38"} 78
+vc_attestation_duty_slot{validator="39"} 95
+vc_attestation_duty_slot{validator="4"} 82
+vc_attestation_duty_slot{validator="40"} 84
+vc_attestation_duty_slot{validator="41"} 80
+vc_attestation_duty_slot{validator="42"} 70
+vc_attestation_duty_slot{validator="43"} 69
+vc_attestation_duty_slot{validator="44"} 93
+vc_attestation_duty_slot{validator="45"} 71
+vc_attestation_duty_slot{validator="46"} 86
+vc_attestation_duty_slot{validator="47"} 95
+vc_attestation_duty_slot{validator="48"} 77
+vc_attestation_duty_slot{validator="49"} 73
+vc_attestation_duty_slot{validator="5"} 64
+vc_attestation_duty_slot{validator="50"} 91
+vc_attestation_duty_slot{validator="51"} 83
+vc_attestation_duty_slot{validator="52"} 72
+vc_attestation_duty_slot{validator="53"} 81
+vc_attestation_duty_slot{validator="54"} 92
+vc_attestation_duty_slot{validator="55"} 66
+vc_attestation_duty_slot{validator="56"} 75
+vc_attestation_duty_slot{validator="57"} 64
+vc_attestation_duty_slot{validator="58"} 71
+vc_attestation_duty_slot{validator="59"} 74
+vc_attestation_duty_slot{validator="6"} 72
+vc_attestation_duty_slot{validator="60"} 85
+vc_attestation_duty_slot{validator="61"} 90
+vc_attestation_duty_slot{validator="62"} 67
+vc_attestation_duty_slot{validator="63"} 81
+vc_attestation_duty_slot{validator="7"} 85
+vc_attestation_duty_slot{validator="8"} 88
+vc_attestation_duty_slot{validator="9"} 94
+# HELP vc_attestation_service_task_times_seconds Duration to perform attestation service tasks
+# TYPE vc_attestation_service_task_times_seconds histogram
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="0.005"} 60
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="0.01"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="0.025"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="0.05"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="0.1"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="0.25"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="0.5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="1"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="2.5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="10"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates",le="+Inf"} 64
+vc_attestation_service_task_times_seconds_sum{task="aggregates"} 0.23546066799999993
+vc_attestation_service_task_times_seconds_count{task="aggregates"} 64
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="0.005"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="0.01"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="0.025"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="0.05"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="0.1"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="0.25"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="0.5"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="1"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="2.5"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="5"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="10"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_get",le="+Inf"} 63
+vc_attestation_service_task_times_seconds_sum{task="aggregates_http_get"} 0.031362417000000004
+vc_attestation_service_task_times_seconds_count{task="aggregates_http_get"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="0.005"} 62
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="0.01"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="0.025"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="0.05"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="0.1"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="0.25"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="0.5"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="1"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="2.5"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="5"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="10"} 63
+vc_attestation_service_task_times_seconds_bucket{task="aggregates_http_post",le="+Inf"} 63
+vc_attestation_service_task_times_seconds_sum{task="aggregates_http_post"} 0.148710044
+vc_attestation_service_task_times_seconds_count{task="aggregates_http_post"} 63
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="0.005"} 0
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="0.01"} 2
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="0.025"} 19
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="0.05"} 63
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="0.1"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="0.25"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="0.5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="1"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="2.5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="10"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations",le="+Inf"} 64
+vc_attestation_service_task_times_seconds_sum{task="attestations"} 2.170371957
+vc_attestation_service_task_times_seconds_count{task="attestations"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="0.005"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="0.01"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="0.025"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="0.05"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="0.1"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="0.25"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="0.5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="1"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="2.5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="10"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_get",le="+Inf"} 64
+vc_attestation_service_task_times_seconds_sum{task="attestations_http_get"} 0.06149483300000001
+vc_attestation_service_task_times_seconds_count{task="attestations_http_get"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="0.005"} 22
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="0.01"} 22
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="0.025"} 63
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="0.05"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="0.1"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="0.25"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="0.5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="1"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="2.5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="5"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="10"} 64
+vc_attestation_service_task_times_seconds_bucket{task="attestations_http_post",le="+Inf"} 64
+vc_attestation_service_task_times_seconds_sum{task="attestations_http_post"} 0.774979918
+vc_attestation_service_task_times_seconds_count{task="attestations_http_post"} 64
+# HELP vc_beacon_attester_count Number of attesters on this host
+# TYPE vc_beacon_attester_count gauge
+vc_beacon_attester_count{task="current_epoch"} 64
+vc_beacon_attester_count{task="next_epoch"} 64
+# HELP vc_beacon_block_proposal_changed A duties update discovered a new block proposer for the current slot
+# TYPE vc_beacon_block_proposal_changed counter
+vc_beacon_block_proposal_changed 1
+# HELP vc_beacon_block_proposer_count Number of beacon block proposers on this host
+# TYPE vc_beacon_block_proposer_count gauge
+vc_beacon_block_proposer_count{task="current_epoch"} 32
+# HELP vc_beacon_block_service_task_times_seconds Duration to perform beacon block service tasks
+# TYPE vc_beacon_block_service_task_times_seconds histogram
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="0.005"} 0
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="0.01"} 0
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="0.025"} 0
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="0.05"} 49
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="0.1"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="0.25"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="0.5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="1"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="2.5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="10"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block",le="+Inf"} 64
+vc_beacon_block_service_task_times_seconds_sum{task="beacon_block"} 3.1131207080000007
+vc_beacon_block_service_task_times_seconds_count{task="beacon_block"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="0.005"} 0
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="0.01"} 61
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="0.025"} 63
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="0.05"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="0.1"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="0.25"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="0.5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="1"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="2.5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="10"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_get",le="+Inf"} 64
+vc_beacon_block_service_task_times_seconds_sum{task="beacon_block_http_get"} 0.486106081
+vc_beacon_block_service_task_times_seconds_count{task="beacon_block_http_get"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="0.005"} 0
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="0.01"} 27
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="0.025"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="0.05"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="0.1"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="0.25"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="0.5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="1"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="2.5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="10"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="beacon_block_http_post",le="+Inf"} 64
+vc_beacon_block_service_task_times_seconds_sum{task="beacon_block_http_post"} 0.6658961630000002
+vc_beacon_block_service_task_times_seconds_count{task="beacon_block_http_post"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="0.005"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="0.01"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="0.025"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="0.05"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="0.1"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="0.25"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="0.5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="1"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="2.5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="5"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="10"} 64
+vc_beacon_block_service_task_times_seconds_bucket{task="full_update",le="+Inf"} 64
+vc_beacon_block_service_task_times_seconds_sum{task="full_update"} 0.0009240019999999998
+vc_beacon_block_service_task_times_seconds_count{task="full_update"} 64
+# HELP vc_beacon_node_latency Round-trip latency for a simple API endpoint on each BN
+# TYPE vc_beacon_node_latency histogram
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="0.005"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="0.01"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="0.025"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="0.05"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="0.1"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="0.25"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="0.5"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="1"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="2.5"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="5"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="10"} 1
+vc_beacon_node_latency_bucket{endpoint="http://bn:5052/",le="+Inf"} 1
+vc_beacon_node_latency_sum{endpoint="http://bn:5052/"} 0.000199875
+vc_beacon_node_latency_count{endpoint="http://bn:5052/"} 1
+# HELP vc_beacon_node_latency_primary_endpoint Round-trip latency for the primary BN endpoint
+# TYPE vc_beacon_node_latency_primary_endpoint histogram
+vc_beacon_node_latency_primary_endpoint_bucket{le="0.005"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="0.01"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="0.025"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="0.05"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="0.1"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="0.25"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="0.5"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="1"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="2.5"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="5"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="10"} 1
+vc_beacon_node_latency_primary_endpoint_bucket{le="+Inf"} 1
+vc_beacon_node_latency_primary_endpoint_sum 0.000199875
+vc_beacon_node_latency_primary_endpoint_count 1
+# HELP vc_beacon_nodes_available_count Number of available beacon nodes
+# TYPE vc_beacon_nodes_available_count gauge
+vc_beacon_nodes_available_count 1
+# HELP vc_beacon_nodes_synced_count Number of synced beacon nodes
+# TYPE vc_beacon_nodes_synced_count gauge
+vc_beacon_nodes_synced_count 1
+# HELP vc_beacon_nodes_total_count Total number of beacon nodes
+# TYPE vc_beacon_nodes_total_count gauge
+vc_beacon_nodes_total_count 1
+# HELP vc_beacon_ptc_count Number of PTC (Payload Timeliness Committee) validators on this host
+# TYPE vc_beacon_ptc_count gauge
+vc_beacon_ptc_count{task="current_epoch"} 64
+vc_beacon_ptc_count{task="next_epoch"} 64
+# HELP vc_block_signing_times_seconds Duration to obtain a signature for a block
+# TYPE vc_block_signing_times_seconds histogram
+vc_block_signing_times_seconds_bucket{le="0.005"} 63
+vc_block_signing_times_seconds_bucket{le="0.01"} 64
+vc_block_signing_times_seconds_bucket{le="0.025"} 64
+vc_block_signing_times_seconds_bucket{le="0.05"} 64
+vc_block_signing_times_seconds_bucket{le="0.1"} 64
+vc_block_signing_times_seconds_bucket{le="0.25"} 64
+vc_block_signing_times_seconds_bucket{le="0.5"} 64
+vc_block_signing_times_seconds_bucket{le="1"} 64
+vc_block_signing_times_seconds_bucket{le="2.5"} 64
+vc_block_signing_times_seconds_bucket{le="5"} 64
+vc_block_signing_times_seconds_bucket{le="10"} 64
+vc_block_signing_times_seconds_bucket{le="+Inf"} 64
+vc_block_signing_times_seconds_sum 0.11245720800000003
+vc_block_signing_times_seconds_count 64
+# HELP vc_duties_service_task_times_seconds Duration to perform duties service tasks
+# TYPE vc_duties_service_task_times_seconds histogram
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="0.005"} 63
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="0.01"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="0.025"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="0.05"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="0.1"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="0.25"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="0.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="1"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="2.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="5"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="10"} 64
+vc_duties_service_task_times_seconds_bucket{task="attestation_selection_proofs",le="+Inf"} 64
+vc_duties_service_task_times_seconds_sum{task="attestation_selection_proofs"} 0.09590920900000004
+vc_duties_service_task_times_seconds_count{task="attestation_selection_proofs"} 64
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="0.005"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="0.01"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="0.025"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="0.05"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="0.1"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="0.25"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="0.5"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="1"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="2.5"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="5"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="10"} 128
+vc_duties_service_task_times_seconds_bucket{task="attester_duties_http_post",le="+Inf"} 128
+vc_duties_service_task_times_seconds_sum{task="attester_duties_http_post"} 0.06576949799999998
+vc_duties_service_task_times_seconds_count{task="attester_duties_http_post"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="0.005"} 127
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="0.01"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="0.025"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="0.05"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="0.1"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="0.25"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="0.5"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="1"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="2.5"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="5"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="10"} 128
+vc_duties_service_task_times_seconds_bucket{task="proposer_duties_http_get",le="+Inf"} 128
+vc_duties_service_task_times_seconds_sum{task="proposer_duties_http_get"} 0.080547213
+vc_duties_service_task_times_seconds_count{task="proposer_duties_http_get"} 128
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="0.005"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="0.01"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="0.025"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="0.05"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="0.1"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="0.25"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="0.5"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="1"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="2.5"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="5"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="10"} 132
+vc_duties_service_task_times_seconds_bucket{task="ptc_duties_http_post",le="+Inf"} 132
+vc_duties_service_task_times_seconds_sum{task="ptc_duties_http_post"} 0.06779675100000003
+vc_duties_service_task_times_seconds_count{task="ptc_duties_http_post"} 132
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="0.005"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="0.01"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="0.025"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="0.05"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="0.1"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="0.25"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="0.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="1"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="2.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="5"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="10"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions",le="+Inf"} 64
+vc_duties_service_task_times_seconds_sum{task="subscriptions"} 0.031111418
+vc_duties_service_task_times_seconds_count{task="subscriptions"} 64
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="0.005"} 62
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="0.01"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="0.025"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="0.05"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="0.1"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="0.25"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="0.5"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="1"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="2.5"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="5"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="10"} 63
+vc_duties_service_task_times_seconds_bucket{task="subscriptions_http_post",le="+Inf"} 63
+vc_duties_service_task_times_seconds_sum{task="subscriptions_http_post"} 0.029373667000000006
+vc_duties_service_task_times_seconds_count{task="subscriptions_http_post"} 63
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="0.005"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="0.01"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="0.025"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="0.05"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="0.1"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="0.25"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="0.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="1"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="2.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="10"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_current_epoch",le="+Inf"} 64
+vc_duties_service_task_times_seconds_sum{task="update_attesters_current_epoch"} 0.04165071199999999
+vc_duties_service_task_times_seconds_count{task="update_attesters_current_epoch"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="0.005"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="0.01"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="0.025"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="0.05"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="0.1"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="0.25"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="0.5"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="1"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="2.5"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="5"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="10"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_fetch",le="+Inf"} 128
+vc_duties_service_task_times_seconds_sum{task="update_attesters_fetch"} 0.06903208599999999
+vc_duties_service_task_times_seconds_count{task="update_attesters_fetch"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="0.005"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="0.01"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="0.025"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="0.05"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="0.1"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="0.25"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="0.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="1"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="2.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="10"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_next_epoch",le="+Inf"} 64
+vc_duties_service_task_times_seconds_sum{task="update_attesters_next_epoch"} 0.030230379000000005
+vc_duties_service_task_times_seconds_count{task="update_attesters_next_epoch"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="0.005"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="0.01"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="0.025"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="0.05"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="0.1"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="0.25"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="0.5"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="1"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="2.5"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="5"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="10"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_attesters_store",le="+Inf"} 4
+vc_duties_service_task_times_seconds_sum{task="update_attesters_store"} 0.000318751
+vc_duties_service_task_times_seconds_count{task="update_attesters_store"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="0.005"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="0.01"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="0.025"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="0.05"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="0.1"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="0.25"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="0.5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="1"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="2.5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="10"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_indices",le="+Inf"} 65
+vc_duties_service_task_times_seconds_sum{task="update_indices"} 0.014231959000000002
+vc_duties_service_task_times_seconds_count{task="update_indices"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="0.005"} 62
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="0.01"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="0.025"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="0.05"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="0.1"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="0.25"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="0.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="1"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="2.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="5"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="10"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_proposers",le="+Inf"} 64
+vc_duties_service_task_times_seconds_sum{task="update_proposers"} 0.08501971300000002
+vc_duties_service_task_times_seconds_count{task="update_proposers"} 64
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="0.005"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="0.01"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="0.025"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="0.05"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="0.1"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="0.25"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="0.5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="1"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="2.5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="10"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_current_epoch",le="+Inf"} 65
+vc_duties_service_task_times_seconds_sum{task="update_ptc_current_epoch"} 0.042691668999999995
+vc_duties_service_task_times_seconds_count{task="update_ptc_current_epoch"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="0.005"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="0.01"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="0.025"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="0.05"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="0.1"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="0.25"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="0.5"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="1"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="2.5"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="5"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="10"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_fetch",le="+Inf"} 128
+vc_duties_service_task_times_seconds_sum{task="update_ptc_fetch"} 0.069319631
+vc_duties_service_task_times_seconds_count{task="update_ptc_fetch"} 128
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="0.005"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="0.01"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="0.025"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="0.05"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="0.1"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="0.25"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="0.5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="1"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="2.5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="5"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="10"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_next_epoch",le="+Inf"} 65
+vc_duties_service_task_times_seconds_sum{task="update_ptc_next_epoch"} 0.027660538999999994
+vc_duties_service_task_times_seconds_count{task="update_ptc_next_epoch"} 65
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="0.005"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="0.01"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="0.025"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="0.05"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="0.1"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="0.25"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="0.5"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="1"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="2.5"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="5"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="10"} 4
+vc_duties_service_task_times_seconds_bucket{task="update_ptc_store",le="+Inf"} 4
+vc_duties_service_task_times_seconds_sum{task="update_ptc_store"} 0.000044626
+vc_duties_service_task_times_seconds_count{task="update_ptc_store"} 4
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="0.005"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="0.01"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="0.025"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="0.05"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="0.1"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="0.25"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="0.5"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="1"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="2.5"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="5"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="10"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_duties_sync_http_post",le="+Inf"} 1
+vc_duties_service_task_times_seconds_sum{task="validator_duties_sync_http_post"} 0.002237
+vc_duties_service_task_times_seconds_count{task="validator_duties_sync_http_post"} 1
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="0.005"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="0.01"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="0.025"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="0.05"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="0.1"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="0.25"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="0.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="1"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="2.5"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="5"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="10"} 64
+vc_duties_service_task_times_seconds_bucket{task="validator_id_http_get",le="+Inf"} 64
+vc_duties_service_task_times_seconds_sum{task="validator_id_http_get"} 0.012402
+vc_duties_service_task_times_seconds_count{task="validator_id_http_get"} 64
+# HELP vc_genesis_distance_seconds Distance between now and genesis time
+# TYPE vc_genesis_distance_seconds gauge
+vc_genesis_distance_seconds -209222319
+# HELP vc_payload_attestation_service_task_times_seconds Duration to perform payload attestation service tasks
+# TYPE vc_payload_attestation_service_task_times_seconds histogram
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="0.005"} 38
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="0.01"} 44
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="0.025"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="0.05"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="0.1"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="0.25"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="0.5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="1"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="2.5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="10"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations",le="+Inf"} 64
+vc_payload_attestation_service_task_times_seconds_sum{task="payload_attestations"} 0.41895395899999993
+vc_payload_attestation_service_task_times_seconds_count{task="payload_attestations"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="0.005"} 24
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="0.01"} 25
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="0.025"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="0.05"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="0.1"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="0.25"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="0.5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="1"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="2.5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="10"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_get",le="+Inf"} 64
+vc_payload_attestation_service_task_times_seconds_sum{task="payload_attestations_http_get"} 0.612490918
+vc_payload_attestation_service_task_times_seconds_count{task="payload_attestations_http_get"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="0.005"} 41
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="0.01"} 45
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="0.025"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="0.05"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="0.1"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="0.25"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="0.5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="1"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="2.5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="5"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="10"} 64
+vc_payload_attestation_service_task_times_seconds_bucket{task="payload_attestations_http_post",le="+Inf"} 64
+vc_payload_attestation_service_task_times_seconds_sum{task="payload_attestations_http_post"} 0.36342557799999997
+vc_payload_attestation_service_task_times_seconds_count{task="payload_attestations_http_post"} 64
+# HELP vc_signed_aggregates_total Total count of attempted SignedAggregateAndProof signings
+# TYPE vc_signed_aggregates_total counter
+vc_signed_aggregates_total{status="success"} 126
+# HELP vc_signed_attestations_total Total count of attempted Attestation signings
+# TYPE vc_signed_attestations_total counter
+vc_signed_attestations_total{status="success"} 128
+# HELP vc_signed_beacon_blocks_total Total count of attempted block signings
+# TYPE vc_signed_beacon_blocks_total counter
+vc_signed_beacon_blocks_total{status="success"} 64
+# HELP vc_signed_selection_proofs_total Total count of attempted SelectionProof signings
+# TYPE vc_signed_selection_proofs_total counter
+vc_signed_selection_proofs_total{status="success"} 144
+# HELP vc_signed_sync_committee_messages_total Total count of attempted SyncCommitteeMessage signings
+# TYPE vc_signed_sync_committee_messages_total counter
+vc_signed_sync_committee_messages_total{status="success"} 4096
+# HELP vc_signing_times_seconds Duration to obtain a signature
+# TYPE vc_signing_times_seconds histogram
+vc_signing_times_seconds_bucket{type="local_keystore",le="0.005"} 2453
+vc_signing_times_seconds_bucket{type="local_keystore",le="0.01"} 3469
+vc_signing_times_seconds_bucket{type="local_keystore",le="0.025"} 5795
+vc_signing_times_seconds_bucket{type="local_keystore",le="0.05"} 5806
+vc_signing_times_seconds_bucket{type="local_keystore",le="0.1"} 5806
+vc_signing_times_seconds_bucket{type="local_keystore",le="0.25"} 5806
+vc_signing_times_seconds_bucket{type="local_keystore",le="0.5"} 5806
+vc_signing_times_seconds_bucket{type="local_keystore",le="1"} 5806
+vc_signing_times_seconds_bucket{type="local_keystore",le="2.5"} 5806
+vc_signing_times_seconds_bucket{type="local_keystore",le="5"} 5806
+vc_signing_times_seconds_bucket{type="local_keystore",le="10"} 5806
+vc_signing_times_seconds_bucket{type="local_keystore",le="+Inf"} 5806
+vc_signing_times_seconds_sum{type="local_keystore"} 48.03928173499998
+vc_signing_times_seconds_count{type="local_keystore"} 5806
+# HELP vc_slashing_protection_prune_times_seconds Time required to prune the slashing protection DB
+# TYPE vc_slashing_protection_prune_times_seconds histogram
+vc_slashing_protection_prune_times_seconds_bucket{le="0.005"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="0.01"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="0.025"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="0.05"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="0.1"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="0.25"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="0.5"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="1"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="2.5"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="5"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="10"} 2
+vc_slashing_protection_prune_times_seconds_bucket{le="+Inf"} 2
+vc_slashing_protection_prune_times_seconds_sum 0.004310334
+vc_slashing_protection_prune_times_seconds_count 2
+# HELP vc_validators_enabled_count Number of enabled validators
+# TYPE vc_validators_enabled_count gauge
+vc_validators_enabled_count 64
+# HELP vc_validators_total_count Number of total validators (enabled and disabled)
+# TYPE vc_validators_total_count gauge
+vc_validators_total_count 64

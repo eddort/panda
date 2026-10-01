@@ -1,0 +1,453 @@
+{
+  "recordedAt": "2026-09-29T11:19:29.155Z",
+  "environment": {
+    "host": {
+      "target": "aarch64-apple-darwin",
+      "arch": "aarch64",
+      "os": "darwin",
+      "vendor": "apple",
+      "standalone": false
+    },
+    "engine": "29.2.0",
+    "dockerCpus": 6,
+    "dockerMemoryBytes": 8322592768,
+    "otherRunningContainers": 3
+  },
+  "cache": "Images and build cached; each run regenerates genesis and starts empty EL/CL volumes.",
+  "runs": [
+    {
+      "run": 0,
+      "readyMs": 10770.565917,
+      "firstBlockMs": 11258.235667,
+      "paused": {
+        "id": "measure",
+        "elapsedMs": 7044.417540999999,
+        "controller": {
+          "cpuPercent": 1.7782875485574514,
+          "memoryBytes": 57622528,
+          "heapBytes": 14377912
+        },
+        "components": [
+          {
+            "role": "vc",
+            "cpuPercent": 0.1586881188118812,
+            "memoryBytes": 124723200,
+            "rawMemoryBytes": 128589824,
+            "memoryLimit": 8322592768,
+            "writableLayerBytes": 522193
+          },
+          {
+            "role": "bn",
+            "cpuPercent": 0.6232577665827036,
+            "memoryBytes": 283136000,
+            "rawMemoryBytes": 286683136,
+            "memoryLimit": 8322592768
+          },
+          {
+            "role": "el",
+            "cpuPercent": 0.3202541356988732,
+            "memoryBytes": 105996288,
+            "rawMemoryBytes": 107216896,
+            "memoryLimit": 8322592768
+          }
+        ]
+      },
+      "load": {
+        "id": "measure",
+        "elapsedMs": 6013.050124999994,
+        "controller": {
+          "cpuPercent": 7.27920091968301,
+          "memoryBytes": 68796416,
+          "heapBytes": 19951576
+        },
+        "components": [
+          {
+            "role": "vc",
+            "cpuPercent": 42.88712985938792,
+            "memoryBytes": 128036864,
+            "rawMemoryBytes": 132075520,
+            "memoryLimit": 8322592768,
+            "writableLayerBytes": 522629
+          },
+          {
+            "role": "bn",
+            "cpuPercent": 103.89793217535153,
+            "memoryBytes": 311832576,
+            "rawMemoryBytes": 317853696,
+            "memoryLimit": 8322592768
+          },
+          {
+            "role": "el",
+            "cpuPercent": 2.536480970766685,
+            "memoryBytes": 113295360,
+            "rawMemoryBytes": 114585600,
+            "memoryLimit": 8322592768
+          }
+        ]
+      },
+      "slots": 128,
+      "advanceMs": 44813.80070800001,
+      "slotsPerSecond": 2.8562629809961613,
+      "protocolSecondsPerSecond": 34.27515577195394,
+      "disk": [
+        {
+          "role": "vc",
+          "path": "/shared/validator-keys",
+          "allocatedBytes": 1806336
+        },
+        {
+          "role": "bn",
+          "path": "/bn",
+          "allocatedBytes": 17362944
+        },
+        {
+          "role": "el",
+          "path": "/el",
+          "allocatedBytes": 37363712
+        }
+      ],
+      "head": {
+        "baseFeePerGas": "0x7",
+        "blobGasUsed": "0x0",
+        "difficulty": "0x0",
+        "excessBlobGas": "0x0",
+        "extraData": "0xd883010f0b846765746888676f312e32342e32856c696e7578",
+        "gasLimit": "0x1bdf202",
+        "gasUsed": "0x0",
+        "hash": "0x35ad788ca61a39ed7c007bdba273b1bdd1e9cc6424746f58c19ab221053b7678",
+        "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "miner": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "mixHash": "0xfc5c5de362b0d667ffe309ca7aa2362c0eb628490e31459bedf8dda2f570a62a",
+        "nonce": "0x0000000000000000",
+        "number": "0xa0",
+        "parentBeaconBlockRoot": "0x1536abd46e89b92cba67c49953f2622650662ed24fb9c885b0b94449db07a88b",
+        "parentHash": "0xcaf1dc5ab47e7badcb09bcdea99b89a48738c87efea7842a8d0a575201a3b551",
+        "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+        "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+        "size": "0x460",
+        "stateRoot": "0xc7d7ab4a0e767cec413317ef2cbe7556be31eab482ef4d40e2f5df9b5bbf0f62",
+        "timestamp": "0x77359b80",
+        "transactions": [],
+        "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+        "uncles": [],
+        "withdrawals": [
+          {
+            "index": "0x9c1",
+            "validatorIndex": "0xf",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c2",
+            "validatorIndex": "0x10",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c3",
+            "validatorIndex": "0x11",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c4",
+            "validatorIndex": "0x12",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c5",
+            "validatorIndex": "0x13",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c6",
+            "validatorIndex": "0x14",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c7",
+            "validatorIndex": "0x15",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c8",
+            "validatorIndex": "0x16",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c9",
+            "validatorIndex": "0x17",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9ca",
+            "validatorIndex": "0x18",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9cb",
+            "validatorIndex": "0x19",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9cc",
+            "validatorIndex": "0x1a",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9cd",
+            "validatorIndex": "0x1b",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9ce",
+            "validatorIndex": "0x1c",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9cf",
+            "validatorIndex": "0x1d",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9d0",
+            "validatorIndex": "0x1e",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          }
+        ],
+        "withdrawalsRoot": "0xe6eff7a421610b812369f972ec66bc207275438c23c7a7bdda84ac3440d8dd26"
+      }
+    },
+    {
+      "run": 1,
+      "readyMs": 10418.57929200001,
+      "firstBlockMs": 10919.756375000012,
+      "paused": {
+        "id": "measure",
+        "elapsedMs": 6380.300000000003,
+        "controller": {
+          "cpuPercent": 0.792831058100716,
+          "memoryBytes": 53870592,
+          "heapBytes": 20536096
+        },
+        "components": [
+          {
+            "role": "vc",
+            "cpuPercent": 0.07507593189139437,
+            "memoryBytes": 130990080,
+            "rawMemoryBytes": 134860800,
+            "memoryLimit": 8322592768,
+            "writableLayerBytes": 522191
+          },
+          {
+            "role": "bn",
+            "cpuPercent": 1.471722103004292,
+            "memoryBytes": 287633408,
+            "rawMemoryBytes": 291180544,
+            "memoryLimit": 8322592768
+          },
+          {
+            "role": "el",
+            "cpuPercent": 4.295022769890169,
+            "memoryBytes": 102727680,
+            "rawMemoryBytes": 103948288,
+            "memoryLimit": 8322592768
+          }
+        ]
+      },
+      "load": {
+        "id": "measure",
+        "elapsedMs": 6956.017458000002,
+        "controller": {
+          "cpuPercent": 6.356942067352699,
+          "memoryBytes": 64651264,
+          "heapBytes": 19459896
+        },
+        "components": [
+          {
+            "role": "vc",
+            "cpuPercent": 42.80935357492655,
+            "memoryBytes": 134778880,
+            "rawMemoryBytes": 138813440,
+            "memoryLimit": 8322592768,
+            "writableLayerBytes": 522191
+          },
+          {
+            "role": "bn",
+            "cpuPercent": 101.1831380240255,
+            "memoryBytes": 318689280,
+            "rawMemoryBytes": 324706304,
+            "memoryLimit": 8322592768
+          },
+          {
+            "role": "el",
+            "cpuPercent": 4.334680068644276,
+            "memoryBytes": 111579136,
+            "rawMemoryBytes": 112869376,
+            "memoryLimit": 8322592768
+          }
+        ]
+      },
+      "slots": 128,
+      "advanceMs": 44599.216125000006,
+      "slotsPerSecond": 2.8700055992295757,
+      "protocolSecondsPerSecond": 34.44006719075491,
+      "disk": [
+        {
+          "role": "vc",
+          "path": "/shared/validator-keys",
+          "allocatedBytes": 1806336
+        },
+        {
+          "role": "bn",
+          "path": "/bn",
+          "allocatedBytes": 17367040
+        },
+        {
+          "role": "el",
+          "path": "/el",
+          "allocatedBytes": 37363712
+        }
+      ],
+      "head": {
+        "baseFeePerGas": "0x7",
+        "blobGasUsed": "0x0",
+        "difficulty": "0x0",
+        "excessBlobGas": "0x0",
+        "extraData": "0xd883010f0b846765746888676f312e32342e32856c696e7578",
+        "gasLimit": "0x1bdf202",
+        "gasUsed": "0x0",
+        "hash": "0x35ad788ca61a39ed7c007bdba273b1bdd1e9cc6424746f58c19ab221053b7678",
+        "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "miner": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "mixHash": "0xfc5c5de362b0d667ffe309ca7aa2362c0eb628490e31459bedf8dda2f570a62a",
+        "nonce": "0x0000000000000000",
+        "number": "0xa0",
+        "parentBeaconBlockRoot": "0x1536abd46e89b92cba67c49953f2622650662ed24fb9c885b0b94449db07a88b",
+        "parentHash": "0xcaf1dc5ab47e7badcb09bcdea99b89a48738c87efea7842a8d0a575201a3b551",
+        "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+        "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+        "size": "0x460",
+        "stateRoot": "0xc7d7ab4a0e767cec413317ef2cbe7556be31eab482ef4d40e2f5df9b5bbf0f62",
+        "timestamp": "0x77359b80",
+        "transactions": [],
+        "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+        "uncles": [],
+        "withdrawals": [
+          {
+            "index": "0x9c1",
+            "validatorIndex": "0xf",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c2",
+            "validatorIndex": "0x10",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c3",
+            "validatorIndex": "0x11",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c4",
+            "validatorIndex": "0x12",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c5",
+            "validatorIndex": "0x13",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c6",
+            "validatorIndex": "0x14",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c7",
+            "validatorIndex": "0x15",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c8",
+            "validatorIndex": "0x16",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9c9",
+            "validatorIndex": "0x17",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9ca",
+            "validatorIndex": "0x18",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9cb",
+            "validatorIndex": "0x19",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9cc",
+            "validatorIndex": "0x1a",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9cd",
+            "validatorIndex": "0x1b",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9ce",
+            "validatorIndex": "0x1c",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9cf",
+            "validatorIndex": "0x1d",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          },
+          {
+            "index": "0x9d0",
+            "validatorIndex": "0x1e",
+            "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+            "amount": "0x12826b"
+          }
+        ],
+        "withdrawalsRoot": "0xe6eff7a421610b812369f972ec66bc207275438c23c7a7bdda84ac3440d8dd26"
+      }
+    }
+  ]
+}

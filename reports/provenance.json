@@ -1,0 +1,47 @@
+{
+  "recordedAt": "2026-09-29T11:20:09.551186+00:00",
+  "sources": {
+    "lighthouse": "cfb1f7331064b758c6786e4e1dc15507af5ff5d1",
+    "geth": "36b2371c59cd91a9b1da062b3e382f05a6d8687e",
+    "ethereum-genesis-generator": "f06b98c2cb789c6ac45fd0e6167173820dc095d2"
+  },
+  "localBuildImages": [
+    {
+      "ref": "rust:1.85.1-bookworm",
+      "id": "sha256:0333b045ecc01d2f401777415e8e37ba6b7ba4d189cfbd71e73baca43a37cfcc",
+      "digests": [
+        "rust@sha256:e51d0265072d2d9d5d320f6a44dde6b9ef13653b035098febd68cce8fa7c0bc4"
+      ],
+      "arch": "arm64",
+      "size": 1741807152
+    },
+    {
+      "ref": "debian:bookworm-slim",
+      "id": "sha256:813cd0370d827a30abbef1cf99f88217f87fda9612dd5241c9015ba182d32428",
+      "digests": [
+        "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251"
+      ],
+      "arch": "arm64",
+      "size": 97212435
+    },
+    {
+      "ref": "zap-lighthouse:7.1.0-clock1",
+      "id": "sha256:59a3eab87aefce7828ff3487cdc8a675062c57e6e4005f19dad13a6e92649543",
+      "digests": [],
+      "arch": "arm64",
+      "size": 218443288
+    }
+  ],
+  "sourceFileSha256": {
+    "clients/lighthouse.patch": "729cfb395a2381f46475d1317cc83af203b2188d8757443b2b3da2417e9a6fef",
+    "clients/controlled_clock.rs": "ac7172ce05b01a5cd51aa946855734bde7afcdd429d2332f4863ae5979d525c3",
+    "clients/controlled_clock_test.rs": "6628a426ef495bd780fc6c3203c3b7aca95e80d4f1a286e1859aafd767f11c32",
+    "deno.lock": "33f37f9b05323319b95e1bc2a7914a85a6ad788204142ed8565c6d4bb00d985e",
+    "deno.json": "829a6f21326ac7842cd8df45ad62f183bd08d4400469476d856dc2a117f37e40",
+    "deno.runtime.json": "dd6508355d326c5e5e07049ee055cff8247efb6f82271af01341dc980a2af16b"
+  },
+  "repeatedClGenesisSha256": {
+    "e2e-5060663e": "0a03237ddb7c9019afe190f76096d33360fb0c89efc78c3d971936c494b2c612",
+    "withdrawal-33c49a9c": "0a03237ddb7c9019afe190f76096d33360fb0c89efc78c3d971936c494b2c612"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "recordedAt": "2026-09-29T12:16:24.566705+00:00",
+  "zapCommit": "9078f84de3c221aecc5f3003d673947324f0d266",
+  "scope": "Source inspection only; no candidate client build or Gloas runtime test executed.",
+  "upstreamSnapshots": {
+    "lighthouse": {
+      "repo": "sigp/lighthouse",
+      "ref": "unstable",
+      "sha": "2d281dfa1b407f7c81cd123954a9fd18ee8f02d2",
+      "date": "2026-09-29T06:38:29Z",
+      "subject": "Update tests to be spec agnostic (#10051)"
+    },
+    "geth": {
+      "repo": "ethereum/go-ethereum",
+      "ref": "master",
+      "sha": "f8f9bc574459a1afefac7b63163739910ee0fe62",
+      "date": "2026-09-29T08:14:37Z",
+      "subject": "core/txpool: restore empty state fallback during snap sync (#35582)"
+    },
+    "genesis": {
+      "repo": "ethpandaops/ethereum-genesis-generator",
+      "ref": "master",
+      "sha": "51fb77af3ad017ab2ae14a6e69246fe95453cdd2",
+      "date": "2026-09-29T08:04:20Z",
+      "subject": "chore(deps): bump crate-ci/typos from 1.48.0 to 1.50.0 in the actions group (#319)"
+    },
+    "consensus-specs": {
+      "repo": "ethereum/consensus-specs",
+      "ref": "master",
+      "sha": "e321975f8295d6872adfeb5d35db5202676739a0",
+      "date": "2026-09-28T20:35:48Z",
+      "subject": "Reduce min epochs for block requests in Gloas (#5680)"
+    },
+    "execution-apis": {
+      "repo": "ethereum/execution-apis",
+      "ref": "main",
+      "sha": "5bcdc34a477b10af278c079525374e6a4046f291",
+      "date": "2026-09-22T19:08:34Z",
+      "subject": "schemas: specify eth_simulateV1 payload type (#896)"
+    }
+  },
+  "lighthousePatchCheck": {
+    "sourceCommit": "2d281dfa1b407f7c81cd123954a9fd18ee8f02d2",
+    "patchPath": "clients/lighthouse.patch",
+    "patchSha256": "729cfb395a2381f46475d1317cc83af203b2188d8757443b2b3da2417e9a6fef",
+    "command": "git apply --check --directory=.cache/version-research/lighthouse clients/lighthouse.patch",
+    "exitCode": 1,
+    "checkedFiles": 13,
+    "failedFiles": [
+      "Cargo.lock",
+      "beacon_node/beacon_chain/src/state_advance_timer.rs",
+      "common/slot_clock/src/lib.rs",
+      "validator_client/validator_services/src/attestation_service.rs",
+      "validator_client/validator_services/src/duties_service.rs",
+      "validator_client/validator_services/src/preparation_service.rs",
+      "validator_client/validator_services/src/sync_committee_service.rs"
+    ]
+  },
+  "observations": {
+    "newGloasWallClockSchedulers": [
+      "validator_client/validator_services/src/payload_attestation_service.rs",
+      "validator_client/validator_services/src/proposer_preferences_service.rs"
+    ],
+    "gethUpdatedPayloadLogStillPresent": true,
+    "engineMethodsObserved": [
+      "engine_forkchoiceUpdatedV4",
+      "engine_getPayloadV6",
+      "engine_newPayloadV5"
+    ],
+    "genesisMapping": {
+      "cl": "GLOAS_FORK_EPOCH",
+      "el": "amsterdamTime"
+    },
+    "gloasCandidateCompatibility": "unverified"
+  }
+}

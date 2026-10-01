@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "profile": "gloas",
+  "tag": "honest-v2",
+  "key": "e96551cd82f66abd24df0eaec60d623121434053f6e59765b34b740d289e9fd9",
+  "createdAt": "2026-09-30T12:45:54.313Z",
+  "recipe": {
+    "schema": 1,
+    "slotMs": 12000,
+    "slotsPerEpoch": 32,
+    "tailMs": 11500,
+    "clockSource": "bakes/shared/controlled_clock.rs",
+    "clockTest": "bakes/shared/controlled_clock_test.rs",
+    "clockEnvPrefix": "PANDA",
+    "sourceFiles": [
+      "bakes/shared/native/verified_signature.rs",
+      "bakes/gloas/native/weighted_selection.rs",
+      "bakes/gloas/native/prepare_skip.rs"
+    ],
+    "preparedSkip": true,
+    "nativeTests": [
+      {
+        "package": "bls",
+        "target": "panda_verified_signature"
+      },
+      {
+        "package": "types",
+        "target": "panda_weighted_selection"
+      }
+    ],
+    "runtime": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+    "clRepository": "https://github.com/sigp/lighthouse.git",
+    "elRepository": "https://github.com/ethereum/go-ethereum.git",
+    "goBuilder": "golang:1.25-bookworm",
+    "tests": {
+      "baseline": "bakes/shared/tests/baseline.ts",
+      "lifecycle": "bakes/shared/tests/lifecycle.ts",
+      "e2e": "bakes/shared/tests/e2e.ts",
+      "warp": "bakes/shared/tests/warp.ts",
+      "warp-economics": "bakes/shared/tests/warp_economics.ts",
+      "protocol": "bakes/shared/tests/protocol.ts",
+      "withdrawal": "bakes/shared/tests/withdrawal.ts",
+      "deploy": "bakes/shared/tests/deploy.ts",
+      "gloas": "bakes/gloas/tests/gloas.ts"
+    },
+    "name": "gloas",
+    "elFork": "amsterdam",
+    "clFork": "gloas",
+    "clRef": "2d281dfa1b407f7c81cd123954a9fd18ee8f02d2",
+    "patch": "bakes/gloas/lighthouse.patch",
+    "rust": "rust@sha256:af306cfa71d987911a781c37b59d7d67d934f49684058f96cf72079c3626bfe0",
+    "elImage": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
+    "genesisImage": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
+    "baselineImage": "ethpandaops/lighthouse@sha256:61ee7093e24598f93319322bed4b40a7f80614b1f3f584e97ad7a0f7d612bf75",
+    "phases": [
+      0,
+      3000,
+      6000,
+      9000,
+      11500
+    ],
+    "attestationMs": 3000,
+    "aggregateMs": 6000,
+    "churnLimitQuotient": 32768,
+    "engineMethods": [
+      "engine_forkchoiceUpdatedV4",
+      "engine_getPayloadV6",
+      "engine_newPayloadV5"
+    ],
+    "genesisEnv": {
+      "ELECTRA_FORK_EPOCH": "0",
+      "FULU_FORK_EPOCH": "0",
+      "GLOAS_FORK_EPOCH": "0",
+      "HEZE_FORK_EPOCH": "18446744073709551615",
+      "SLOT_DURATION_IN_SECONDS": "12",
+      "SLOT_DURATION_MS": "12000"
+    },
+    "clockWait": true
+  },
+  "source": {
+    "cl": "2d281dfa1b407f7c81cd123954a9fd18ee8f02d2"
+  },
+  "hashes": {
+    "bakes/gloas/lighthouse.patch": "9d56b083eb2b555832221cb7121080eddaeb5dddd1a5c20d0800ce8c12ea21fc",
+    "bakes/shared/controlled_clock.rs": "370d21256b809eb308f7f76a1875bd6e578b016690211add250a65dd0da2d012",
+    "bakes/shared/controlled_clock_test.rs": "e1880748707e809e5eccba1255282f31db86c2cc25b738d17060ae9af0552c17",
+    "bakes/shared/native/verified_signature.rs": "62678a3bc2662e2be8722da90ed52c46f939cec96f753170b9f35ebdf4813c1d",
+    "bakes/gloas/native/weighted_selection.rs": "e38a847e71364f1baa5a742e81b00fbcf5f11c3252708d9a4881b16dfdc426b3",
+    "bakes/gloas/native/prepare_skip.rs": "c6979a20ac079ab0768ff6335b1c5a11d9cd939b807d0ff1a3482507f8d09166"
+  },
+  "images": {
+    "cl": {
+      "ref": "panda-lighthouse:bake-e96551cd82f66abd24df0eae",
+      "id": "sha256:7bffd7e57472587ba4f1a84265cb87f608b5ef328acf28776983745bd84c5c01",
+      "platform": "linux/arm64"
+    },
+    "el": {
+      "ref": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
+      "id": "sha256:50acd60c272047362ff5369de1eae09dc0094ba714eeff0f88e8ab64d53903e5",
+      "digest": "ethpandaops/geth@sha256:bd9af83c652f8b24774245fb5122128298561fff38d2ae3cf9853be3273fea07",
+      "platform": "linux/arm64"
+    },
+    "genesis": {
+      "ref": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
+      "id": "sha256:95d66723fab247e476861b7168e8b20150e85daeee734f2417a79c2db8e2b1a3",
+      "digest": "ethpandaops/ethereum-genesis-generator@sha256:d3bb2d426b1b579207ade0f1cbc533eea8fd345c23c7708dc5eed072a1816651",
+      "platform": "linux/arm64"
+    },
+    "baseline": {
+      "ref": "ethpandaops/lighthouse@sha256:61ee7093e24598f93319322bed4b40a7f80614b1f3f584e97ad7a0f7d612bf75",
+      "id": "sha256:e2ccd0b4a799d87de2bc89dd61e72bc3f4ae125c97d8bfcd3b1088a615b33fde",
+      "digest": "ethpandaops/lighthouse@sha256:61ee7093e24598f93319322bed4b40a7f80614b1f3f584e97ad7a0f7d612bf75",
+      "platform": "linux/arm64"
+    }
+  },
+  "builders": {
+    "runtime": {
+      "ref": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+      "id": "sha256:813cd0370d827a30abbef1cf99f88217f87fda9612dd5241c9015ba182d32428",
+      "digest": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
+      "platform": "linux/arm64"
+    },
+    "rust": {
+      "ref": "rust@sha256:af306cfa71d987911a781c37b59d7d67d934f49684058f96cf72079c3626bfe0",
+      "id": "sha256:9ad0c47880881464036f8b5779f49a15d058154581404d0d50a20f9d11f3436e",
+      "digest": "rust@sha256:af306cfa71d987911a781c37b59d7d67d934f49684058f96cf72079c3626bfe0",
+      "platform": "linux/arm64"
+    }
+  }
+}
