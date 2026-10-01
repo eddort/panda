@@ -3,6 +3,10 @@ name: Publish Lighthouse images
 on:
   workflow_dispatch:
     inputs:
+      version:
+        description: Panda Git tag to create after merging the generated release PR (vX.Y.Z or vX.Y.Z-rc.N).
+        required: true
+        type: string
       profile:
         description: Registered hardfork name, or all. Upstream and baker versions come from its recipe.
         required: true
@@ -12,6 +16,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: lighthouse-release-${{ inputs.version }}
+  cancel-in-progress: false
+
 jobs:
   select:
     runs-on: ubuntu-24.04
@@ -20,6 +28,13 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: sh scripts/bootstrap.sh
+      - name: Validate release version and unchanged profile locks
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          PANDA_VERSION: ${{ inputs.version }}
+          PROFILE: ${{ inputs.profile }}
+        run: ./scripts/deno run -A scripts/release_pr.ts check
       - id: select
         env:
           PROFILE: ${{ inputs.profile }}
@@ -67,13 +82,49 @@ jobs:
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./scripts/deno run -A scripts/lighthouse_ci.ts publish "$PROFILE"
+      - name: Upload published lock for the release PR
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: lighthouse-lock-${{ matrix.profile }}
+          path: .cache/client-releases/${{ matrix.profile }}/clients.lock.json
+          include-hidden-files: true
+          if-no-files-found: error
+          overwrite: true
       - name: Upload client lock and verification
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: lighthouse-${{ matrix.profile }}-${{ matrix.tag }}
           include-hidden-files: true
+          overwrite: true
           path: |
             .cache/client-releases/${{ matrix.profile }}/
             reports/profiles/${{ matrix.profile }}/${{ matrix.bake }}/
             bakes/${{ matrix.profile }}/tags/${{ matrix.bake }}.json
+
+  release-pr:
+    needs: [select, lighthouse]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      PANDA_VERSION: ${{ inputs.version }}
+      PROFILE: ${{ inputs.profile }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: sh scripts/bootstrap.sh
+      - name: Download locks from this successful publication
+        env:
+          RELEASE_MATRIX: ${{ needs.select.outputs.matrix }}
+        run: |
+          while IFS= read -r profile; do
+            gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" \
+              --name "lighthouse-lock-$profile" --dir ".cache/release-locks/lighthouse-lock-$profile"
+          done < <(jq -r '.include[].profile' <<< "$RELEASE_MATRIX")
+      - name: Open release PR with Lighthouse versions, client pins and Panda tag
+        run: ./scripts/deno run -A scripts/release_pr.ts open

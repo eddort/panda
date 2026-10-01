@@ -105,7 +105,7 @@ if (command === "matrix") {
       summary,
       `${
         reused ? "Reused" : "Published"
-      } \`${digest}\`. Upstream: ${build.upstream.version} (${build.upstream.commit}); baker: ${build.baker.version} (${build.baker.hash}). Download the clients artifact, run \`deno task clients:pin clients.lock.json\`, and commit the lock before tagging Panda.\n`,
+      } \`${digest}\`. Upstream: ${build.upstream.version} (${build.upstream.commit}); baker: ${build.baker.version} (${build.baker.hash}). The release-pr job will include this client lock in the release PR.\n`,
       { append: true },
     );
   }

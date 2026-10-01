@@ -39,39 +39,56 @@ Panda Git versions can therefore reuse precisely the same Lighthouse image and c
 
 ## First publication and client updates
 
-1. Set the desired `clVersion`/`clRef` and `bakerVersion` in the profile recipe. Run **Publish
-   Lighthouse images** with `profile=all`, or select just the changed profile.
-2. The workflow computes the upstream/baker tag and checks GHCR. HTTP 404 builds native
-   `linux/amd64` Lighthouse and runs native tests. HTTP 200 reuses the existing image by digest,
-   verifies its embedded full build identity, and skips Rust compilation. Authentication failures,
-   outages and malformed registry responses fail instead of triggering a rebuild. Geth, genesis and
-   baseline Lighthouse use their own pinned images. The complete selected profile suite runs in
-   either case, then the workflow publishes a new Lighthouse image or retains the existing one.
-3. Download the `lighthouse-<profile>-<upstream-baker-tag>` workflow artifact. It includes a
-   generated `clients.lock.json`, the original bake manifest and verification reports. For each
-   profile, run:
+The normal release flow is **Run workflow → release PR → maintainer merge → automatic Panda
+release**. Downloading artifacts, copying locks and pushing the release tag are automated.
 
-   ```sh
-   ./scripts/deno task clients:pin /path/to/downloaded/clients.lock.json
-   ```
+1. Keep the desired `clVersion`/`clRef` and `bakerVersion` in each profile recipe on the default
+   branch. In **Publish Lighthouse images**, enter the future Panda tag in `version` (for example
+   `v1.2.3`) and choose `profile=all`, or only the updated profile. The first release needs `all`;
+   later single-profile runs retain the other profiles' committed client locks. Invalid or occupied
+   Git tags and missing unchanged locks are rejected before compilation.
+2. The workflow builds or reuses the exact `linux/amd64` Lighthouse images, runs native/full-profile
+   checks and publishes them. After every selected profile succeeds, it opens a PR on
+   `codex/release-<version>`. The PR contains `bakes/<profile>/release/clients.lock.json` with the
+   Lighthouse upstream/baker versions, image tags and immutable digests, plus
+   `.github/panda-release.json` with the future Panda Git tag and hashes of the selected client
+   locks. Its description lists the client versions and digests. Failed builds do not open a release
+   PR.
+3. Review and merge that PR yourself. **Release merged Panda PR** validates the merged client locks,
+   creates the Git tag on the exact PR merge commit, and triggers **Publish Panda images**. The tag
+   does not point at a newer moving `main`. Panda restores the pinned clients, runs its own full
+   profile and packaged-service checks, then publishes both service images.
 
-   This validates the release and writes `bakes/<profile>/release/clients.lock.json`. Commit that
-   generated file. Keep it unchanged until intentionally selecting another client release.
-4. Create and push the Panda Git tag, for example `v1.2.3`. This triggers **Publish Panda images**
-   for all registered profiles. There is no manual Panda `revision` input. For a retry or a single
-   profile, dispatch the workflow on that same Git tag using, for example,
-   `gh workflow run images.yml --ref v1.2.3 -f profile=gloas`.
+The `version` input chooses the tag that the PR will create. The Panda image revision still comes
+from the actual Git tag; the image publisher does not accept a free-form revision override.
+Lighthouse tags still come from its upstream/baker identity independently of the Panda version.
 
-Panda accepts `vMAJOR.MINOR.PATCH` and prereleases such as `v1.2.3-rc.1`; the Docker image tag is
-identical. Branch refs, malformed versions and SemVer build metadata (`+...`) are rejected rather
-than normalized into potentially colliding Docker tags. Existing registry versions cannot be
-overwritten by either workflow.
+For controller-only releases with unchanged clients, pushing a new Panda Git tag still triggers
+**Publish Panda images** directly. Prereleases such as `v1.2.3-rc.1` are accepted; branch refs,
+malformed versions and SemVer build metadata (`+...`) are rejected.
 
-The first client locks do not exist yet: no amd64 Lighthouse image has been published from this
-work. They must come from the actual publication output; the repository does not contain invented
-digests or references to unpublished images. Missing locks stop Panda's release before any client
-build or service packaging. A default `all` release requires a committed lock for every registered
-profile. Adding a new hardfork uses the existing dynamic profile matrix and its own lock.
+A retry reuses the same open PR when its generated files match. It never force-updates a branch,
+changes a closed PR, or moves an existing tag. If the tag was created but dispatch failed, rerun
+**Release merged Panda PR**: it accepts that tag only at the same merge commit. If a Panda run
+already exists for that tag and commit, rerun its failed jobs instead of creating another release.
+Artifacts can be overwritten within a workflow rerun, while published image identities remain
+immutable. `clients:pin` remains available for manual recovery, but is not a normal release step.
+
+One-time repository setup: enable **Settings → Actions → General → Workflow permissions → Allow
+GitHub Actions to create and approve pull requests**. The workflow only creates the PR; it does not
+approve or merge it. The workflow files must be present on the default branch. Repository rules must
+permit the release workflow to create version tags. No additional PAT is required.
+
+The PR commit uses GitHub's signed `createCommitOnBranch` API. The merge trigger explicitly
+dispatches Panda because a tag pushed using `GITHUB_TOKEN` does not trigger another workflow by
+itself. GitHub documents
+[workflow chaining](https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/trigger-a-workflow)
+and [API commit signing](https://docs.github.com/en/graphql/reference/commits).
+
+The first published client locks do not exist yet. They will be generated by the actual successful
+amd64 publication; no placeholder digests are committed. A default `all` Panda release requires a
+valid committed lock for every registered hardfork. New profiles use the existing dynamic matrix and
+receive their own lock in the release PR.
 
 ## What each workflow verifies
 
@@ -119,6 +136,8 @@ services:
     image: ghcr.io/eddort/panda-gloas@sha256:<published-digest>
     ports:
       - 127.0.0.1:18547:8545
+      - 127.0.0.1:5052:5052
+      - 127.0.0.1:5062:5062
     options: --privileged --stop-timeout 120 --label io.panda.id=lido-ci
 ```
 
@@ -132,10 +151,77 @@ The exit-eligibility and historical-summary transitions explicitly use
 `advanceTo(timestamp, { mode: "fast" })`. Voting, activation and finality recovery still execute
 complete slots. The Node client preserves Panda's honest default when the mode is omitted.
 
-Ethereum RPC, Beacon API and `/control` share one endpoint. Importing validator keys uses the real
-Lighthouse keymanager; Lighthouse signs voluntary exits before submission to the Beacon API.
-Keymanager credentials stay on the controller host. The consumer patch is described in
+Ethereum RPC, the Beacon API proxy and `/control` share port 8545. Native Beacon and validator APIs
+are also available on separate ports, as described below. Importing validator keys through Panda
+uses the real Lighthouse keymanager; Lighthouse signs voluntary exits before submission to the
+Beacon API. The consumer patch is described in
 [integrations/lido-core](../integrations/lido-core/README.md).
+
+## Client APIs and logs
+
+Publish the ports needed by your test on loopback:
+
+| Container port | API                                                          | Authentication                |
+| -------------- | ------------------------------------------------------------ | ----------------------------- |
+| 8545           | Geth HTTP JSON-RPC, Panda `/control`, Beacon HTTP proxy      | Controller Host/Origin checks |
+| 5052           | Native Lighthouse Beacon API, including `/eth/v1/events` SSE | Native Beacon API             |
+| 5062           | Native Lighthouse Validator / Keymanager API                 | Lighthouse bearer token       |
+
+For a local service named `panda`:
+
+```sh
+docker run -d --name panda --privileged --stop-timeout 120 \
+  -p 127.0.0.1:18547:8545 \
+  -p 127.0.0.1:5052:5052 \
+  -p 127.0.0.1:5062:5062 \
+  ghcr.io/eddort/panda-gloas@sha256:<published-digest>
+
+curl --fail http://127.0.0.1:5052/eth/v1/beacon/headers/head
+curl --no-buffer 'http://127.0.0.1:5052/eth/v1/events?topics=head'
+
+PANDA_VC_TOKEN=$(docker exec panda panda validator-token)
+curl --fail -H "Authorization: Bearer $PANDA_VC_TOKEN" \
+  http://127.0.0.1:5062/eth/v1/keystores
+```
+
+Obtain the token after the service becomes healthy. It belongs to this fresh network and is not
+printed in readiness logs. Port 5062 preserves Lighthouse authentication. After a fast warp replaces
+VC, new connections use its new internal port; the token persists for that network. Clients should
+reconnect if a request overlaps the restart. Use 5052 for long-lived Beacon event subscriptions; the
+compatibility proxy on 8545 retains its bounded HTTP request timeout. Protocol clocks and the Engine
+API remain private.
+
+The outer service and its clients have separate logs. Use the bundled `panda` command inside the
+running service to read each client's stdout and stderr:
+
+```sh
+docker logs --tail 200 -f panda                 # controller and private Docker daemon
+docker exec panda panda logs el --tail 200     # Geth
+docker exec panda panda logs cl --tail 200 -f  # Lighthouse beacon node
+docker exec panda panda logs vc --tail all    # Lighthouse validator client
+```
+
+`logs` defaults to the last 300 lines; `--follow` / `-f` follows that client until it stops. Rerun
+the command after VC is replaced by a fast warp. Each invocation selects the current client by the
+service's exact `io.panda.id` and role, without accessing the host Docker daemon. Save client logs
+before stopping or removing the outer service. In GitHub Actions, use the actual service ID:
+
+```yaml
+- name: Save Panda service and client logs
+  if: always()
+  env:
+    SERVICE_ID: ${{ job.services.panda.id }}
+  run: |
+    mkdir -p .local/panda
+    docker logs "$SERVICE_ID" > .local/panda/service.log 2>&1
+    for client in el cl vc; do
+      docker exec "$SERVICE_ID" panda logs "$client" --tail 2000 \
+        > ".local/panda/$client.log" 2>&1 || true
+    done
+```
+
+The Lido consumer workflow uploads these files even when tests fail. A log collection error is
+retained in the corresponding file when the service or client has already stopped.
 
 ## Packaging and runtime
 
@@ -146,9 +232,10 @@ pulling clients. This self-contained service requires `--privileged` and has lar
 requirements than a controller-only image.
 
 The internal daemon uses a Unix socket and classic `overlay2` storage to preserve baked image IDs.
-The controller relay listens on port 8545; bind the host port on loopback. Never mount the host
-Docker socket. Host/Origin checks still apply. All resources use exact `io.panda.id` ownership.
-SIGTERM closes the controller and its resources before stopping the private daemon.
+TCP relays listen on ports 8545, 5052 and 5062; bind host ports on loopback. Never mount the host
+Docker socket. Controller Host/Origin checks and VC authentication still apply. All resources use
+exact `io.panda.id` ownership. SIGTERM closes API connections, the controller and its resources
+before stopping the private daemon.
 
 Initial readiness requires block zero, slot zero and automine off. Health probes remain read-only
 while the suite controls time. Restarts start a fresh chain; daemon failure stops the service. Time
@@ -175,6 +262,21 @@ packaging accepts an existing native bake; published client locks require `linux
 packaging checks do not establish that the amd64 publication pipeline passed.
 
 ## Verification record
+
+Native API relays and client log access passed five focused regressions and all 72 fast tests (13
+Docker/profile opt-ins ignored), plus formatting, lint, types and workflow validation. Checks cover
+bearer/header preservation, streaming responses, VC endpoint replacement, connection cleanup and
+Docker log demultiplexing with exact ownership. These use local HTTP and Docker transport fixtures.
+The packaged-service CI check now exercises real CL/VC APIs, rejected tokens, access after fast warp
+and client log collection for each profile. That Docker check was not run locally, as requested. See
+[the local evidence](../reports/ci/container-access/README.md).
+
+Release-PR automation passed `deno task check`, all 67 fast tests (13 Docker/profile opt-ins
+ignored), and `actionlint` for all three workflows. Seven focused regressions cover PR contents,
+partial-failure recovery, immutable tags and the merge trigger. This is local verification with a
+mock GitHub transport; an actual Actions publication remains unverified. See the
+[release-PR evidence](../reports/ci/release-pr/README.md). The earlier records below describe the
+previous pipeline stages.
 
 For the split release pipelines, local verification is limited to unit tests, formatting, lint,
 types and workflow validation. Docker tests and builds were not run, as requested. Unit coverage

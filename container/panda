@@ -1,0 +1,2 @@
+#!/bin/sh
+exec deno run --config=/opt/panda/deno.runtime.json --cached-only -A /opt/panda/container/clients.ts "$@"

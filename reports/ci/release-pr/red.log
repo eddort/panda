@@ -1,0 +1,57 @@
+Check tests/release_pr_test.ts
+running 6 tests from ./tests/release_pr_test.ts
+release PR carries all published client pins and the intended tag, without publishing Panda ... FAILED (28ms)
+release preparation rejects missing profiles, mutable clients and invalid versions ... ok (3ms)
+release PR retries preserve unrelated branches and fail closed on API authorization errors ... FAILED (2ms)
+merging the release PR tags its exact merge commit and dispatches Panda once ... FAILED (1ms)
+release trigger rejects unmerged, foreign or changed PR data before creating a tag ... FAILED (1ms)
+a failed dispatch can be retried after tag creation without moving or replacing the tag ... FAILED (1ms)
+
+ ERRORS
+
+release PR carries all published client pins and the intended tag, without publishing Panda => ./tests/release_pr_test.ts:114:6
+error: Error: Release PR automation is not implemented
+  return Promise.reject(new Error("Release PR automation is not implemented"));
+                        ^
+    at prepareRelease (file:///Users/lexdort/development/zap-net/src/release_pr.ts:40:25)
+    at file:///Users/lexdort/development/zap-net/tests/release_pr_test.ts:116:25
+
+release PR retries preserve unrelated branches and fail closed on API authorization errors => ./tests/release_pr_test.ts:143:6
+error: Error: Release PR automation is not implemented
+  return Promise.reject(new Error("Release PR automation is not implemented"));
+                        ^
+    at prepareRelease (file:///Users/lexdort/development/zap-net/src/release_pr.ts:40:25)
+    at file:///Users/lexdort/development/zap-net/tests/release_pr_test.ts:144:25
+
+merging the release PR tags its exact merge commit and dispatches Panda once => ./tests/release_pr_test.ts:155:6
+error: Error: Release PR automation is not implemented
+  return Promise.reject(new Error("Release PR automation is not implemented"));
+                        ^
+    at prepareRelease (file:///Users/lexdort/development/zap-net/src/release_pr.ts:40:25)
+    at file:///Users/lexdort/development/zap-net/tests/release_pr_test.ts:157:26
+
+release trigger rejects unmerged, foreign or changed PR data before creating a tag => ./tests/release_pr_test.ts:166:6
+error: Error: Release PR automation is not implemented
+  return Promise.reject(new Error("Release PR automation is not implemented"));
+                        ^
+    at prepareRelease (file:///Users/lexdort/development/zap-net/src/release_pr.ts:40:25)
+    at file:///Users/lexdort/development/zap-net/tests/release_pr_test.ts:168:26
+
+a failed dispatch can be retried after tag creation without moving or replacing the tag => ./tests/release_pr_test.ts:186:6
+error: Error: Release PR automation is not implemented
+  return Promise.reject(new Error("Release PR automation is not implemented"));
+                        ^
+    at prepareRelease (file:///Users/lexdort/development/zap-net/src/release_pr.ts:40:25)
+    at file:///Users/lexdort/development/zap-net/tests/release_pr_test.ts:188:26
+
+ FAILURES
+
+release PR carries all published client pins and the intended tag, without publishing Panda => ./tests/release_pr_test.ts:114:6
+release PR retries preserve unrelated branches and fail closed on API authorization errors => ./tests/release_pr_test.ts:143:6
+merging the release PR tags its exact merge commit and dispatches Panda once => ./tests/release_pr_test.ts:155:6
+release trigger rejects unmerged, foreign or changed PR data before creating a tag => ./tests/release_pr_test.ts:166:6
+a failed dispatch can be retried after tag creation without moving or replacing the tag => ./tests/release_pr_test.ts:186:6
+
+FAILED | 1 passed | 5 failed (42ms)
+
+error: Test failed
