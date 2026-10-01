@@ -1,0 +1,8 @@
+Check tests/lighthouse_publish_test.ts
+running 4 tests from ./tests/lighthouse_publish_test.ts
+pectra Lighthouse publication does not require a Panda profile report ... ok (26ms)
+gloas Lighthouse publication does not require a Panda profile report ... ok (2ms)
+Lighthouse publication still rejects imported or mismatched native artifacts ... ok (3ms)
+full profile validation gates Panda publication, independently of the Lighthouse release ... ok (1ms)
+
+ok | 4 passed | 0 failed (38ms)

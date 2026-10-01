@@ -47,13 +47,13 @@ release**. Downloading artifacts, copying locks and pushing the release tag are 
    `v1.2.3`) and choose `profile=all`, or only the updated profile. The first release needs `all`;
    later single-profile runs retain the other profiles' committed client locks. Invalid or occupied
    Git tags and missing unchanged locks are rejected before compilation.
-2. The workflow builds or reuses the exact `linux/amd64` Lighthouse images, runs native/full-profile
-   checks and publishes them. After every selected profile succeeds, it opens a PR on
-   `codex/release-<version>`. The PR contains `bakes/<profile>/release/clients.lock.json` with the
-   Lighthouse upstream/baker versions, image tags and immutable digests, plus
-   `.github/panda-release.json` with the future Panda Git tag and hashes of the selected client
-   locks. Its description lists the client versions and digests. Failed builds do not open a release
-   PR.
+2. The workflow builds the exact `linux/amd64` Lighthouse images with their native Rust tests, or
+   reuses the matching published images, and publishes them before any Panda profile tests. After
+   every selected profile succeeds, it opens a PR on `codex/release-<version>`. The PR contains
+   `bakes/<profile>/release/clients.lock.json` with the Lighthouse upstream/baker versions, image
+   tags and immutable digests, plus `.github/panda-release.json` with the future Panda Git tag and
+   hashes of the selected client locks. Its description lists the client versions and digests.
+   Failed builds or native tests do not open a release PR.
 3. Review and merge that PR yourself. **Release merged Panda PR** validates the merged client locks,
    creates the Git tag on the exact PR merge commit, and triggers **Publish Panda images**. The tag
    does not point at a newer moving `main`. Panda restores the pinned clients, runs its own full
@@ -92,10 +92,16 @@ receive their own lock in the release PR.
 
 ## What each workflow verifies
 
-The Lighthouse workflow checks that its selected profile passed with the current suite fingerprint
-and bake key before publishing. The generated lock contains the original immutable bake verbatim,
-plus the published Lighthouse repository digest and the source commit of the build. A bake created
-with `--import-cl` cannot be presented as a native Lighthouse release.
+The Lighthouse workflow runs the native Rust regressions as part of a new `bake`, then publishes the
+compiled image and its immutable identity. Publication checks the native bake provenance,
+upstream/baker identity, architecture and original source commit. A bake created with `--import-cl`
+cannot be presented as a native Lighthouse release. The generated lock contains the original
+immutable bake verbatim plus the published Lighthouse digest and build commit.
+
+Full `test:profile` runs only in the Panda release workflow. A published Lighthouse image certifies
+the native build, not Panda's protocol integration. If a later Panda profile or packaged-service
+check fails, Panda publication is blocked and the Lighthouse image remains in GHCR for reuse. Fixing
+the controller or its tests does not require compiling that unchanged Lighthouse again.
 
 The Panda workflow validates that its ref is a release Git tag and that its client locks are
 committed. `clients:restore` loads Lighthouse, Geth, genesis and the baseline client by digest and

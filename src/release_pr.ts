@@ -170,7 +170,7 @@ export async function openReleasePullRequest(
     base,
     body: [
       `Pin the published Lighthouse/client versions and prepare Git tag \`${plan.version}\`.`,
-      `Lighthouse publication and its profile checks completed before this PR. Build source: ${plan.sourceCommit}.`,
+      `Native-tested Lighthouse images were published or reused before this PR. Release source: ${plan.sourceCommit}.`,
       clients.join("\n"),
       "Merge this PR to create the tag on the merge commit and automatically run Publish Panda images. Panda runs its own profile and packaged-service checks before publication.",
     ].join("\n\n"),

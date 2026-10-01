@@ -1,0 +1,182 @@
+Check tests/lighthouse_publish_test.ts
+running 4 tests from ./tests/lighthouse_publish_test.ts
+pectra Lighthouse publication does not require a Panda profile report ... FAILED (29ms)
+gloas Lighthouse publication does not require a Panda profile report ... FAILED (3ms)
+Lighthouse publication still rejects imported or mismatched native artifacts ... FAILED (3ms)
+full profile validation gates Panda publication, independently of the Lighthouse release ... FAILED (916µs)
+
+ ERRORS
+
+pectra Lighthouse publication does not require a Panda profile report => ./tests/lighthouse_publish_test.ts:30:8
+error: NotFound: No such file or directory (os error 2): readfile 'reports/profiles/pectra/unit-publication-48f2e2e6-f96e-4d3d-8d7e-7d6e83aa0081/verification.json'
+    await Deno.readTextFile(`reports/profiles/${profile}/${bake.tag}/verification.json`),
+    ^
+    at async Object.readTextFile (ext:deno_fs/30_fs.js:1:10042)
+    at async validateLighthousePublication (file:///Users/lexdort/development/zap-net/src/lighthouse_publish.ts:17:5)
+    at async file:///Users/lexdort/development/zap-net/tests/lighthouse_publish_test.ts:32:18
+
+gloas Lighthouse publication does not require a Panda profile report => ./tests/lighthouse_publish_test.ts:30:8
+error: NotFound: No such file or directory (os error 2): readfile 'reports/profiles/gloas/unit-publication-20e8412a-0173-4012-9b68-9ee82f668e8a/verification.json'
+    await Deno.readTextFile(`reports/profiles/${profile}/${bake.tag}/verification.json`),
+    ^
+    at async Object.readTextFile (ext:deno_fs/30_fs.js:1:10042)
+    at async validateLighthousePublication (file:///Users/lexdort/development/zap-net/src/lighthouse_publish.ts:17:5)
+    at async file:///Users/lexdort/development/zap-net/tests/lighthouse_publish_test.ts:32:18
+
+Lighthouse publication still rejects imported or mismatched native artifacts => ./tests/lighthouse_publish_test.ts:36:6
+error: AssertionError: The input did not match the regular expression /original native Lighthouse bake/. Input:
+
+"NotFound: No such file or directory (os error 2): readfile 'reports/profiles/gloas/unit-publication-81ccbbfe-0371-422f-a398-df436a385dfd/verification.json'"
+
+  await assert.rejects(async () => {
+  ^
+    at async file:///Users/lexdort/development/zap-net/tests/lighthouse_publish_test.ts:38:3
+
+full profile validation gates Panda publication, independently of the Lighthouse release => ./tests/lighthouse_publish_test.ts:67:6
+error: AssertionError: The input was expected to not match the regular expression /task test:profile/. Input:
+
+'name: Publish Lighthouse images\n' +
+  '\n' +
+  'on:\n' +
+  '  workflow_dispatch:\n' +
+  '    inputs:\n' +
+  '      version:\n' +
+  '        description: Panda Git tag to create after merging the generated release PR (vX.Y.Z or vX.Y.Z-rc.N).\n' +
+  '        required: true\n' +
+  '        type: string\n' +
+  '      profile:\n' +
+  '        description: Registered hardfork name, or all. Upstream and baker versions come from its recipe.\n' +
+  '        required: true\n' +
+  '        default: all\n' +
+  '        type: string\n' +
+  '\n' +
+  'permissions:\n' +
+  '  contents: read\n' +
+  '\n' +
+  'concurrency:\n' +
+  '  group: lighthouse-release-${{ inputs.version }}\n' +
+  '  cancel-in-progress: false\n' +
+  '\n' +
+  'jobs:\n' +
+  '  select:\n' +
+  '    runs-on: ubuntu-24.04\n' +
+  '    outputs:\n' +
+  '      matrix: ${{ steps.select.outputs.matrix }}\n' +
+  '    steps:\n' +
+  '      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1\n' +
+  '      - run: sh scripts/bootstrap.sh\n' +
+  '      - name: Validate release version and unchanged profile locks\n' +
+  '        env:\n' +
+  '          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n' +
+  '          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}\n' +
+  '          PANDA_VERSION: ${{ inputs.version }}\n' +
+  '          PROFILE: ${{ inputs.profile }}\n' +
+  '        run: ./scripts/deno run -A scripts/release_pr.ts check\n' +
+  '      - id: select\n' +
+  '        env:\n' +
+  '          PROFILE: ${{ inputs.profile }}\n' +
+  '        run: ./scripts/deno run -A scripts/lighthouse_ci.ts matrix "$PROFILE"\n' +
+  '\n' +
+  '  lighthouse:\n' +
+  '    needs: select\n' +
+  '    strategy:\n' +
+  '      fail-fast: false\n' +
+  '      matrix: ${{ fromJSON(needs.select.outputs.matrix) }}\n' +
+  '    runs-on: ubuntu-24.04\n' +
+  '    timeout-minutes: 360\n' +
+  '    concurrency:\n' +
+  '      group: panda-lighthouse-${{ matrix.profile }}-${{ matrix.tag }}\n' +
+  '      cancel-in-progress: false\n' +
+  '    permissions:\n' +
+  '      contents: read\n' +
+  '      packages: write\n' +
+  '    env:\n' +
+  '      PROFILE: ${{ matrix.profile }}\n' +
+  '      BAKE: ${{ matrix.bake }}\n' +
+  '      CARGO_BUILD_JOBS: 2\n' +
+  '    steps:\n' +
+  '      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1\n' +
+  '      - run: sh scripts/bootstrap.sh\n' +
+  '      - name: Resolve upstream/baker version in the registry\n' +
+  '        id: client\n' +
+  '        env:\n' +
+  '          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n' +
+  '        run: ./scripts/deno run -A scripts/lighthouse_ci.ts resolve "$PROFILE"\n' +
+  '      - run: ./scripts/deno task check && ./scripts/deno task test\n' +
+  '      - name: Reuse published Lighthouse or compile the new upstream/baker pair\n' +
+  '        env:\n' +
+  '          LIGHTHOUSE_DIGEST: ${{ steps.client.outputs.digest }}\n' +
+  '          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n' +
+  '        run: |\n' +
+  '          if [ -n "$LIGHTHOUSE_DIGEST" ]; then\n' +
+  '            ./scripts/deno task bake "$PROFILE" --tag "$BAKE" --reuse-cl "$LIGHTHOUSE_DIGEST"\n' +
+  '          else\n' +
+  '            ./scripts/deno task bake "$PROFILE" --tag "$BAKE"\n' +
+  '          fi\n' +
+  '      - name: Verify the real EL/CL combination\n' +
+  '        run: ./scripts/deno task test:profile "$PROFILE" --bake "$BAKE"\n' +
+  '      - name: Publish or reuse Lighthouse and produce the client lock\n' +
+  '        env:\n' +
+  '          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n' +
+  '        run: ./scripts/deno run -A scripts/lighthouse_ci.ts publish "$PROFILE"\n' +
+  '      - name: Upload published lock for the release PR\n' +
+  '        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2\n' +
+  '        with:\n' +
+  '          name: lighthouse-lock-${{ matrix.profile }}\n' +
+  '          path: .cache/client-releases/${{ matrix.profile }}/clients.lock.json\n' +
+  '          include-hidden-files: true\n' +
+  '          if-no-files-found: error\n' +
+  '          overwrite: true\n' +
+  '      - name: Upload client lock and verification\n' +
+  '        if: always()\n' +
+  '        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2\n' +
+  '        with:\n' +
+  '          name: lighthouse-${{ matrix.profile }}-${{ matrix.tag }}\n' +
+  '          include-hidden-files: true\n' +
+  '          overwrite: true\n' +
+  '          path: |\n' +
+  '            .cache/client-releases/${{ matrix.profile }}/\n' +
+  '            reports/profiles/${{ matrix.profile }}/${{ matrix.bake }}/\n' +
+  '            bakes/${{ matrix.profile }}/tags/${{ matrix.bake }}.json\n' +
+  '\n' +
+  '  release-pr:\n' +
+  '    needs: [select, lighthouse]\n' +
+  '    runs-on: ubuntu-24.04\n' +
+  '    timeout-minutes: 10\n' +
+  '    permissions:\n' +
+  '      contents: write\n' +
+  '      pull-requests: write\n' +
+  '      actions: read\n' +
+  '    env:\n' +
+  '      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n' +
+  '      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}\n' +
+  '      PANDA_VERSION: ${{ inputs.version }}\n' +
+  '      PROFILE: ${{ inputs.profile }}\n' +
+  '    steps:\n' +
+  '      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1\n' +
+  '      - run: sh scripts/bootstrap.sh\n' +
+  '      - name: Download locks from this successful publication\n' +
+  '        env:\n' +
+  '          RELEASE_MATRIX: ${{ needs.select.outputs.matrix }}\n' +
+  '        run: |\n' +
+  '          while IFS= read -r profile; do\n' +
+  '            gh run download "$GITHUB_RUN_ID" --repo "$GITHUB_REPOSITORY" \\\n' +
+  '              --name "lighthouse-lock-$profile" --dir ".cache/release-locks/lighthouse-lock-$profile"\n' +
+  `          done < <(jq -r '.include[].profile' <<< "$RELEASE_MATRIX")\n` +
+  '      - name: Open release PR with Lighthouse versions, client pins and Panda tag\n' +
+  '        run: ./scripts/deno run -A scripts/release_pr.ts open\n'
+
+  assert.doesNotMatch(lighthouse, /task test:profile/);
+         ^
+    at file:///Users/lexdort/development/zap-net/tests/lighthouse_publish_test.ts:69:10
+
+ FAILURES
+
+pectra Lighthouse publication does not require a Panda profile report => ./tests/lighthouse_publish_test.ts:30:8
+gloas Lighthouse publication does not require a Panda profile report => ./tests/lighthouse_publish_test.ts:30:8
+Lighthouse publication still rejects imported or mismatched native artifacts => ./tests/lighthouse_publish_test.ts:36:6
+full profile validation gates Panda publication, independently of the Lighthouse release => ./tests/lighthouse_publish_test.ts:67:6
+
+FAILED | 0 passed | 4 failed (41ms)
+
+error: Test failed
