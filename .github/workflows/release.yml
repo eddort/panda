@@ -1,0 +1,51 @@
+name: Release Panda from published images
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Panda Git tag to create after merging the release PR (vX.Y.Z).
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse-release-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  release-pr:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+      actions: read
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+      PANDA_VERSION: ${{ inputs.version }}
+      PROFILE: all
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: sh scripts/bootstrap.sh
+      - name: Validate the release version and branch
+        run: ./scripts/deno run -A scripts/release_pr.ts check
+      - name: Find the latest published client lock for every profile
+        run: ./scripts/deno run -A scripts/release_artifacts.ts
+      - name: Download the selected immutable lock artifacts
+        run: |
+          set -euo pipefail
+          while IFS=$'\t' read -r profile artifact_id; do
+            archive=".cache/release-locks/$profile.zip"
+            directory=".cache/release-locks/lighthouse-lock-$profile"
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" > "$archive"
+            mkdir -p "$directory"
+            unzip -p "$archive" clients.lock.json > "$directory/clients.lock.json"
+          done < <(jq -r '.[] | [.profile, .artifactId] | @tsv' .cache/release-locks/sources.json)
+      - name: Open the release PR with the published image digests
+        run: ./scripts/deno run -A scripts/release_pr.ts open

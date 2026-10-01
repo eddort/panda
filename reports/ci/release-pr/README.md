@@ -66,3 +66,24 @@ Push the fix to the default branch and use **Run workflow** from that branch; re
 uses its old source revision. Existing matching Lighthouse images can be reused from GHCR.
 Under repository **Settings → Actions → General → Workflow permissions**, enable **Allow GitHub
 Actions to create and approve pull requests** for the release bot to open its PR.
+
+## Standalone release from published images
+
+**Release Panda from published images** selects the newest published client lock artifact for every
+registered profile and opens a release PR. It has no Docker, bake, native compilation or Lighthouse
+workflow dispatch step. The three existing workflows are unchanged. Exact artifact IDs are used for
+download, so selection cannot switch to another artifact with the same name during download.
+
+Five new regressions cover publication followed by a failed PR job, separate runs per profile,
+workflow/branch/repository restrictions, missing or expired locks and authorization errors,
+pagination, publication-time ordering, and the independent workflow's lack of build steps.
+The initial run failed before the new selector module existed. After implementation, 14 focused
+release/security tests passed. The full unit suite passed 92 tests with 13 Docker/profile opt-ins
+ignored; formatting, lint, types and `actionlint` passed. Local evidence is under the ignored
+`.cache/release-existing/` directory.
+
+Read-only verification against GitHub selected run `36836753889`, with Pectra artifact
+`11150842738` and Gloas artifact `11150726579`. Both ZIP archives were downloaded and each contained
+only `clients.lock.json`; both real locks passed `prepareRelease` validation. This establishes
+artifact selection/download and local release preparation, not an executed Actions job or PR
+publication. No GitHub mutation, Docker build or devnet test was performed.
