@@ -90,6 +90,29 @@ amd64 publication; no placeholder digests are committed. A default `all` Panda r
 valid committed lock for every registered hardfork. New profiles use the existing dynamic matrix and
 receive their own lock in the release PR.
 
+## Release already published clients
+
+Use **Release Panda from published images** (`.github/workflows/release.yml`) on `main` and enter
+only the new Panda `version`, for example `v0.2.0`. It opens the same release PR using the latest
+published client lock for every registered profile. Merge the PR to trigger the existing tag and
+Panda publication workflows.
+
+This separate action does not run Docker, `bake`, Rust compilation or the Lighthouse workflow. It
+downloads only the selected lock JSON artifacts by their immutable artifact IDs. Lighthouse images
+remain in GHCR; the Panda publisher later restores them by digest. The existing build workflows are
+unchanged.
+
+Locks are selected by artifact creation time from completed **Publish Lighthouse images** runs on
+the repository default branch. A run whose later PR job failed is eligible: its lock artifacts were
+uploaded after successful client publication. Profiles can come from different runs. Artifacts from
+other workflows, branches or fork repositories are excluded. The action summary links each selected
+publication run and records the exact artifact ID; the PR lists the image digests.
+
+If a required lock is missing or its latest retained artifact has expired, the action stops with an
+error. It does not compile clients or silently use an older retained lock. Artifact retention is
+separate from GHCR image retention. Existing release branches and occupied tags retain the same
+protection as the original release flow.
+
 ## What each workflow verifies
 
 The Lighthouse workflow runs the native Rust regressions as part of a new `bake`, then publishes the
