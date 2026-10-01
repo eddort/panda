@@ -1,0 +1,4 @@
+.cache/pilots/lido-pr-1940-working/.github/workflows/tests-integration-panda.yml:50:15: description is required in metadata of "Common setup" action at "/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/.github/workflows/setup/action.yml" [action]
+   |
+50 |         uses: ./.github/workflows/setup
+   |               ^~~~~~~~~~~~~~~~~~~~~~~~~

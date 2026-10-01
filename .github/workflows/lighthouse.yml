@@ -76,8 +76,8 @@ jobs:
           else
             ./scripts/deno task bake "$PROFILE" --tag "$BAKE"
           fi
-      - name: Verify the real EL/CL combination
-        run: ./scripts/deno task test:profile "$PROFILE" --bake "$BAKE"
+      # bake already ran the native Rust regressions. Full EL/CL profile and packaged-service
+      # checks gate Panda publication in images.yml, after this binary is durable in GHCR.
       - name: Publish or reuse Lighthouse and produce the client lock
         env:
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -90,7 +90,7 @@ jobs:
           include-hidden-files: true
           if-no-files-found: error
           overwrite: true
-      - name: Upload client lock and verification
+      - name: Upload client lock and native bake identity
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
@@ -99,7 +99,6 @@ jobs:
           overwrite: true
           path: |
             .cache/client-releases/${{ matrix.profile }}/
-            reports/profiles/${{ matrix.profile }}/${{ matrix.bake }}/
             bakes/${{ matrix.profile }}/tags/${{ matrix.bake }}.json
 
   release-pr:

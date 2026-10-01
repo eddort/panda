@@ -1,0 +1,165 @@
+TAP version 13
+# Subtest: external Panda needs no checkout, preserves fresh genesis and does not own shutdown
+not ok 1 - external Panda needs no checkout, preserves fresh genesis and does not own shutdown
+  ---
+  duration_ms: 32.136333
+  type: 'test'
+  location: '/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:96:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+
+    + undefined
+    - 'http://127.0.0.1:64845'
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'http://127.0.0.1:64845'
+  operator: 'strictEqual'
+  stack: |-
+    /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:100:12
+    async fixture (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:89:5)
+    async TestContext.<anonymous> (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:97:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: SDK routes Beacon reads and writes to native CL and keeps the controller proxy as default
+not ok 2 - SDK routes Beacon reads and writes to native CL and keeps the controller proxy as default
+  ---
+  duration_ms: 8.702708
+  type: 'test'
+  location: '/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:114:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+    + undefined
+    - {
+    -   body: {
+    -     message: {
+    -       epoch: '4'
+    -     },
+    -     signature: 'fixture'
+    -   },
+    -   method: 'POST',
+    -   route: '/eth/v1/beacon/pool/voluntary_exits'
+    - }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    route: '/eth/v1/beacon/pool/voluntary_exits'
+    method: 'POST'
+    body:
+      message:
+        epoch: '4'
+      signature: 'fixture'
+  operator: 'deepStrictEqual'
+  stack: |-
+    /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:120:12
+    processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async fixture (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:89:5)
+    async TestContext.<anonymous> (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:115:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: SDK rejects stale, optimistic, noncanonical or mismatched CL genesis
+not ok 3 - SDK rejects stale, optimistic, noncanonical or mismatched CL genesis
+  ---
+  duration_ms: 4.629916
+  type: 'test'
+  location: '/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:125:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:139:7
+    async fixture (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:89:5)
+    async TestContext.<anonymous> (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:137:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: SDK validates CL URL and does not fall back when an explicit CL is unavailable
+not ok 4 - SDK validates CL URL and does not fall back when an explicit CL is unavailable
+  ---
+  duration_ms: 4.722167
+  type: 'test'
+  location: '/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:144:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:147:7
+    async fixture (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:89:5)
+    async TestContext.<anonymous> (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:145:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: SDK verifies the Gloas bid, envelope and canonical EL block for an immutable Beacon root
+not ok 5 - SDK verifies the Gloas bid, envelope and canonical EL block for an immutable Beacon root
+  ---
+  duration_ms: 3.08075
+  type: 'test'
+  location: '/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:155:1'
+  failureType: 'testCodeFailure'
+  error: 'panda.assertExecution is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:158:32
+    async fixture (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:89:5)
+    async TestContext.<anonymous> (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:156:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: SDK rejects an optimistic or conflicting Gloas bid, envelope and EL block
+not ok 6 - SDK rejects an optimistic or conflicting Gloas bid, envelope and EL block
+  ---
+  duration_ms: 3.101292
+  type: 'test'
+  location: '/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:167:1'
+  failureType: 'testCodeFailure'
+  error: 'panda.assertExecution is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:186:34
+    async fixture (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:89:5)
+    async TestContext.<anonymous> (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:183:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: SDK confirms Gloas finality using the checkpoint execution parent, not its own payload
+not ok 7 - SDK confirms Gloas finality using the checkpoint execution parent, not its own payload
+  ---
+  duration_ms: 4.764666
+  type: 'test'
+  location: '/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:191:1'
+  failureType: 'testCodeFailure'
+  error: 'panda.finalized is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    /Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:194:34
+    async fixture (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:89:5)
+    async TestContext.<anonymous> (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:192:3)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 0
+# fail 7
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 304.81375
