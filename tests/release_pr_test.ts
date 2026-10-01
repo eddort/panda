@@ -54,6 +54,7 @@ class FakeGitHub implements GitHub {
   runs: { head_branch: string; head_sha: string }[] = [];
   dispatchFailure = false;
   failure: "commit" | "pr" | undefined;
+  commitErrors: { message: string; extensions?: unknown }[] | undefined;
   unauthorized = false;
   request<T>(method: string, path: string, body?: unknown): Promise<T> {
     this.calls.push({ method, path, body });
@@ -75,7 +76,12 @@ class FakeGitHub implements GitHub {
         return Promise.reject(new GitHubError(503, "commit unavailable"));
       }
       const input = (data.variables as { input: Record<string, unknown> }).input;
+      assert.deepEqual(input.branch, {
+        repositoryNameWithOwner: repository,
+        branchName: releaseBranch(version),
+      });
       assert.equal(input.expectedHeadOid, this.branch);
+      if (this.commitErrors) return Promise.resolve({ errors: this.commitErrors } as T);
       const changes = input.fileChanges as { additions: { path: string; contents: string }[] };
       for (const file of changes.additions) {
         this.files[file.path] = new TextDecoder().decode(
@@ -148,6 +154,29 @@ Deno.test("release preparation rejects missing profiles, mutable clients and inv
   await assert.rejects(() => prepareRelease(version, source, { gloas: selected.gloas }));
   selected.gloas.lighthouse.digest = "ghcr.io/eddort/panda-lighthouse-gloas:latest";
   await assert.rejects(() => prepareRelease(version, source, selected));
+});
+
+Deno.test("release commit errors report the API message without echoing file contents", async () => {
+  const release = await prepareRelease(version, source, await clients());
+  const api = new FakeGitHub();
+  const message = "CommittableBranch requires repositoryNameWithOwner and branchName";
+  api.commitErrors = [{
+    message,
+    extensions: { value: { fileChanges: { additions: [{ contents: "private-file-payload" }] } } },
+  }];
+  await assert.rejects(
+    () => openReleasePullRequest(api, repository, "main", release),
+    { message: `Release commit failed: ${message}` },
+  );
+  assert.equal(api.branch, source);
+  assert.deepEqual(api.files, {});
+  assert.equal(api.pr, undefined);
+  assert.equal(api.tag, undefined);
+  api.commitErrors = undefined;
+  assert.equal(
+    await openReleasePullRequest(api, repository, "main", release),
+    "https://github.com/eddort/panda/pull/123",
+  );
 });
 
 Deno.test("partial GitHub failures resume the same release branch without duplicate commits or PRs", async () => {

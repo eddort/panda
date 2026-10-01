@@ -2,6 +2,6 @@ envelope 129 verification: BadSignature
 error: Uncaught (in promise) Error: Native tests exited 1
  if(StatusCode) throw Error(`Native tests exited ${StatusCode}`);
                       ^
-    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/.cache/warp-native/run_oracle.ts:26:23
+    at file:///workspace/panda/.cache/warp-native/run_oracle.ts:26:23
     at processTicksAndRejections (ext:core/01_core.js:405:7)
     at drainTicks (ext:core/01_core.js:432:5)

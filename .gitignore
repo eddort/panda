@@ -4,3 +4,39 @@
 .zap/
 node_modules/
 reports/*.jsonl
+
+# Console output and rotated logs stay local or in CI artifacts.
+*.log
+*.log.[0-9]*
+/reports/ci/**/*.jsonl
+
+# Preserve raw bake/profile and protocol regression evidence.
+!/reports/profiles/**/*.log
+!/reports/profiles/**/*.log.[0-9]*
+!/reports/profiles/**/*.jsonl
+!/reports/warp-tdd/**/*.log
+!/reports/warp-modes/**/*.log
+
+# Local investigation notes and external pilot deployments are private artifacts.
+/docs/next-session.md
+/reports/pilots/
+/reports/cleanup.json
+
+# Credentials and generated validator material must never enter a source snapshot.
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+.netrc
+.npmrc
+.DS_Store
+api-token.txt
+jwtsecret
+validator-keys/
+keystores/

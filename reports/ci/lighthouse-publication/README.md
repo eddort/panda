@@ -1,5 +1,8 @@
 # Publish Lighthouse before Panda profile verification
 
+Console logs mentioned below are local or CI artifacts, not versioned files. See the
+[report retention policy](../../README.md).
+
 Local verification on 2026-10-01. The previous Lighthouse workflow ran `test:profile` before its
 first registry push, even though the Panda release workflow already ran the same full suite. A
 profile failure could therefore discard a successfully compiled Lighthouse with the ephemeral

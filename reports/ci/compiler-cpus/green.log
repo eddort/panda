@@ -1,8 +1,0 @@
-Check tests/compiler_resources_test.ts
-running 4 tests from ./tests/compiler_resources_test.ts
-CL and EL compiler containers fit a 1-CPU Docker daemon ... ok (4ms)
-CL and EL compiler containers fit a 2-CPU Docker daemon ... ok (252µs)
-CL and EL compiler containers fit a 8-CPU Docker daemon ... ok (110µs)
-invalid Docker CPU information fails before creating compiler containers ... ok (1ms)
-
-ok | 4 passed | 0 failed (9ms)

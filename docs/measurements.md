@@ -192,5 +192,5 @@ Final launcher regression: `ZAP_DOCKER_TEST=1 ZAP_E2E=1 deno task test` passed a
 through the installed system Deno 1.36.4; workload execution uses the pinned local Deno 2.9.7.
 `deno.json` is the backwards-compatible task launcher (no runtime lockfile parsing);
 `deno.runtime.json` owns the pinned runtime configuration and `deno.lock`. A separate post-fix
-`deno task test:lifecycle` passed as well. `reports/cleanup.json` records final Docker inventory;
-only the two intentional build cache volumes remain.
+`deno task test:lifecycle` passed as well. The historical cleanup check left only the two
+intentional build cache volumes. The workstation inventory is kept privately.

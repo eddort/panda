@@ -1,5 +1,8 @@
 # Compiler CPU limit regression
 
+Console logs mentioned below are local or CI artifacts, not versioned files. See the
+[report retention policy](../../README.md).
+
 Local verification on 2026-10-01. The reported GitHub Actions Gloas build used tag
 `ci-b312399cd32ffd8272775480aef22a1cc5412d9c` and failed before compilation because its Docker
 daemon exposed two CPUs while Panda requested `NanoCpus: 4e9`.

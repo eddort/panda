@@ -13,16 +13,10 @@
   "memoryBytes": 8322592768,
   "other": [
     {
-      "names": [
-        "/buildx_buildkit_oracle-buildkit0"
-      ],
-      "id": "378fd92187c0f9fa43ffc91b4a08284729e61880f9e5d094c3ea6e66175dd3a3"
+      "redacted": true
     },
     {
-      "names": [
-        "/qbittorrent"
-      ],
-      "id": "6e769408b2b2757936fd128671fda5aa9596bb692afc648ad12dcc440ee739ce"
+      "redacted": true
     }
   ],
   "slots": 32,

@@ -9,7 +9,7 @@ shutdown interrupts a long advance at the next phase boundary ... ok (72µs)
 large advanceTime/advanceTo execute every slot and preserve partial-slot targets ... FAILED (12ms)
 failed explicit skip faults the timeline and continuous advancement never skips ... ok (415µs)
 
- ERRORS 
+ ERRORS
 
 large advanceTime/advanceTo execute every slot and preserve partial-slot targets => ./tests/time_test.ts:94:6
 error: AssertionError: advanceTime must not model validator downtime
@@ -22,9 +22,9 @@ error: AssertionError: advanceTime must not model validator downtime
 
   assert.deepEqual(skips, [], "advanceTime must not model validator downtime");
          ^
-    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/time_test.ts:109:10
+    at file:///workspace/panda/tests/time_test.ts:109:10
 
- FAILURES 
+ FAILURES
 
 large advanceTime/advanceTo execute every slot and preserve partial-slot targets => ./tests/time_test.ts:94:6
 

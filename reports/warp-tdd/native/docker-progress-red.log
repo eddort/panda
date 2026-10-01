@@ -2,7 +2,7 @@ Check tests/docker_progress_test.ts
 running 1 test from ./tests/docker_progress_test.ts
 Docker reports an operation failure inside an HTTP-success progress stream ... FAILED (5ms)
 
- ERRORS 
+ ERRORS
 
 Docker reports an operation failure inside an HTTP-success progress stream => ./tests/docker_progress_test.ts:5:6
 error: AssertionError: Missing expected rejection.
@@ -10,9 +10,9 @@ error: AssertionError: Missing expected rejection.
   ^
     at processTicksAndRejections (ext:core/01_core.js:405:7)
     at drainTicks (ext:core/01_core.js:432:5)
-    at async file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/docker_progress_test.ts:13:3
+    at async file:///workspace/panda/tests/docker_progress_test.ts:13:3
 
- FAILURES 
+ FAILURES
 
 Docker reports an operation failure inside an HTTP-success progress stream => ./tests/docker_progress_test.ts:5:6
 

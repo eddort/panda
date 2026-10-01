@@ -1,6 +1,27 @@
 debconf: delaying package configuration, since apt-utils is not installed
 Selecting previously unselected package libarchive13:arm64.
-(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 23273 files and directories currently installed.)
+(Reading database ...
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 23273 files and directories currently installed.)
 Preparing to unpack .../00-libarchive13_3.6.2-1+deb12u5_arm64.deb ...
 Unpacking libarchive13:arm64 (3.6.2-1+deb12u5) ...
 Selecting previously unselected package libjsoncpp25:arm64.
@@ -186,6 +207,6 @@ error: could not compile `beacon_chain` (test "panda_direct_sync") due to 1 prev
 error: Uncaught (in promise) Error: Native tests exited 101
  if(StatusCode) throw Error(`Native tests exited ${StatusCode}`);
                       ^
-    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/.cache/warp-native/run_direct_sync_test.ts:25:23
+    at file:///workspace/panda/.cache/warp-native/run_direct_sync_test.ts:25:23
     at processTicksAndRejections (ext:core/01_core.js:405:7)
     at drainTicks (ext:core/01_core.js:432:5)
