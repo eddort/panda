@@ -1,0 +1,361 @@
+diff --git a/docs/scratch-panda.md b/docs/scratch-panda.md
+index 27f16fcd4..798f39b2c 100644
+--- a/docs/scratch-panda.md
++++ b/docs/scratch-panda.md
+@@ -9,13 +9,32 @@ From this core checkout, install dependencies (`HUSKY=0 yarn install --immutable
+ PANDA_ROOT=/path/to/panda yarn test:integration:panda --bail
+ ```
+ 
+-The Hardhat suite starts one fresh Panda network and invokes the ordinary `yarn deploy:scratch`
++To use a running Panda service, set `PANDA_URL=http://127.0.0.1:18547` instead of `PANDA_ROOT`:
++
++```sh
++PANDA_URL=http://127.0.0.1:18547 yarn test:integration:panda --bail
++```
++
++The service must expose a fresh Gloas chain (block 0, slot 0, automine off). The client connects over
++HTTP and leaves the externally owned service running when the suite ends. Validator import and
++voluntary exits use Panda's `/control` API; keymanager credentials stay inside Panda.
++
++Run the **Integration Tests Panda** workflow with the published
++`ghcr.io/eddort/panda-gloas@sha256:<digest>` from Panda's release artifact. It starts the image as a
++privileged service with its own Docker daemon and binds `127.0.0.1:18547:8545`. Deno and the Panda
++runtime are contained in the image. The workflow uses the command above; scratch deployment remains
++inside the existing suite. Private packages require `PANDA_REGISTRY_TOKEN` with package read access
++unless this repository's `GITHUB_TOKEN` already has access.
++
++The Hardhat suite uses one fresh Panda network and invokes the ordinary `yarn deploy:scratch`
+ command through the TypeScript [deployment helper](../test/integration/panda/helpers/deploy.ts).
+ The helper enables transaction-driven mining, waits for Geth indexer readiness, and records wall
+ time, migration steps and output under `.local/panda/core-<id>/`. Each run has its own
+-`deployment.json`. The suite then checks the four core verifiers and stops its network in `after`.
++`deployment.json`. The suite then checks the four core verifiers. Local mode starts and stops its
++own Panda process; service mode leaves lifecycle management to Docker/CI.
+ See the [suite documentation](../test/integration/panda/README.md) for prerequisites and coverage.
+-The default bake is `gloas:panda`; set `PANDA_BAKE` to match another compatible tag.
++Local startup defaults to `gloas:panda`; `PANDA_BAKE` selects another compatible tag. In service mode,
++`PANDA_BAKE` optionally asserts that the running service uses that exact bake tag.
+ The standard public Hardhat development key is used only against this local Gloas network.
+ 
+ The supplied scratch TOML keeps the original token allocations and vote durations, but assigns
+diff --git a/hardhat.config.ts b/hardhat.config.ts
+index 078bc9b0c..a7357dd4c 100644
+--- a/hardhat.config.ts
++++ b/hardhat.config.ts
+@@ -69,7 +69,7 @@ const config: HardhatUserConfig = {
+     },
+     // Panda starts this real Geth endpoint in the integration suite before hook.
+     "panda": {
+-      url: `http://127.0.0.1:${process.env.PANDA_PORT || "18547"}`,
++      url: process.env.PANDA_URL || `http://127.0.0.1:${process.env.PANDA_PORT || "18547"}`,
+       chainId: 1337,
+       accounts: ["0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"],
+       timeout: 120_000,
+diff --git a/lib/panda/index.ts b/lib/panda/index.ts
+index 6ebb763f3..89352aa90 100644
+--- a/lib/panda/index.ts
++++ b/lib/panda/index.ts
+@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
+ import { ChildProcess, spawn } from "node:child_process";
+ import { randomUUID } from "node:crypto";
+ import { createWriteStream } from "node:fs";
+-import { mkdir, readFile } from "node:fs/promises";
++import { mkdir } from "node:fs/promises";
+ import path from "node:path";
+ import { createInterface } from "node:readline";
+ 
+@@ -12,9 +12,14 @@ export interface PandaStatus {
+   bake: string;
+   bakeKey: string;
+   slot: number;
++  automine: boolean;
+   el: { number: string; hash: string; timestamp: string };
+ }
+ 
++export interface WarpOptions {
++  mode: "honest" | "fast";
++}
++
+ /** Thin Node client: the Panda process owns Docker, EL/CL and protocol time. */
+ export class Panda {
+   private child?: ChildProcess;
+@@ -31,13 +36,33 @@ export class Panda {
+ 
+   static async start({
+     root = process.env.PANDA_ROOT,
++    url = process.env.PANDA_URL,
+     profile = "gloas",
+-    bake = process.env.PANDA_BAKE ?? "panda",
++    bake = process.env.PANDA_BAKE,
+     output = ".local/panda",
+     port = 0,
+   } = {}): Promise<Panda> {
+-    assert.ok(root, "Set PANDA_ROOT to the local Panda checkout with baked Docker images");
+     const id = `core-${randomUUID().slice(0, 8)}`;
++    if (url) {
++      const endpoint = new URL(url);
++      assert.ok(["http:", "https:"].includes(endpoint.protocol), "PANDA_URL must be HTTP(S)");
++      assert.equal(endpoint.pathname, "/", "PANDA_URL must be the controller root");
++      assert.ok(!endpoint.search && !endpoint.hash && !endpoint.username && !endpoint.password);
++      const directory = path.resolve(output, id);
++      const connection = new Panda("", id, directory, profile, bake ?? "", endpoint.origin);
++      const status = await connection.status();
++      assert.match(status.id, /^[a-z0-9][a-z0-9-]{0,39}$/);
++      assert.equal(status.profile, profile);
++      if (bake) assert.equal(status.bake, bake);
++      assert.match(status.bakeKey, /^[a-f0-9]{64}$/);
++      assert.equal(BigInt(status.el.number), 0n, "Panda must start a fresh chain");
++      assert.equal(status.slot, 0, "Panda must start at genesis");
++      assert.equal(status.automine, false, "The suite owns automine setup");
++      await mkdir(directory, { recursive: true });
++      return new Panda("", status.id, directory, profile, status.bake, endpoint.origin);
++    }
++    assert.ok(root, "Set PANDA_ROOT for local startup or PANDA_URL for a running service");
++    bake ??= "panda";
+     const panda = new Panda(path.resolve(root), id, path.resolve(output, id), profile, bake);
+     await mkdir(panda.directory, { recursive: true });
+     const log = createWriteStream(path.join(panda.directory, "network.log"));
+@@ -122,8 +147,8 @@ export class Panda {
+   advanceSlots(count: number): Promise<void> {
+     return this.rpc("advanceSlots", [count], true);
+   }
+-  advanceTo(timestamp: number): Promise<void> {
+-    return this.rpc("advanceTo", [timestamp], true);
++  advanceTo(timestamp: number, options?: WarpOptions): Promise<void> {
++    return this.rpc("advanceTo", options ? [timestamp, options] : [timestamp], true);
+   }
+   setAutomine(enabled: boolean): Promise<void> {
+     return this.rpc("setAutomine", [enabled], true);
+@@ -131,32 +156,12 @@ export class Panda {
+ 
+   /** Import an EIP-2335 key so newly deposited validators can perform their duties. */
+   async importValidator(keystore: string, password: string): Promise<void> {
+-    const result = await this.keymanager<{ data: { status: string; message?: string }[] }>("/eth/v1/keystores", {
+-      keystores: [keystore],
+-      passwords: [password],
+-    });
+-    assert.equal(result.data[0]?.status, "imported", result.data[0]?.message);
++    await this.rpc("importValidator", [keystore, password], true);
+   }
+ 
+   async exitValidator(pubkey: string): Promise<void> {
+     assert.match(pubkey, /^0x[0-9a-f]{96}$/i);
+-    const signed = await this.keymanager<{ data: unknown }>(`/eth/v1/validator/${pubkey}/voluntary_exit`);
+-    await this.beacon("/eth/v1/beacon/pool/voluntary_exits", signed.data);
+-  }
+-
+-  private async keymanager<T>(route: string, body?: unknown): Promise<T> {
+-    const manifest = JSON.parse(await readFile(path.join(this.root, ".panda", this.id, "manifest.json"), "utf8"));
+-    assert.equal(manifest.config.id, this.id);
+-    assert.equal(new URL(manifest.vc).hostname, "127.0.0.1");
+-    const token = (await readFile(path.join(manifest.directory, "validator-keys/keys/api-token.txt"), "utf8")).trim();
+-    const response = await fetch(`${manifest.vc}${route}`, {
+-      method: "POST",
+-      headers: { "authorization": `Bearer ${token}`, "content-type": "application/json" },
+-      body: body === undefined ? undefined : JSON.stringify(body),
+-      signal: AbortSignal.timeout(60_000),
+-    });
+-    assert.ok(response.ok, `Validator keymanager: HTTP ${response.status}`);
+-    return (await response.json()) as T;
++    await this.rpc("exitValidator", [pubkey], true);
+   }
+ 
+   async close(): Promise<void> {
+diff --git a/test/integration/panda/README.md b/test/integration/panda/README.md
+index a9f77249e..c4f675c3c 100644
+--- a/test/integration/panda/README.md
++++ b/test/integration/panda/README.md
+@@ -8,11 +8,16 @@ when a test fails.
+ PANDA_ROOT=/path/to/panda yarn test:integration:panda --bail
+ ```
+ 
+-The Panda checkout must already have the local `gloas:panda` bake and its Docker images; `PANDA_BAKE`
++For local startup, the Panda checkout must already have the `gloas:panda` bake and its Docker images; `PANDA_BAKE`
+ selects another compatible tag. The test starts containers; it does not build clients. Node, Yarn,
+ Forge and `just` are the same prerequisites as scratch deployment. Hardhat uses port 18547 by default;
+ `PANDA_PORT` selects another local port.
+ 
++For a container service, use `PANDA_URL=http://127.0.0.1:18547 yarn test:integration:panda --bail`.
++The service must provide fresh Gloas genesis with automine off; the suite performs its own deployment
++and warmup. This mode needs no Panda checkout or Deno on the test runner. The client leaves the service
++running after the suite. The **Integration Tests Panda** workflow accepts its immutable image digest.
++
+ Read [verifiers.integration.ts](verifiers.integration.ts) for the scenarios. Network lifecycle and
+ HTTP calls live in `lib/panda/index.ts`; protocol fixture setup, the existing scratch command, and
+ SSZ proof construction live in `helpers/`. Tests use Hardhat's real-network provider, TypeChain,
+@@ -54,8 +59,8 @@ receipts under `.local/panda/core-<id>/`. The SDK asserts fresh genesis before d
+ witness is anchored only after its complete reconstructed state root matches Lighthouse and its
+ beacon root matches both the EL child header and EIP-4788.
+ 
+-The current bake implements large `advanceTo` jumps using skipped slots and real state transitions.
+-The exit/history scenarios explicitly exercise that path. They do **not** certify complete validator
++The exit/history scenarios explicitly call `advanceTo(..., { mode: "fast" })`, using skipped slots
++and real state transitions. The client's omitted mode preserves Panda's honest default. These fast scenarios do **not** certify complete validator
+ duty coverage or absence of missed-duty penalties. Voting and validator activation advance full
+ slots. Protocol delays and fork constants are unchanged.
+ 
+diff --git a/test/integration/panda/helpers/protocol.ts b/test/integration/panda/helpers/protocol.ts
+index 34b1185ff..e54161010 100644
+--- a/test/integration/panda/helpers/protocol.ts
++++ b/test/integration/panda/helpers/protocol.ts
+@@ -383,7 +383,7 @@ export class Protocol {
+       boundary = (Math.floor(oldSlot / 8192) + 1) * 8192;
+     // Explicit time-jump scenario: the current bake skips empty slots. This tests
+     // real historical transitions, not complete validator duty/economics coverage.
+-    await this.panda.advanceTo(Number(this.genesis.genesis_time) + boundary * 12 + 11.5);
++    await this.panda.advanceTo(Number(this.genesis.genesis_time) + boundary * 12 + 11.5, { mode: "fast" });
+     const recent = await this.capture("historical-anchor");
+     const index = Math.floor(oldSlot / 8192);
+     const roots = State.fields.block_roots.node(recent.state.block_roots);
+@@ -426,7 +426,7 @@ export class Protocol {
+     const earliest = BigInt(this.genesis.genesis_time) + (await this.exitVerifier.SHARD_COMMITTEE_PERIOD_IN_SECONDS());
+     const eligible = delivered > earliest ? delivered : earliest;
+     const deadline = eligible + (await this.nor.exitDeadlineThreshold(0)) + 24n;
+-    await this.panda.advanceTo(Number(deadline) + 11.5);
++    await this.panda.advanceTo(Number(deadline) + 11.5, { mode: "fast" });
+   }
+   expectExitDelayEvent(receipt: TransactionReceipt, pubkey: string): void {
+     const events = receipt.logs
+diff --git a/.github/workflows/tests-integration-panda.yml b/.github/workflows/tests-integration-panda.yml
+new file mode 100644
+index 000000000..01c52ff71
+--- /dev/null
++++ b/.github/workflows/tests-integration-panda.yml
+@@ -0,0 +1,72 @@
++name: Integration Tests Panda
++
++on:
++  workflow_dispatch:
++    inputs:
++      image:
++        description: Published Gloas image pinned by digest (ghcr.io/eddort/panda-gloas@sha256:...)
++        required: true
++        type: string
++
++permissions:
++  contents: read
++  packages: read
++
++jobs:
++  select:
++    runs-on: ubuntu-24.04
++    outputs:
++      image: ${{ steps.select.outputs.image }}
++    steps:
++      - id: select
++        env:
++          PANDA_IMAGE: ${{ inputs.image }}
++        run: |
++          [[ "$PANDA_IMAGE" =~ ^ghcr\.io/eddort/panda-gloas@sha256:[a-f0-9]{64}$ ]]
++          echo "image=$PANDA_IMAGE" >> "$GITHUB_OUTPUT"
++
++  test:
++    needs: select
++    runs-on: ubuntu-24.04
++    timeout-minutes: 120
++    env:
++      PANDA_URL: http://127.0.0.1:18547
++      NODE_OPTIONS: --max_old_space_size=10240
++    services:
++      panda:
++        image: ${{ needs.select.outputs.image }}
++        credentials:
++          username: ${{ github.actor }}
++          password: ${{ secrets.PANDA_REGISTRY_TOKEN || secrets.GITHUB_TOKEN }}
++        ports:
++          - 127.0.0.1:18547:8545
++        options: --privileged --stop-timeout 120 --label io.panda.id=lido-ci-${{ github.run_id }}-${{ github.run_attempt }}
++    steps:
++      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
++      - name: Common setup
++        uses: ./.github/workflows/setup
++      - name: Install foundry
++        uses: foundry-rs/foundry-toolchain@908c540300062bd5a7e473851cdb4282204cee09 # v1.9.1
++        with:
++          version: v1.7.1
++      - name: Install just
++        run: cargo install just --locked
++      - run: cp .env.example .env
++      - name: Check external-service client
++        run: node --test scripts/tests/panda-client.test.cjs
++      # The suite checks block zero and owns deployment, warmup, automine and time controls.
++      - name: Run existing Panda integration suite
++        run: yarn test:integration:panda --bail
++      - name: Save Panda service logs
++        if: always()
++        env:
++          SERVICE_ID: ${{ job.services.panda.id }}
++        run: |
++          mkdir -p .local/panda
++          docker logs "$SERVICE_ID" > .local/panda/service.log 2>&1
++      - name: Upload Panda evidence
++        if: always()
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
++        with:
++          name: panda-integration-${{ github.run_attempt }}
++          path: .local/panda/
+diff --git a/scripts/tests/panda-client.test.cjs b/scripts/tests/panda-client.test.cjs
+new file mode 100644
+index 000000000..12d0fb0db
+--- /dev/null
++++ b/scripts/tests/panda-client.test.cjs
+@@ -0,0 +1,59 @@
++const assert = require("node:assert/strict");
++const { test } = require("node:test");
++const http = require("node:http");
++const fs = require("node:fs/promises");
++const os = require("node:os");
++const path = require("node:path");
++require("ts-node/register/transpile-only");
++const { Panda } = require("../../lib/panda/index.ts");
++
++test("external Panda needs no checkout, preserves fresh genesis and does not own shutdown", async () => {
++  const output = await fs.mkdtemp(path.join(os.tmpdir(), "panda-client-"));
++  const methods = [];
++  const advances = [];
++  let block = "0x0";
++  const server = http.createServer(async (req, res) => {
++    let text = "";
++    for await (const chunk of req) text += chunk;
++    const request = JSON.parse(text);
++    methods.push(request.method);
++    if (request.method === "advanceTo") advances.push(request.params);
++    res.setHeader("content-type", "application/json");
++    res.end(
++      JSON.stringify({
++        result:
++          request.method === "status"
++            ? {
++                id: "service-unit",
++                profile: "gloas",
++                bake: "r1",
++                bakeKey: "a".repeat(64),
++                slot: 0,
++                automine: false,
++                el: { number: block },
++              }
++            : null,
++      }),
++    );
++  });
++  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
++  const url = `http://127.0.0.1:${server.address().port}`;
++  try {
++    const panda = await Panda.start({ url, root: "/nonexistent-panda", output, bake: "r1" });
++    assert.equal(panda.url, url);
++    assert.equal(panda.id, "service-unit");
++    await panda.importValidator("{}", "password");
++    await panda.exitValidator(`0x${"ab".repeat(48)}`);
++    await panda.advanceTo(2000000000);
++    await panda.advanceTo(2000098304, { mode: "fast" });
++    assert.deepEqual(advances, [[2000000000], [2000098304, { mode: "fast" }]]);
++    await panda.close();
++    assert.deepEqual(methods, ["status", "importValidator", "exitValidator", "advanceTo", "advanceTo"]);
++    block = "0x1";
++    await assert.rejects(Panda.start({ url, root: "/nonexistent-panda", output, bake: "r1" }), /fresh chain/);
++    assert.equal(methods.includes("shutdown"), false);
++  } finally {
++    await new Promise((resolve) => server.close(resolve));
++    await fs.rm(output, { recursive: true, force: true });
++  }
++});

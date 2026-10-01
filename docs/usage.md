@@ -65,6 +65,17 @@ To connect to a running controller, use `new Devnet("http://127.0.0.1:8545")`. `
 `await using` stop only an instance created by that object. Connecting to another controller does
 not transfer ownership of its lifecycle.
 
+`await net.importValidator(keystoreJson, password)` imports one EIP-2335 keystore through
+Lighthouse's keymanager. `await net.exitValidator(pubkey)` asks Lighthouse to sign a voluntary exit
+and submits it to the Beacon API. Both operations run in the controller, alongside serialized time
+controls; the caller does not need access to Panda's files or keymanager token. Lighthouse validates
+keys, signatures and consensus conditions. Importing an existing key is reported as an error.
+
+The HTTP equivalents are `POST /control` with
+`{"method":"importValidator","params":["<EIP-2335 JSON>","<password>"]}` and
+`{"method":"exitValidator","params":["0x<48-byte-pubkey>"]}`. See [CI images](ci-containers.md) to
+use the same API from a container service.
+
 ## Protocol time
 
 `advanceTime` accepts seconds with millisecond precision. `advanceTo` accepts a Unix timestamp in

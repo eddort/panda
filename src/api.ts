@@ -63,6 +63,12 @@ export class Devnet {
   setAutomine(enabled: boolean): Promise<void> {
     return this.call("setAutomine", [enabled]);
   }
+  importValidator(keystore: string, password: string): Promise<void> {
+    return this.call("importValidator", [keystore, password]);
+  }
+  exitValidator(pubkey: string): Promise<void> {
+    return this.call("exitValidator", [pubkey]);
+  }
   rpc<T = unknown>(method: string, params: unknown[] = []): Promise<T> {
     return rpc(this.url, method, params);
   }

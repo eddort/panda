@@ -1,0 +1,79 @@
+name: Publish Lighthouse images
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Registered hardfork name, or all. Upstream and baker versions come from its recipe.
+        required: true
+        default: all
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  select:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: sh scripts/bootstrap.sh
+      - id: select
+        env:
+          PROFILE: ${{ inputs.profile }}
+        run: ./scripts/deno run -A scripts/lighthouse_ci.ts matrix "$PROFILE"
+
+  lighthouse:
+    needs: select
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.select.outputs.matrix) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    concurrency:
+      group: panda-lighthouse-${{ matrix.profile }}-${{ matrix.tag }}
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: write
+    env:
+      PROFILE: ${{ matrix.profile }}
+      BAKE: ${{ matrix.bake }}
+      CARGO_BUILD_JOBS: 2
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: sh scripts/bootstrap.sh
+      - name: Resolve upstream/baker version in the registry
+        id: client
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/deno run -A scripts/lighthouse_ci.ts resolve "$PROFILE"
+      - run: ./scripts/deno task check && ./scripts/deno task test
+      - name: Reuse published Lighthouse or compile the new upstream/baker pair
+        env:
+          LIGHTHOUSE_DIGEST: ${{ steps.client.outputs.digest }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -n "$LIGHTHOUSE_DIGEST" ]; then
+            ./scripts/deno task bake "$PROFILE" --tag "$BAKE" --reuse-cl "$LIGHTHOUSE_DIGEST"
+          else
+            ./scripts/deno task bake "$PROFILE" --tag "$BAKE"
+          fi
+      - name: Verify the real EL/CL combination
+        run: ./scripts/deno task test:profile "$PROFILE" --bake "$BAKE"
+      - name: Publish or reuse Lighthouse and produce the client lock
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/deno run -A scripts/lighthouse_ci.ts publish "$PROFILE"
+      - name: Upload client lock and verification
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: lighthouse-${{ matrix.profile }}-${{ matrix.tag }}
+          include-hidden-files: true
+          path: |
+            .cache/client-releases/${{ matrix.profile }}/
+            reports/profiles/${{ matrix.profile }}/${{ matrix.bake }}/
+            bakes/${{ matrix.profile }}/tags/${{ matrix.bake }}.json

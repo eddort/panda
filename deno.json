@@ -6,7 +6,7 @@
     "reset": "./scripts/deno run -A src/cli.ts reset",
     "test": "./scripts/deno test -A tests",
     "test:baker": "PANDA_DOCKER_TEST=1 ./scripts/deno test -A tests/baker_test.ts tests/docker_test.ts",
-    "check": "./scripts/deno fmt --check && ./scripts/deno lint && ./scripts/deno check src/*.ts scripts/*.ts tests/*.ts bakes/*/tests/*.ts",
+    "check": "./scripts/deno fmt --check && ./scripts/deno lint && ./scripts/deno check src/*.ts scripts/*.ts container/*.ts tests/*.ts bakes/*/tests/*.ts",
     "smoke:docker": "./scripts/deno run -A scripts/smoke_docker.ts",
     "baseline": "./scripts/deno run -A scripts/baseline.ts",
     "profile": "./scripts/deno run -A scripts/profile.ts",
@@ -24,6 +24,10 @@
     "bake": "./scripts/deno run -A scripts/bake.ts",
     "test:profile": "./scripts/deno run -A scripts/test_profile.ts",
     "bakes": "./scripts/deno run -A scripts/bakes.ts",
+    "package:image": "./scripts/deno run -A scripts/package_image.ts",
+    "test:image": "./scripts/deno run -A scripts/test_image.ts",
+    "clients:pin": "./scripts/deno run -A scripts/clients.ts pin",
+    "clients:restore": "./scripts/deno run -A scripts/clients.ts restore",
     "e2e:warp-fast": "./scripts/deno run -A bakes/shared/tests/warp_fast.ts"
   }
 }

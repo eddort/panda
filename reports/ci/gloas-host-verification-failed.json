@@ -1,0 +1,23 @@
+{
+  "profile": "gloas",
+  "tag": "panda",
+  "bakeKey": "8716953f4b576b861c7fef5d0487a0b9e5a5d122615dbc0e5210e82bdc2907cf",
+  "runId": "437e8224-b0b1-475c-b33b-7c14a7702e1a",
+  "suiteHash": "b98e36e97ac0dded61d2a03da69cb66826e4b740ea2bed80dc0f75a096dbd6f4",
+  "startedAt": "2026-09-30T11:58:42.817Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "protocol",
+    "withdrawal",
+    "deploy",
+    "gloas"
+  ],
+  "finishedAt": "2026-09-30T12:04:31.386Z",
+  "elapsedMs": 348631.644583,
+  "passed": false,
+  "status": "failed",
+  "error": "Error: Test process exited 1"
+}
