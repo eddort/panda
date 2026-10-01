@@ -1,0 +1,7 @@
+Check tests/warp_rewards_test.ts
+running 2 tests from ./tests/warp_rewards_test.ts
+long honest warp captures each closed epoch before historical states are pruned ... ok (413ms)
+reward collection propagates missing evidence instead of claiming no penalties ... ok (2ms)
+
+ok | 2 passed | 0 failed (418ms)
+

@@ -100,10 +100,26 @@ Protocol time is explicit and can run ahead of the host clock. Use `advanceSlots
 `advanceUntil(predicate, options)` to wait for a condition within a slot budget and a real-time
 deadline. Time only moves forward, and advancing it still requires client computation.
 
-`advanceTime(seconds)` advances by a duration; `advanceTo(timestampOrDate)` targets a specific time.
-Large `advanceTime`/`advanceTo` jumps skip intermediate blocks and votes, then produce a destination
-block. `skipSlots(n)` also skips the destination block. Skipping can delay finality and incur
-inactivity penalties; use `advanceSlots`/`advanceEpochs` for continuous participation.
+`advanceTime(seconds, options)` advances by a duration; `advanceTo(timestampOrDate, options)`
+targets a specific time. Both offer two modes on the same bake:
+
+- **`honest` (default):** execute every intermediate phase, block and validator duty up to the exact
+  target. The historical estimate for Gloas `direct-sync` is roughly 13 minutes for 8192 slots; the
+  complete long-run acceptance remains open.
+- **`fast`:** for jumps over 32 slots, finish current duties, skip the gap and produce the
+  destination slot. Real missed-duty penalties and delayed finality are expected. Slashing
+  protection remains enabled; conflicting signatures are a bug in either mode.
+
+```ts
+await net.advanceTime(8192 * 12); // Honest, continuous participation.
+await net.advanceTime(8192 * 12, { mode: "fast" }); // Explicit downtime and its penalties.
+```
+
+`skipSlots(n)` remains the lower-level downtime operation without producing the destination block.
+Fast regression tests require the jump plus the next transaction within 25 seconds. Honest tests
+retain economic and full-duty assertions with a separate long watchdog. See
+[the algorithm walkthrough](docs/warp-algorithm.md) for phase barriers, fast recovery and failure
+semantics, and [mode validation](docs/warp-modes.md) for measured results and remaining checks.
 
 ## Scope and limitations
 
@@ -141,6 +157,8 @@ reports. Keep resource measurements separate from other devnet tests.
 ## Documentation
 
 - [Usage guide](docs/usage.md) — configuration, API details, ethers settings and troubleshooting.
+- [Time and warp algorithm](docs/warp-algorithm.md) — start here to understand honest/fast modes,
+  execution phases, validator duties, recovery and the source files involved.
 - [Architecture](docs/architecture.md) — clock boundaries, client patches and Engine API
   coordination.
 - [Project plan](docs/plan.md) — completed work and next steps.

@@ -1,0 +1,22 @@
+Check tests/warp_rewards_test.ts
+running 2 tests from ./tests/warp_rewards_test.ts
+long honest warp captures each closed epoch before historical states are pruned ... FAILED (416ms)
+reward collection propagates missing evidence instead of claiming no penalties ... ok (534µs)
+
+ ERRORS 
+
+long honest warp captures each closed epoch before historical states are pruned => ./tests/warp_rewards_test.ts:4:6
+error: Error: pruned reward state for epoch 4
+    if (epoch < head - 3) throw new Error(`pruned reward state for epoch ${epoch}`);
+                                ^
+    at result (file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/warp_rewards_test.ts:13:33)
+    at captureWarpRewards (file:///Users/lexdort/.codex/worktrees/2b62/zap-net/bakes/shared/tests/warp_rewards.ts:18:42)
+    at async file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/warp_rewards_test.ts:9:18
+
+ FAILURES 
+
+long honest warp captures each closed epoch before historical states are pruned => ./tests/warp_rewards_test.ts:4:6
+
+FAILED | 1 passed | 1 failed (419ms)
+
+error: Test failed

@@ -3,7 +3,10 @@ import { profileName, profiles } from "../src/profiles.ts";
 const profile = profileName(Deno.env.get("PANDA_PROFILE") ?? "pectra");
 const descriptions: Record<string, string> = {
   e2e: "time travel, pause, automine, finality and external indexer",
-  warp: "large jumps finish in seconds and restore finality without slashable signatures",
+  warp: "honest large jumps preserve every duty, economics and signing history",
+  "warp-fast":
+    "fast skips preserve signing history, support the next transaction and resume finality",
+  "warp-economics": "full participation, no attestation penalties and finality at warp return",
   protocol: "deposit, activation and consolidation",
   withdrawal: "signed voluntary exit and complete withdrawal",
   deploy: "sequential RPC and ethers contract deployments",

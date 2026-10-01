@@ -14,6 +14,7 @@
     "build:clients": "./scripts/deno run -A scripts/build.ts",
     "e2e": "./scripts/deno run -A bakes/shared/tests/e2e.ts",
     "e2e:warp": "./scripts/deno run -A bakes/shared/tests/warp.ts",
+    "e2e:warp-economics": "./scripts/deno run -A bakes/shared/tests/warp_economics.ts",
     "e2e:withdrawal": "./scripts/deno run -A bakes/shared/tests/withdrawal.ts",
     "e2e:protocol": "./scripts/deno run -A bakes/shared/tests/protocol.ts",
     "e2e:deploy": "./scripts/deno run -A bakes/shared/tests/deploy.ts",
@@ -22,6 +23,7 @@
     "measure": "./scripts/deno run -A scripts/measure.ts",
     "bake": "./scripts/deno run -A scripts/bake.ts",
     "test:profile": "./scripts/deno run -A scripts/test_profile.ts",
-    "bakes": "./scripts/deno run -A scripts/bakes.ts"
+    "bakes": "./scripts/deno run -A scripts/bakes.ts",
+    "e2e:warp-fast": "./scripts/deno run -A bakes/shared/tests/warp_fast.ts"
   }
 }

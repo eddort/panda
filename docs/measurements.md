@@ -131,9 +131,10 @@ Finality was checked by equality of the Beacon finalized block's execution hash 
 seconds), using **explicit skipped slots** for long waits and retaining real inactivity penalties.
 Its first large payout was 31.711599587 ETH; final validator balance is zero. It did not fabricate
 votes/finality during skipped periods. That original implementation processed all intervening slots
-in `advanceTime`/`advanceTo`. The current API skips intermediate slots for jumps larger than an
-epoch and produces a real destination block; `advanceSlots`/`advanceEpochs` preserve continuous
-block production.
+in `advanceTime`/`advanceTo`. The September 29 implementation then skipped intermediate slots for
+large jumps. The September 30 TDD change restores continuous duties; its performance and acceptance
+gaps are recorded in [warp-tdd-results.md](warp-tdd-results.md). Historical skip timings do not
+describe this new path.
 
 Consolidation is explicitly tested with `churnLimitQuotient: 4`: the default mainnet quotient 65536
 leaves no consolidation capacity at 64 validators. The default exit/withdrawal test keeps 65536 and

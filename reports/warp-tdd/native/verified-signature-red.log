@@ -1,0 +1,45 @@
+   Compiling bls v0.2.0 (/source/crypto/bls)
+warning: function `verify` is never used
+  --> crypto/bls/tests/../src/impls/panda_verified_signature.rs:20:8
+   |
+20 | pub fn verify(signature: &Signature, pubkey: &PublicKey, message: [u8; 32]) -> bool {
+   |        ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: `bls` (test "panda_verified_signature") generated 1 warning
+    Finished `release` profile [optimized] target(s) in 0.94s
+     Running tests/panda_verified_signature.rs (/target/release/deps/panda_verified_signature-054cd6172efe51f1)
+
+running 4 tests
+
+thread 'verification::tests::identical_subnet_messages_are_verified_once' panicked at crypto/bls/tests/../src/impls/panda_verified_signature.rs:41:9:
+assertion `left == right` failed
+  left: 4
+ right: 1
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+test verification::tests::identical_subnet_messages_are_verified_once ... FAILED
+test verification::tests::cached_success_cannot_accept_another_key_root_domain_or_signature ... ok
+test verification::tests::concurrent_lookups_do_not_cross_contaminate_messages ... ok
+test verification::tests::old_successes_are_evicted_and_reverified ... FAILED
+
+failures:
+
+failures:
+    verification::tests::identical_subnet_messages_are_verified_once
+    verification::tests::old_successes_are_evicted_and_reverified
+
+
+thread 'verification::tests::old_successes_are_evicted_and_reverified' panicked at crypto/bls/tests/../src/impls/panda_verified_signature.rs:77:9:
+assertion `left == right` failed
+  left: 515
+ right: 514
+test result: FAILED. 2 passed; 2 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+
+error: test failed, to rerun pass `-p bls --test panda_verified_signature`
+error: Uncaught (in promise) Error: Native tests exited 101
+ if(StatusCode) throw Error(`Native tests exited ${StatusCode}`);
+                      ^
+    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/.cache/warp-native/run_test.ts:25:23
+    at processTicksAndRejections (ext:core/01_core.js:405:7)
+    at drainTicks (ext:core/01_core.js:432:5)

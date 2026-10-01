@@ -39,6 +39,13 @@ Deno.test("each hardfork's timeline executes its declared phases and completes a
   }
   assert(Object.hasOwn(profiles.gloas.tests, "gloas"));
   for (const profile of Object.values(profiles)) {
+    assert.equal(Reflect.get(profile.tests, "warp-fast"), "bakes/shared/tests/warp_fast.ts");
+    assert.equal(
+      Reflect.get(profile.tests, "warp-economics"),
+      "bakes/shared/tests/warp_economics.ts",
+    );
+  }
+  for (const profile of Object.values(profiles)) {
     for (const scenario of ["e2e", "protocol", "withdrawal", "deploy"]) {
       assert(Object.hasOwn(profile.tests, scenario));
     }

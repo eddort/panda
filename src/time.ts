@@ -1,6 +1,20 @@
 export const SLOT_MS = 12_000;
 export const SLOTS_PER_EPOCH = 32;
 export const PHASES = [0, 4_000, 6_000, 8_000, 9_000, 11_500] as const;
+export type WarpMode = "honest" | "fast";
+export interface WarpOptions {
+  /** Honest executes every duty; fast permits empty slots and their inactivity penalties. */
+  mode?: WarpMode;
+}
+export function warpMode(options: unknown = {}): WarpMode {
+  if (options === null || typeof options !== "object" || Array.isArray(options)) {
+    throw new Error("Warp options must be an object");
+  }
+  const mode = (options as WarpOptions).mode;
+  if (mode === undefined) return "honest";
+  if (mode !== "honest" && mode !== "fast") throw new Error("Warp mode must be honest or fast");
+  return mode;
+}
 export interface TimeBackend {
   move(nowMs: number, phase?: number): Promise<void>;
   skip?(nowMs: number): Promise<void>;
@@ -76,21 +90,24 @@ export class Timeline {
       throw error;
     }
   }
-  advanceTo(timestamp: number): Promise<void> {
+  advanceTo(timestamp: number, options?: WarpOptions): Promise<void> {
     const target = milliseconds(timestamp);
-    return this.exclusive(() => this.warpTo(target));
+    const mode = warpMode(options);
+    return this.exclusive(() => this.warpTo(target, mode));
   }
-  advanceTime(seconds: number): Promise<void> {
+  advanceTime(seconds: number, options?: WarpOptions): Promise<void> {
     const duration = milliseconds(seconds);
-    return this.exclusive(() => this.warpTo(this.nowMs + duration));
+    const mode = warpMode(options);
+    return this.exclusive(() => this.warpTo(this.nowMs + duration, mode));
   }
-  /** Large jumps use empty slots and a real block at the destination.
-   * advanceSlots/advanceEpochs explicitly preserve continuous production. */
-  private async warpTo(target: number): Promise<void> {
+  private async warpTo(target: number, mode: WarpMode): Promise<void> {
     integer(target, "target milliseconds");
     if (target < this.nowMs) throw new Error("Protocol time can only move forward");
     const targetSlot = Math.floor((target - this.genesisMs) / SLOT_MS);
-    if (this.backend.skip && targetSlot - this.slot > SLOTS_PER_EPOCH) {
+    if (mode === "fast" && targetSlot - this.slot > SLOTS_PER_EPOCH) {
+      if (!this.backend.skip) throw new Error("This backend does not support fast slot skipping");
+      // Preserve the established skip algorithm: complete current duties, restart the VC with
+      // its slashing DB at the end of the gap, then produce the destination slot normally.
       await this.to(Math.max(this.nowMs, this.genesisMs + this.slot * SLOT_MS + 11_500));
       const beforeDestination = this.genesisMs + (targetSlot - 1) * SLOT_MS + 11_500;
       try {

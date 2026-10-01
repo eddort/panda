@@ -1,0 +1,147 @@
+{
+  "scope": "Targeted two-mode regressions, not a complete profile verification or full honest 8192-slot acceptance",
+  "results": [
+    {
+      "name": "gloas-fast",
+      "source": "reports/profiles/gloas/direct-sync/warp-fast.json",
+      "sha256": "5fe9bf681d1cac7f563c39e0d855d0c0f8437fe9477d0145489a656397d9f932",
+      "passed": true,
+      "bakeKey": "e41c863be72847fb1bec8e0b455e23f243cb27d8e73d3ce90ea8f5be6e78c0c8",
+      "recordedAt": "2026-09-30T16:24:21.435Z",
+      "samples": [
+        {
+          "advanceMs": 8142.552,
+          "slots": 8192,
+          "readyMs": 8286.051666999996
+        },
+        {
+          "advanceMs": 8492.457957999999,
+          "slots": 8192,
+          "readyMs": 8633.266500000005
+        }
+      ]
+    },
+    {
+      "name": "pectra-fast",
+      "source": "reports/profiles/pectra/panda/warp-fast.json",
+      "sha256": "1459286e892d8b9aaec365bc80787f728360bb9d39b60f333c0559b8a5523aae",
+      "passed": true,
+      "bakeKey": "96b5d5a260d902e7a6abacbd745c89072a7f17407ac3d526d8240fd32dd884da",
+      "recordedAt": "2026-09-30T16:28:50.079Z",
+      "samples": [
+        {
+          "advanceMs": 14845.316667,
+          "slots": 8192,
+          "readyMs": 15181.325000000004
+        },
+        {
+          "advanceMs": 15168.589124999999,
+          "slots": 8192,
+          "readyMs": 15509.838124999995
+        }
+      ]
+    },
+    {
+      "name": "gloas-honest-short",
+      "source": "reports/profiles/gloas/direct-sync/warp-96.json",
+      "sha256": "b5d55ba9afbf8353a50e175e80c4fb543d1e0a800f1a5c8ed62ff1e8cd16c209",
+      "passed": true,
+      "bakeKey": "e41c863be72847fb1bec8e0b455e23f243cb27d8e73d3ce90ea8f5be6e78c0c8",
+      "recordedAt": "2026-09-30T16:30:55.015Z",
+      "samples": [
+        {
+          "advanceMs": 8484.833416999998,
+          "slots": 96,
+          "readyMs": 8591.872458000002
+        },
+        {
+          "advanceMs": 8557.495625000003,
+          "slots": 96,
+          "readyMs": 8662.406541999997
+        }
+      ]
+    },
+    {
+      "name": "gloas-economics",
+      "source": "reports/profiles/gloas/direct-sync/warp-economics.json",
+      "sha256": "2b6025541978912206e0063535c3eded8dbed67167725d99166f8eb762ab0669",
+      "passed": true,
+      "bakeKey": "e41c863be72847fb1bec8e0b455e23f243cb27d8e73d3ce90ea8f5be6e78c0c8",
+      "recordedAt": "2026-09-30T16:32:37.255Z",
+      "samples": [
+        {
+          "method": "advanceTime",
+          "elapsedMs": 8526.304125000002,
+          "nextTransactionMs": 106.08087499999965,
+          "warpAndNextTransactionMs": 8632.385000000002
+        },
+        {
+          "method": "advanceTo",
+          "elapsedMs": 8489.81925,
+          "nextTransactionMs": 99.74662499999977,
+          "warpAndNextTransactionMs": 8589.565875
+        }
+      ]
+    },
+    {
+      "name": "pectra-economics",
+      "source": "reports/profiles/pectra/panda/warp-economics.json",
+      "sha256": "d5ce53faab6ee94bc278bc32090bebe0728aafa084d1d2fc5bd5f92f88db268c",
+      "passed": true,
+      "bakeKey": "96b5d5a260d902e7a6abacbd745c89072a7f17407ac3d526d8240fd32dd884da",
+      "recordedAt": "2026-09-30T16:35:11.654Z",
+      "samples": [
+        {
+          "method": "advanceTime",
+          "elapsedMs": 32222.754041000007,
+          "nextTransactionMs": 371.1188750000001,
+          "warpAndNextTransactionMs": 32593.872916000008
+        },
+        {
+          "method": "advanceTo",
+          "elapsedMs": 32038.54066700001,
+          "nextTransactionMs": 465.7451250000013,
+          "warpAndNextTransactionMs": 32504.28579200001
+        }
+      ]
+    }
+  ],
+  "testNetworkIds": [
+    "warp-30841d0e",
+    "warp-527d806c",
+    "warp-9fd78188",
+    "economics-f0c92a93",
+    "economics-307bf5d1"
+  ],
+  "nativeInputsUnchanged": {
+    "bakes/gloas/lighthouse.patch": "9717ffa4a4d6cb94eadcb0dd5ce9a78736409be8401bffd8aad6700233c35274",
+    "bakes/shared/controlled_clock.rs": "87f9d148b720af705dd8d8deb3c22a4a3e1441c7af4bc988dee566101bf2c692",
+    "bakes/shared/controlled_clock_test.rs": "5a36b0b2713c708bddefd7011a5f8c0fdd038974b149ad84baefd2fa11d89f9e",
+    "bakes/shared/native/verified_signature.rs": "6746df67b0cf6893d889b36aad83183c21a21a3e46d135ce035cce52617ecf3e",
+    "bakes/shared/native/sync_batch.rs": "0d421c3f1e4b23842cee5ee079347600dba316ea460cf070d768c88fab3f818f",
+    "bakes/gloas/native/weighted_selection.rs": "e38a847e71364f1baa5a742e81b00fbcf5f11c3252708d9a4881b16dfdc426b3",
+    "bakes/gloas/native/prepare_skip.rs": "c6979a20ac079ab0768ff6335b1c5a11d9cd939b807d0ff1a3482507f8d09166",
+    "bakes/shared/native/direct_sync_test.rs": "292afa5a59fa9e5f00bf12a92b01a51488903ae948455a08b311d52907b353c9"
+  },
+  "finalSourceSha256": {
+    "src/api.ts": "6644837ca443b45ae3f02e85175e0c150168352cb1eafd00f8a99d1515406380",
+    "src/controller.ts": "05ee54e893a49e50063bb5d60e637426e09a3a6d9a3f02c618f1314c32952c0c",
+    "src/time.ts": "7bba62696e4c0bb21f2f89194f83f5552f2f3b66a6fd9d377d5c4083adcaf00c",
+    "bakes/shared/tests/warp.ts": "efb6cc35d95da07f1284c495125a806ae1856d34a04663ce81700001ef650599",
+    "bakes/shared/tests/warp_fast.ts": "85cfffa0cd179e8dff01ded753f40f12a4653768d7d3813532a9c4acdd934cc3",
+    "bakes/shared/tests/warp_rewards.ts": "2e6a6e0e40258490904f2902ca99f7236bcb62e76406c7e5bd882debb5321686",
+    "bakes/shared/tests/warp_economics.ts": "9d885f8b460eb8aec54500f8095eef549d7ed82c62888669799d8a338e2eb827",
+    "bakes/gloas/recipe.json": "850a29a40e569a489a0b97635b76d2e9aded0d233c7136d750b835e3ead0f0f9",
+    "bakes/pectra/recipe.json": "6a31f5fe1c2a62d5afe379b5942bbf8ae968fb7f9a020d5db5bf90733272d5fb",
+    "tests/time_test.ts": "904b926263d3d5e053d60e92d6155a16219d3dc2674c44457b01b959677130db",
+    "tests/warp_api_test.ts": "e2be082602b2427bf607f38300976c0e74e97b22f0a28f5e91dad33387effaea",
+    "tests/warp_rewards_test.ts": "87461b6a6aaa64a6f85340b3a846b866c63f1d0ac86012708464fab1f1876ca2",
+    "tests/profiles_test.ts": "7d5d879c0d50ceb859d6c6b7ad3fb5b93f583c0bfc4d280db1edf74edbd41842"
+  },
+  "notRun": [
+    "full honest two x 8192",
+    "complete profile suite",
+    "new Pectra direct-sync build",
+    "full honest lifecycle/failure matrix"
+  ]
+}

@@ -1,0 +1,23 @@
+Check tests/consensus_test.ts
+running 5 tests from ./tests/consensus_test.ts
+native completion barrier replaces mark polling ... ok (7ms)
+legacy bakes keep their existing mark protocol ... ok (643µs)
+native barrier must confirm every requested completion at the exact slot ... ok (962µs)
+native barrier timeout is a failure, not a polling fallback ... ok (797µs)
+direct sync requires BN coverage for the current root, independently of VC success ... FAILED (7ms)
+
+ ERRORS 
+
+direct sync requires BN coverage for the current root, independently of VC success => ./tests/consensus_test.ts:76:6
+error: AssertionError: Missing expected rejection.
+      else await assert.rejects(advancing, /Incomplete native barrier|head changed/i);
+           ^
+    at async file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:115:12
+
+ FAILURES 
+
+direct sync requires BN coverage for the current root, independently of VC success => ./tests/consensus_test.ts:76:6
+
+FAILED | 4 passed | 1 failed (22ms)
+
+error: Test failed

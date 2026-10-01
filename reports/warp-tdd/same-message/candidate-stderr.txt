@@ -1,0 +1,3 @@
+   Compiling panda-same-message-proof v0.1.0 (/source)
+    Finished `release` profile [optimized] target(s) in 0.36s
+     Running `/target/batch-proof/release/panda-same-message-proof --mode candidate`

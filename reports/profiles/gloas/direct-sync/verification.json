@@ -1,0 +1,21 @@
+{
+  "profile": "gloas",
+  "tag": "direct-sync",
+  "bakeKey": "e41c863be72847fb1bec8e0b455e23f243cb27d8e73d3ce90ea8f5be6e78c0c8",
+  "runId": "281493b3-ea1e-4c05-8156-7ba4d3553c12",
+  "suiteHash": "ddf9a851e6b1c708259189958a4599792365337cd416cc956366fdd354bb90d5",
+  "startedAt": "2026-09-30T14:17:57.338Z",
+  "scenarios": [
+    "baseline",
+    "lifecycle",
+    "e2e",
+    "warp",
+    "warp-economics",
+    "protocol",
+    "withdrawal",
+    "deploy",
+    "gloas"
+  ],
+  "passed": false,
+  "status": "running"
+}

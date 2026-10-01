@@ -1,0 +1,33 @@
+Check tests/consensus_test.ts
+running 5 tests from ./tests/consensus_test.ts
+native completion barrier replaces mark polling ... ok (9ms)
+legacy bakes keep their existing mark protocol ... ok (823µs)
+native barrier must confirm every requested completion at the exact slot ... ok (1ms)
+native barrier timeout is a failure, not a polling fallback ... ok (997µs)
+proposal waits for a VALID canonical Engine head before querying CL agreement ... FAILED (3ms)
+
+ ERRORS 
+
+proposal waits for a VALID canonical Engine head before querying CL agreement => ./tests/consensus_test.ts:77:6
+error: AssertionError: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
+    'bn',
+    'vc',
+-   'engine head',
+    'head read',
+    'agreement'
+  ]
+
+    assert.deepEqual(events, ["bn", "vc", "engine head", "head read", "agreement"]);
+           ^
+    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:104:12
+
+ FAILURES 
+
+proposal waits for a VALID canonical Engine head before querying CL agreement => ./tests/consensus_test.ts:77:6
+
+FAILED | 4 passed | 1 failed (21ms)
+
+error: Test failed

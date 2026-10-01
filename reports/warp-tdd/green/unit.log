@@ -1,0 +1,65 @@
+Task test ./scripts/deno test -A tests
+Check tests/automine_test.ts
+Check tests/bake_layout_test.ts
+Check tests/baker_test.ts
+Check tests/config_test.ts
+Check tests/docker_test.ts
+Check tests/e2e_test.ts
+Check tests/profiles_test.ts
+Check tests/time_test.ts
+Check tests/verification_test.ts
+Check tests/warp_assertions_test.ts
+running 3 tests from ./tests/automine_test.ts
+automine eligibility excludes nonce gaps, insufficient funds, fee caps and oversized gas ... ok (342µs)
+disabling automine waits for an in-flight pool check and prevents another slot ... ok (201µs)
+a notification during an empty pool check rechecks newly arrived work ... ok (219µs)
+running 5 tests from ./tests/bake_layout_test.ts
+profile inputs and executable suites are owned by the hardfork or shared bake directory ... ok (3ms)
+bake tag namespace is separate from recipe and shared module names ... ok (115µs)
+tag listing reads new and legacy manifests without treating recipes as artifacts ... ok (203ms)
+legacy and relocated copies may agree but conflicting immutable tags fail closed ... ok (1s)
+legacy native input paths recover relocated bytes only on an exact hash match ... ok (1s)
+running 2 tests from ./tests/baker_test.ts
+baker pins imports, reuses artifacts across tags and preserves a tag on failed replacement ... ignored (0ms)
+local bake archive restores the identical image after removal from Docker ... ignored (0ms)
+running 4 tests from ./tests/config_test.ts
+Panda environment selects the hardfork and bake; explicit options take precedence ... ok (439µs)
+clock launch and restart select the environment compiled into each bake ... ok (768µs)
+Panda Docker socket overrides DOCKER_HOST without allowing a remote daemon ... ok (409µs)
+Panda state and Docker ownership use the project namespace ... ok (203µs)
+running 2 tests from ./tests/docker_test.ts
+partial startup rollback preserves another stand and is repeatable ... ignored (0ms)
+Panda resources are named and labeled consistently; cleanup preserves another owner ... ignored (0ms)
+running 8 tests from ./tests/e2e_test.ts
+real pectra: ordinary unmodified clients produce an agreed execution payload ... ignored (0ms)
+real pectra: CLI up/down/reset, ownership and profile mismatch rejection ... ignored (0ms)
+real pectra: time travel, pause, automine, finality and external indexer ... ignored (0ms)
+real pectra: large jumps finish in seconds and restore finality without slashable signatures ... ignored (0ms)
+real pectra: full participation, no attestation penalties and finality at warp return ... ignored (0ms)
+real pectra: deposit, activation and consolidation ... ignored (0ms)
+real pectra: signed voluntary exit and complete withdrawal ... ignored (0ms)
+real pectra: sequential RPC and ethers contract deployments ... ignored (0ms)
+running 6 tests from ./tests/profiles_test.ts
+hardfork profiles reject unknown names and unsafe bake paths ... ok (700µs)
+build identity is independent of JSON key ordering and changes with patch/source/platform ... ok (8ms)
+each hardfork's timeline executes its declared phases and completes a full slot ... ok (529µs)
+bake lock protects a running build and atomic publication preserves prior records ... ok (3ms)
+CLI parses hardfork/tag without consuming control arguments and rejects typos ... ok (204µs)
+native tests keep their baked source snapshot after edits and reject archive corruption ... ok (2ms)
+running 8 tests from ./tests/time_test.ts
+forward time executes phase barriers, exact dates and partial slots ... ok (781µs)
+concurrent advances serialize and accumulate, rather than lose time ... ok (312µs)
+a partially failed clock update faults subsequent mutations ... ok (163µs)
+advanceUntil is bounded, detects existing success and processes epochs ... ok (258µs)
+skip has separate semantics and does not execute intervening duties ... ok (107µs)
+shutdown interrupts a long advance at the next phase boundary ... ok (72µs)
+large advanceTime/advanceTo execute every slot and preserve partial-slot targets ... ok (35ms)
+failed explicit skip faults the timeline and continuous advancement never skips ... ok (270µs)
+running 1 test from ./tests/verification_test.ts
+immutable bake verification ignores other profiles, new build recipes and unrelated tests ... ok (57ms)
+running 2 tests from ./tests/warp_assertions_test.ts
+warp economics rejects missing duty flags, inactivity, negative rewards and lost participants ... ok (2ms)
+warp history checks reject double proposals, double votes, surround votes and lost keys ... ok (845µs)
+
+ok | 29 passed | 0 failed | 12 ignored (3s)
+

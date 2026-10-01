@@ -1,5 +1,52 @@
 import assert from "node:assert/strict";
 
+/** Fixed-size SSZ bitvectors; preserves repeated positions of the same validator. */
+export function assertFullBitvector(bits: string, size: number, duty: string): void {
+  assert(Number.isSafeInteger(size) && size > 0 && size % 8 === 0);
+  assert.equal(bits, `0x${"ff".repeat(size / 8)}`, `Missing ${duty} participation`);
+}
+
+export interface AttestationReward {
+  validator_index: string;
+  source: string;
+  target: string;
+  head: string;
+  inactivity: string;
+}
+
+/** A closed epoch in this fixture has all 64 active keys and no pre-existing inactivity. */
+export function assertFullParticipation(
+  flags: (number | string)[],
+  inactivity: string[],
+  count: number,
+): void {
+  assert.equal(flags.length, count, "Missing participation records");
+  assert.equal(inactivity.length, count, "Missing inactivity records");
+  for (let index = 0; index < count; index++) {
+    assert.equal(
+      Number(flags[index]) & 7,
+      7,
+      `Validator ${index} missed source/target/head participation`,
+    );
+    assert.equal(BigInt(inactivity[index]), 0n, `Validator ${index} accumulated inactivity`);
+  }
+}
+
+export function assertNoAttestationPenalties(rewards: AttestationReward[], count: number): void {
+  assert.equal(rewards.length, count, "Missing reward records");
+  assert.deepEqual(
+    rewards.map((r) => Number(r.validator_index)).sort((a, b) => a - b),
+    Array.from({ length: count }, (_, index) => index),
+    "Missing or duplicate reward participant",
+  );
+  for (const reward of rewards) {
+    for (const field of ["source", "target", "head"] as const) {
+      assert(BigInt(reward[field]) >= 0n, `Validator ${reward.validator_index}: ${field} penalty`);
+    }
+    assert.equal(BigInt(reward.inactivity), 0n, "Inactivity penalty during honest warp");
+  }
+}
+
 export interface SigningHistory {
   metadata: { genesis_validators_root: string };
   data: {

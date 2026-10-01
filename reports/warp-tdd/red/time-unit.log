@@ -1,0 +1,33 @@
+Check tests/time_test.ts
+running 8 tests from ./tests/time_test.ts
+forward time executes phase barriers, exact dates and partial slots ... ok (2ms)
+concurrent advances serialize and accumulate, rather than lose time ... ok (614µs)
+a partially failed clock update faults subsequent mutations ... ok (354µs)
+advanceUntil is bounded, detects existing success and processes epochs ... ok (417µs)
+skip has separate semantics and does not execute intervening duties ... ok (135µs)
+shutdown interrupts a long advance at the next phase boundary ... ok (72µs)
+large advanceTime/advanceTo execute every slot and preserve partial-slot targets ... FAILED (12ms)
+failed explicit skip faults the timeline and continuous advancement never skips ... ok (415µs)
+
+ ERRORS 
+
+large advanceTime/advanceTo execute every slot and preserve partial-slot targets => ./tests/time_test.ts:94:6
+error: AssertionError: advanceTime must not model validator downtime
++ actual - expected
+
++ [
++   98303500
++ ]
+- []
+
+  assert.deepEqual(skips, [], "advanceTime must not model validator downtime");
+         ^
+    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/time_test.ts:109:10
+
+ FAILURES 
+
+large advanceTime/advanceTo execute every slot and preserve partial-slot targets => ./tests/time_test.ts:94:6
+
+FAILED | 7 passed | 1 failed (21ms)
+
+error: Test failed

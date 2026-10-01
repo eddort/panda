@@ -1,0 +1,14 @@
+Check tests/consensus_test.ts
+Check tests/engine_test.ts
+running 5 tests from ./tests/consensus_test.ts
+native completion barrier replaces mark polling ... ok (10ms)
+legacy bakes keep their existing mark protocol ... ok (911µs)
+native barrier must confirm every requested completion at the exact slot ... ok (1ms)
+native barrier timeout is a failure, not a polling fallback ... ok (933µs)
+proposal waits for a VALID canonical Engine head before querying CL agreement ... ok (679µs)
+running 2 tests from ./tests/engine_test.ts
+Engine readiness requires VALID payload and VALID canonical forkchoice for its exact hash ... ok (24ms)
+Engine head wait uses a real deadline and shutdown rejects pending waiters ... ok (23ms)
+
+ok | 7 passed | 0 failed (111ms)
+
