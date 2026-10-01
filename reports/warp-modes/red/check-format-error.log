@@ -1,6 +1,6 @@
 Task check ./scripts/deno fmt --check && ./scripts/deno lint && ./scripts/deno check src/*.ts scripts/*.ts tests/*.ts bakes/*/tests/*.ts
 
-from /Users/lexdort/.codex/worktrees/2b62/zap-net/docs/warp-algorithm-budget.md:
+from /workspace/panda/docs/warp-algorithm-budget.md:
  18 | -Если предположить, что сокращение isolated sync crypto **27,816 → 1,563 мс** целиком переносится
  18 | +Если предположить, что сокращение isolated sync crypto **27,816 → 1,563 мс** целиком переносится на
  19 | -на последовательный путь каждого слота, получится `(92,382 − 27,816 + 1,563) ×8192 /1000` =

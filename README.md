@@ -129,6 +129,10 @@ The current topology is one execution client, one beacon node and one validator 
 bind to localhost, and Docker must run locally because the network uses local bind mounts.
 Development keys are public and intended only for this environment.
 
+Panda requires trusted source code and Docker access. Use a disposable VM or hosted CI runner for
+untrusted changes; the privileged CI image is not a sandbox for hostile code. Keep published ports
+on loopback and never use real wallet keys. See [security boundaries](SECURITY.md).
+
 HTTP JSON-RPC is supported. WebSocket, long-lived Beacon SSE, multiple beacon nodes and arbitrary
 external validators are outside the current verified scope. Resuming an existing chain after a
 controller restart is not implemented; use `down` followed by `up` to start fresh. Geth's real-time

@@ -5,7 +5,7 @@ legacy bakes keep their existing mark protocol ... ok (704µs)
 native barrier must confirm every requested completion at the exact slot ... FAILED (711µs)
 native barrier timeout is a failure, not a polling fallback ... FAILED (688µs)
 
- ERRORS 
+ ERRORS
 
 native completion barrier replaces mark polling => ./tests/consensus_test.ts:24:6
 error: AssertionError: Expected values to be strictly deep-equal:
@@ -18,27 +18,27 @@ error: AssertionError: Expected values to be strictly deep-equal:
 
       assert.deepEqual(paths, ["/wait/7/30000/proposal,execution"]);
              ^
-    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:30:14
-    at async clockFixture (file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:18:5)
-    at async file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:25:3
+    at file:///workspace/panda/tests/consensus_test.ts:30:14
+    at async clockFixture (file:///workspace/panda/tests/consensus_test.ts:18:5)
+    at async file:///workspace/panda/tests/consensus_test.ts:25:3
 
 native barrier must confirm every requested completion at the exact slot => ./tests/consensus_test.ts:46:6
 error: AssertionError: Missing expected rejection.
         await assert.rejects(consensus.mark(endpoint, ["proposal", "execution"], 7));
         ^
-    at async file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:56:9
-    at async clockFixture (file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:18:5)
-    at async file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:48:5
+    at async file:///workspace/panda/tests/consensus_test.ts:56:9
+    at async clockFixture (file:///workspace/panda/tests/consensus_test.ts:18:5)
+    at async file:///workspace/panda/tests/consensus_test.ts:48:5
 
 native barrier timeout is a failure, not a polling fallback => ./tests/consensus_test.ts:62:6
 error: AssertionError: Missing expected rejection.
       await assert.rejects(consensus.mark(endpoint, ["proposal"], 7));
       ^
-    at async file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:70:7
-    at async clockFixture (file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:18:5)
-    at async file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/consensus_test.ts:63:3
+    at async file:///workspace/panda/tests/consensus_test.ts:70:7
+    at async clockFixture (file:///workspace/panda/tests/consensus_test.ts:18:5)
+    at async file:///workspace/panda/tests/consensus_test.ts:63:3
 
- FAILURES 
+ FAILURES
 
 native completion barrier replaces mark polling => ./tests/consensus_test.ts:24:6
 native barrier must confirm every requested completion at the exact slot => ./tests/consensus_test.ts:46:6

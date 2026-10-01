@@ -121,7 +121,7 @@ export async function openReleasePullRequest(
       }`,
       variables: {
         input: {
-          branch: { repositoryNameWithOwner: repository, refName: branch },
+          branch: { repositoryNameWithOwner: repository, branchName: branch },
           expectedHeadOid: ref.object.sha,
           message: { headline: `Prepare Panda ${plan.version} with published Lighthouse clients` },
           fileChanges: {
@@ -134,7 +134,9 @@ export async function openReleasePullRequest(
       },
     });
     if (result.errors?.length || !result.data?.createCommitOnBranch?.commit.oid) {
-      throw new Error(`Release commit failed: ${JSON.stringify(result.errors ?? [])}`);
+      const reason = result.errors?.map((error) => error.message).join("; ") ||
+        "GitHub did not return a commit OID";
+      throw new Error(`Release commit failed: ${reason}`);
     }
   } else {
     for (const [path, expected] of Object.entries(files)) {

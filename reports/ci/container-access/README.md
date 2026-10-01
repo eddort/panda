@@ -1,5 +1,8 @@
 # Container client API and log access
 
+Console logs mentioned below are local or CI artifacts, not versioned files. See the
+[report retention policy](../../README.md).
+
 Local verification on 2026-10-01. No Docker daemon, client build, devnet or packaged image test was
 started for this change.
 

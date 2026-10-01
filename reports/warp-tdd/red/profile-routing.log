@@ -7,7 +7,7 @@ bake lock protects a running build and atomic publication preserves prior record
 CLI parses hardfork/tag without consuming control arguments and rejects typos ... ok (182µs)
 native tests keep their baked source snapshot after edits and reject archive corruption ... ok (1ms)
 
- ERRORS 
+ ERRORS
 
 each hardfork's timeline executes its declared phases and completes a full slot => ./tests/profiles_test.ts:26:6
 error: AssertionError: Expected values to be strictly equal:
@@ -18,9 +18,9 @@ error: AssertionError: Expected values to be strictly equal:
 
     assert.equal(Reflect.get(profile.tests, "warp-economics"), "bakes/shared/tests/warp_economics.ts");
            ^
-    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/profiles_test.ts:42:12
+    at file:///workspace/panda/tests/profiles_test.ts:42:12
 
- FAILURES 
+ FAILURES
 
 each hardfork's timeline executes its declared phases and completes a full slot => ./tests/profiles_test.ts:26:6
 

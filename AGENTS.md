@@ -39,6 +39,10 @@ source map. `src/http.ts` contains real bounded waits. Keep third-party source/b
 ignored `.cache/`. All Docker mutations must be scoped by the exact `io.panda.id` label. Never prune
 Docker globally: this machine may have unrelated running workloads.
 
+Before tracking reports, remove personal checkout paths and unrelated Docker workload names/IDs.
+Keep original private evidence in ignored `.cache/`; preserve numeric measurements, bake identities
+and pass/fail results in public copies. Session handoffs and external pilot dumps stay outside Git.
+
 Extended verification: `deno task e2e`, `e2e:withdrawal`, `e2e:protocol`, `test:lifecycle`,
 `test:clock <hardfork> --bake <tag>`, `measure`. Raw profile reports are tracked under
 `reports/profiles/<hardfork>/<tag>/`; verification binds the bake key and suite fingerprint. Gloas

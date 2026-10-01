@@ -1,5 +1,8 @@
 # Non-root runtime file ownership
 
+Console logs mentioned below are local or CI artifacts, not versioned files. See the
+[report retention policy](../../README.md).
+
 The supplied Linux CI log failed on `metadata/bootstrap_nodes.txt` after genesis generation. Eight
 profile scenarios reported the same permission error; CLI lifecycle timed out before readiness. The
 genesis and VC containers did not select a user, leaving bind-mounted output owned by root while the
@@ -24,15 +27,15 @@ Linux CI runner before treating the filesystem/client compatibility as verified.
 `./scripts/deno test -A tests/network_permissions_test.ts`:
 
 - Before implementation: **0 passed, 5 failed**, each from a missing Docker `User` field. See
-  [red.log](red.log).
-- After implementation: **5 passed, 0 failed**. See [green.log](green.log).
+  `red.log`.
+- After implementation: **5 passed, 0 failed**. See `green.log`.
 
 These are Docker/HTTP adapter fixtures exercising the real startup, replacement and deposit fixture
 code. They do not run a daemon, emulate Linux UID permissions or certify real client compatibility.
 
-`./scripts/deno task check`: passed formatting, lint and type checks. See [check.log](check.log).
+`./scripts/deno task check`: passed formatting, lint and type checks. See `check.log`.
 
-`./scripts/deno task test`: **85 passed, 0 failed, 13 ignored**. See [unit.log](unit.log).
+`./scripts/deno task test`: **85 passed, 0 failed, 13 ignored**. See `unit.log`.
 
 Docker smoke, profile suites and the original CI reproduction were **not executed locally**, at the
 user's request. No Docker commands or containers were started for this change.
