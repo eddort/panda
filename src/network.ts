@@ -77,6 +77,8 @@ export class Network {
     }
     await Deno.mkdir(this.directory, { recursive: true });
     const { config, infra, directory } = this;
+    // Bind-mounted metadata, keys and the private VC token must belong to the controller.
+    const sharedUser = `${Deno.uid()}:${Deno.gid()}`;
     for (const name of ["metadata", "parsed", "jwt", "validator-keys", "manifest.json"]) {
       try {
         await Deno.remove(`${directory}/${name}`, { recursive: true });
@@ -135,6 +137,7 @@ export class Network {
       };
       await oneShot("genesis", {
         Image: images.genesis,
+        User: sharedUser,
         Env: env,
         Entrypoint: ["/bin/bash"],
         Cmd: [
@@ -241,6 +244,7 @@ export class Network {
       await waitFor("Beacon API", () => json(`${bn(5052)}/eth/v1/beacon/genesis`), 90_000);
       const vc = await start("vc", {
         Image: clientImage,
+        User: sharedUser,
         Entrypoint: ["lighthouse"],
         Env: clockEnv,
         Cmd: [
@@ -352,6 +356,7 @@ export class Network {
     const env = (info.Config.Env ?? []).filter((e) => !e.startsWith(`${startMs}=`));
     const replacement = await this.infra.container("vc", {
       Image: info.Image,
+      User: info.Config.User,
       Entrypoint: info.Config.Entrypoint,
       Cmd: info.Config.Cmd,
       Env: [...env, `${startMs}=${nowMs}`],

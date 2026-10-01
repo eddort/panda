@@ -16,6 +16,11 @@ HTTP stream failures, so they are not supported.
 The baseline uses the official Lighthouse image. The controlled profile refuses to start without the
 locally built fork. It never falls back to ordinary clocks.
 
+Genesis, the validator client and the deposit-key fixture run with the controller's numeric UID/GID.
+They write into its bind-mounted `.panda/<id>` directory, so a non-root Linux controller can update
+metadata, read private keys/API tokens and reset the network. Fast VC replacement preserves this
+user. Geth and the beacon node keep their image defaults and write client state into named volumes.
+
 ```mermaid
 flowchart LR
   Test[Test / TypeScript API] --> C[Deno controller and RPC proxy]
