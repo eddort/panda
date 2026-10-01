@@ -18,6 +18,7 @@ export interface ExecutionBlock {
 }
 export class Consensus implements TimeBackend {
   private recovering = false;
+  private confirmedHead?: { slot: number; root: string };
   constructor(readonly manifest: Manifest, readonly engine?: EngineGate) {}
   async clock(endpoint: string, at?: number): Promise<ClockState> {
     return await json<ClockState>(
@@ -26,6 +27,17 @@ export class Consensus implements TimeBackend {
     );
   }
   async mark(endpoint: string, names: string[], slot: number): Promise<void> {
+    if (this.manifest.bake.recipe.clockWait && !this.recovering) {
+      if (!names.length) return;
+      const state = await json<ClockState>(`${endpoint}/wait/${slot}/30000/${names.join(",")}`, {
+        method: "POST",
+        signal: AbortSignal.timeout(31_000),
+      });
+      if (!names.every((name) => state.marks[name] === slot)) {
+        throw new Error(`Incomplete native barrier at slot ${slot}: ${names.join(", ")}`);
+      }
+      return;
+    }
     await waitFor(`slot ${slot}: ${names.join(", ")}`, async () => {
       const state = await this.clock(endpoint);
       return names.every((name) => state.marks[name] === slot) ? true : undefined;
@@ -40,13 +52,15 @@ export class Consensus implements TimeBackend {
     if (phase === 0) await this.mark(m.bnClock, ["slot"], slot);
     await this.clock(m.vcClock, at);
     if (phase === 0) {
-      await waitFor(`Beacon block at slot ${slot}`, async () => {
-        const head = await json<{ data: { header: { message: { slot: string } } } }>(
+      this.confirmedHead = undefined;
+      const head = await waitFor(`Beacon block at slot ${slot}`, async () => {
+        const head = await json<{ data: { root: string; header: { message: { slot: string } } } }>(
           `${m.beacon}/eth/v1/beacon/headers/head`,
         );
-        return Number(head.data.header.message.slot) === slot ? true : undefined;
+        return Number(head.data.header.message.slot) === slot ? head.data : undefined;
       }, this.recovering ? 600_000 : 30_000);
       await waitFor(`execution agreement at slot ${slot}`, () => this.consistency(slot));
+      this.confirmedHead = { slot, root: head.root };
     } else if (phase === profile.attestationMs || phase === profile.aggregateMs) {
       const committees = await json<{ data: { index: string; validators: string[] }[] }>(
         `${m.beacon}/eth/v1/beacon/states/head/committees?slot=${slot}`,
@@ -59,7 +73,7 @@ export class Consensus implements TimeBackend {
           );
       // This topology owns all genesis keys and the complete sync committee.
       if (phase === profile.attestationMs) names.push("sync_messages");
-      else {
+      else if (!profile.directSync) {
         await this.mark(m.vcClock, ["sync_expected_slot"], slot);
         const state = await this.clock(m.vcClock);
         if (state.marks.sync_expected_slot !== slot) throw new Error("Missing sync duty manifest");
@@ -70,6 +84,22 @@ export class Consensus implements TimeBackend {
         );
       }
       await this.mark(m.vcClock, names, slot);
+      if (phase === profile.attestationMs && profile.directSync) {
+        const head = await json<{ data: { root: string; header: { message: { slot: string } } } }>(
+          `${m.beacon}/eth/v1/beacon/headers/head`,
+        );
+        if (
+          Number(head.data.header.message.slot) !== slot || !/^0x[0-9a-f]{64}$/.test(head.data.root)
+        ) {
+          throw new Error("Invalid head for sync contribution barrier");
+        }
+        if (this.confirmedHead?.slot !== slot || this.confirmedHead.root !== head.data.root) {
+          throw new Error("Beacon head changed after execution agreement; reset required");
+        }
+        // Phase 0 already confirmed execution. This independent BN barrier proves full voting
+        // coverage for this exact root; VC publication marks alone can also follow HTTP errors.
+        await this.mark(m.bnClock, [`sync_contributions_${head.data.root}`], slot);
+      }
     } else if (phase === 9_000) {
       if (m.config.profile === "gloas") await this.mark(m.vcClock, ["payload_attestations"], slot);
       await this.mark(m.bnClock, ["state_advance"], slot);

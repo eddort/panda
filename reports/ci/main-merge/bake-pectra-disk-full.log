@@ -1,0 +1,25 @@
+Task bake ./scripts/deno run -A scripts/bake.ts 'pectra' '--tag' 'ci-main-merge'
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Err:1 http://deb.debian.org/debian bookworm InRelease
+  At least one invalid signature was encountered.
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+Err:2 http://deb.debian.org/debian bookworm-updates InRelease
+  At least one invalid signature was encountered.
+Err:3 http://deb.debian.org/debian-security bookworm-security InRelease
+  At least one invalid signature was encountered.
+Reading package lists...
+W: GPG error: http://deb.debian.org/debian bookworm InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian bookworm InRelease' is not signed.
+W: GPG error: http://deb.debian.org/debian bookworm-updates InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian bookworm-updates InRelease' is not signed.
+W: GPG error: http://deb.debian.org/debian-security bookworm-security InRelease: At least one invalid signature was encountered.
+E: The repository 'http://deb.debian.org/debian-security bookworm-security InRelease' is not signed.
+error: Uncaught (in promise) Error: cl compilation failed: 100
+    if (status.StatusCode) throw new Error(`${kind} compilation failed: ${status.StatusCode}`);
+                                 ^
+    at compile (file:///Users/lexdort/development/zap-net/src/baker.ts:266:34)
+    at processTicksAndRejections (ext:core/01_core.js:405:7)
+    at drainTicks (ext:core/01_core.js:432:5)
+    at async bake (file:///Users/lexdort/development/zap-net/src/baker.ts:461:12)
+    at async file:///Users/lexdort/development/zap-net/scripts/bake.ts:18:16

@@ -1,0 +1,22 @@
+{
+  "profile": "gloas",
+  "tag": "direct-sync",
+  "bakeKey": "e41c863be72847fb1bec8e0b455e23f243cb27d8e73d3ce90ea8f5be6e78c0c8",
+  "runId": "281493b3-ea1e-4c05-8156-7ba4d3553c12",
+  "status": "interrupted",
+  "passed": false,
+  "observations": {
+    "baseline": "passed in 38 s",
+    "lifecycle": "passed in 23 s",
+    "e2e": "passed in 39 s",
+    "warp": "FAILED after 12m40s: reward endpoint returned 404 for missing state at slot 191; first 8192 slots and following transaction reached EL block 8321; second jump not executed",
+    "warp-economics": "FAILED after 8 s: referenced Geth image missing. Prior standalone pass remains separate. Cause of image disappearance in this run not established.",
+    "protocol": "interrupted",
+    "withdrawal": "not run",
+    "deploy": "not run",
+    "gloas": "not run"
+  },
+  "timingCaveat": "12m40s is the entire failed warp test, not the exact elapsed time of advanceTime. API elapsed was not persisted before the historical rewards assertion failed.",
+  "cleanup": "SIGINT process exited 130; child 81815 absent; exact owned protocol-e1662fc5 containers removed; all ids found in the run log had zero remaining containers.",
+  "verificationFile": "Generated verification.json remains passed:false,status:running because the process was interrupted. This note is not a verification replacement."
+}

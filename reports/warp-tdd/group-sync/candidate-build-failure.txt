@@ -1,0 +1,22 @@
+   Compiling panda-group-sync-proof v0.1.0 (/source)
+warning: unused import: `BTreeSet`
+ --> src/lib.rs:4:35
+  |
+4 | use std::{collections::{BTreeMap, BTreeSet}, sync::{mpsc, Arc}, time::Instant};
+  |                                   ^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+error[E0509]: cannot move out of type `SecretScratch`, which implements the `Drop` trait
+   --> src/lib.rs:599:35
+    |
+599 |                 let mut scratch = SecretScratch { wiped: Some(seen), ..SecretScratch::default() };
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                                   |
+    |                                   cannot move out of here
+    |                                   move occurs because value has type `blst_scalar`, which does not implement the `Copy` trait
+
+For more information about this error, try `rustc --explain E0509`.
+error: could not compile `panda-group-sync-proof` (lib test) due to 1 previous error
+warning: build failed, waiting for other jobs to finish...
+warning: `panda-group-sync-proof` (lib) generated 1 warning (run `cargo fix --lib -p panda-group-sync-proof` to apply 1 suggestion)

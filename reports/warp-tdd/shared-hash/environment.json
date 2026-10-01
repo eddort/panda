@@ -1,0 +1,23 @@
+{
+  "date": "2026-09-30",
+  "profileContext": "gloas",
+  "image": "sha256:9ad0c47880881464036f8b5779f49a15d058154581404d0d50a20f9d11f3436e",
+  "cpuLimit": 2,
+  "architecture": "linux/aarch64",
+  "clientModified": false,
+  "fullWarpProven": false,
+  "baselineExitCode": 2,
+  "workerPoolIsSchedulingSurrogate": true,
+  "candidateExitCode": 2,
+  "sourceSha256": {
+    "baseline-source/Cargo.lock": "2b88f699612b16656bff9f7bae3a7d5678188871dce60b15beb1c31b4bbe8762",
+    "baseline-source/Cargo.toml": "911af71e8b3af5245b225ff5e8c5906f2e09e771e4772429db7bd8718cfa302f",
+    "baseline-source/src/lib.rs": "94c3370bffb7c56d849133c9537ed06756f259fe668bb8877aebcf0f1c396a51",
+    "baseline-source/src/main.rs": "ebf3803994082e8260853c6546bd00c9a57d2af864ad5db4bd5e5411cc4b5801",
+    "candidate-source/Cargo.lock": "2b88f699612b16656bff9f7bae3a7d5678188871dce60b15beb1c31b4bbe8762",
+    "candidate-source/Cargo.toml": "911af71e8b3af5245b225ff5e8c5906f2e09e771e4772429db7bd8718cfa302f",
+    "candidate-source/src/lib.rs": "23d2a3dd872fa26ef1009ec12c12b9d26234c814496234a4438342d8f1982be6",
+    "candidate-source/src/main.rs": "23af749d892e31d4404d42f532a49d25904cba4aae58d7f2dc2967e20e894fe7",
+    "candidate-source/src/shared_hash.rs": "b71b922c6bb5b857f4a849bdee621e0e6b5d79ba918046c3c4eab4be70c9990a"
+  }
+}

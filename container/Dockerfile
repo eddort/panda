@@ -19,7 +19,7 @@ ARG SOURCE_COMMIT
 ARG PROFILE
 ARG REVISION
 ARG BAKE_KEY
-LABEL org.opencontainers.image.source="https://github.com/eddort/zap-net" \
+LABEL org.opencontainers.image.source="https://github.com/eddort/panda" \
     org.opencontainers.image.revision=$SOURCE_COMMIT \
     org.opencontainers.image.version=$REVISION \
     io.panda.profile=$PROFILE io.panda.bake.key=$BAKE_KEY

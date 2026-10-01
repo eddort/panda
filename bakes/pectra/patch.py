@@ -1,8 +1,14 @@
 """Maintainer helper: create a minimal, checked patch against Lighthouse v7.1.0."""
 from pathlib import Path
 import shutil
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'shared'))
+from patch_bls import apply as patch_bls
+from patch_direct_sync import apply as patch_direct_sync
 
 root = Path('.cache/upstream/lighthouse')
+patch_bls(root)
 
 def edit(path, old, new, count=1):
     file = root / path
@@ -54,3 +60,6 @@ start = s.index('name = "slot_clock"')
 end = s.index('[[package]]', start)
 section = s[start:end].replace(' "types",', ' "tokio",\n "types",')
 p.write_text(s[:start] + section + s[end:])
+
+# Local sync delivery after the profile-specific scheduling adaptations.
+patch_direct_sync(root, profile='pectra')

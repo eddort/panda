@@ -1,0 +1,22 @@
+Check tests/docker_progress_test.ts
+running 2 tests from ./tests/docker_progress_test.ts
+Docker reports an operation failure inside an HTTP-success progress stream ... ok (2ms)
+publishing rejects a registry error even when an older RepoDigest is present ... FAILED (1ms)
+
+ ERRORS 
+
+publishing rejects a registry error even when an older RepoDigest is present => ./tests/docker_progress_test.ts:22:6
+error: AssertionError: Missing expected rejection.
+  await assert.rejects(
+  ^
+    at processTicksAndRejections (ext:core/01_core.js:405:7)
+    at drainTicks (ext:core/01_core.js:432:5)
+    at async file:///Users/lexdort/development/zap-net/tests/docker_progress_test.ts:37:3
+
+ FAILURES 
+
+publishing rejects a registry error even when an older RepoDigest is present => ./tests/docker_progress_test.ts:22:6
+
+FAILED | 1 passed | 1 failed (7ms)
+
+error: Test failed

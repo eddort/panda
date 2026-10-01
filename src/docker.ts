@@ -39,6 +39,20 @@ export class Infrastructure {
     this.docker = docker;
     this.labels = { [LABEL]: id };
   }
+  /** Docker can return HTTP 200 with an operation error in its JSON progress stream. */
+  async progress(stream: NodeJS.ReadableStream): Promise<void> {
+    await new Promise<void>((resolve, reject) => {
+      this.docker.modem.followProgress(
+        stream,
+        (error: Error | null, events: { error?: string; errorDetail?: { message?: string } }[]) => {
+          const failure = events?.find((event) => event.error || event.errorDetail?.message);
+          if (error) reject(error);
+          else if (failure) reject(new Error(failure.errorDetail?.message ?? failure.error));
+          else resolve();
+        },
+      );
+    });
+  }
   async image(ref: string, authconfig?: Docker.AuthConfig): Promise<void> {
     try {
       await this.docker.getImage(ref).inspect();
@@ -51,12 +65,7 @@ export class Infrastructure {
       throw new Error(`Local image ${ref} is missing`);
     }
     const stream = await this.docker.pull(ref, { authconfig });
-    await new Promise<void>((resolve, reject) => {
-      this.docker.modem.followProgress(
-        stream,
-        (error: Error | null) => error ? reject(error) : resolve(),
-      );
-    });
+    await this.progress(stream);
   }
   async registryImage(image: BakedImage, authconfig?: Docker.AuthConfig): Promise<void> {
     if (!image.digest || !/@sha256:[a-f0-9]{64}$/.test(image.digest)) {
@@ -80,12 +89,7 @@ export class Infrastructure {
     const repo = ref.slice(0, separator);
     await image.tag({ repo, tag: ref.slice(separator + 1) });
     const stream = await this.docker.getImage(ref).push({ authconfig });
-    await new Promise<void>((resolve, reject) => {
-      this.docker.modem.followProgress(
-        stream,
-        (error: Error | null) => error ? reject(error) : resolve(),
-      );
-    });
+    await this.progress(stream);
     const published = await this.docker.getImage(ref).inspect();
     const digest = published.RepoDigests?.find((value) => value.startsWith(`${repo}@sha256:`));
     if (published.Id !== id || !digest) throw new Error("Published image identity/digest mismatch");
@@ -127,12 +131,7 @@ export class Infrastructure {
       throw error;
     }
     const stream = await this.docker.loadImage(createReadStream(path));
-    await new Promise<void>((resolve, reject) => {
-      this.docker.modem.followProgress(
-        stream,
-        (error: Error | null) => error ? reject(error) : resolve(),
-      );
-    });
+    await this.progress(stream);
     if ((await this.docker.getImage(id).inspect()).Id !== id) {
       throw new Error(`Restored bake image identity mismatch: ${id}`);
     }

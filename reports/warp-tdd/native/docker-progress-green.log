@@ -1,0 +1,6 @@
+Check tests/docker_progress_test.ts
+running 1 test from ./tests/docker_progress_test.ts
+Docker reports an operation failure inside an HTTP-success progress stream ... ok (1ms)
+
+ok | 1 passed | 0 failed (7ms)
+

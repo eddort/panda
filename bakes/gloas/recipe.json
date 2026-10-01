@@ -7,14 +7,25 @@
   "clockTest": "bakes/shared/controlled_clock_test.rs",
   "clockEnvPrefix": "PANDA",
   "sourceFiles": [
+    "bakes/shared/native/verified_signature.rs",
+    "bakes/shared/native/sync_batch.rs",
     "bakes/gloas/native/weighted_selection.rs",
-    "bakes/gloas/native/prepare_skip.rs"
+    "bakes/gloas/native/prepare_skip.rs",
+    "bakes/shared/native/direct_sync_test.rs"
   ],
   "preparedSkip": true,
   "nativeTests": [
     {
+      "package": "bls",
+      "target": "panda_verified_signature"
+    },
+    {
       "package": "types",
       "target": "panda_weighted_selection"
+    },
+    {
+      "package": "beacon_chain",
+      "target": "panda_direct_sync"
     }
   ],
   "runtime": "debian@sha256:3783cc01769c7b2b1b83a5c5ad96c815348e28ed7da68e2e3687004faa906251",
@@ -26,6 +37,8 @@
     "lifecycle": "bakes/shared/tests/lifecycle.ts",
     "e2e": "bakes/shared/tests/e2e.ts",
     "warp": "bakes/shared/tests/warp.ts",
+    "warp-fast": "bakes/shared/tests/warp_fast.ts",
+    "warp-economics": "bakes/shared/tests/warp_economics.ts",
     "protocol": "bakes/shared/tests/protocol.ts",
     "withdrawal": "bakes/shared/tests/withdrawal.ts",
     "deploy": "bakes/shared/tests/deploy.ts",
@@ -64,5 +77,7 @@
     "SLOT_DURATION_MS": "12000"
   },
   "clVersion": "8.2.2",
-  "bakerVersion": 1
+  "bakerVersion": 1,
+  "clockWait": true,
+  "directSync": true
 }

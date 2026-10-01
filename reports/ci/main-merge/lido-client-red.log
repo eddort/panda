@@ -1,0 +1,54 @@
+TAP version 13
+# Subtest: external Panda needs no checkout, preserves fresh genesis and does not own shutdown
+not ok 1 - external Panda needs no checkout, preserves fresh genesis and does not own shutdown
+  ---
+  duration_ms: 54.213375
+  type: 'test'
+  location: '/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:10:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        [
+          2000000000
+        ],
+        [
+          2000098304,
+    -     {
+    -       mode: 'fast'
+    -     }
+        ]
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      0: 2000000000
+    1:
+      0: 2000098304
+      1:
+        mode: 'fast'
+  actual:
+    0:
+      0: 2000000000
+    1:
+      0: 2000098304
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/lexdort/development/zap-net/.cache/pilots/lido-pr-1940-working/scripts/tests/panda-client.test.cjs:49:12)
+    processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 351.819

@@ -3,7 +3,12 @@ from pathlib import Path
 import shutil
 import sys
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'shared'))
+from patch_bls import apply as patch_bls
+from patch_direct_sync import apply as patch_direct_sync
+
 root = Path(sys.argv[1] if len(sys.argv) > 1 else '.cache/upstream/lighthouse-gloas')
+patch_bls(root)
 def edit(path, old, new, count=1):
     file = root / path
     text = file.read_text()
@@ -142,3 +147,6 @@ edit('beacon_node/beacon_chain/src/beacon_chain.rs', '''                (
                 let (state, root) = cached.map(|(root, state)| (Cow::Owned(state), root))
                     .unwrap_or_else(|| (Cow::Borrowed(head_state), cached_head.head_state_root()));
                 (state, root, head_block.payload_bid_block_hash().ok())''')
+
+# Local sync delivery after the profile-specific scheduling adaptations.
+patch_direct_sync(root, profile='gloas')

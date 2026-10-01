@@ -1,0 +1,113 @@
+Task test ./scripts/deno test -A tests
+Check tests/automine_test.ts
+Check tests/bake_layout_test.ts
+Check tests/baker_test.ts
+Check tests/client_release_test.ts
+Check tests/config_test.ts
+Check tests/consensus_test.ts
+Check tests/controller_validators_test.ts
+Check tests/docker_progress_test.ts
+Check tests/docker_test.ts
+Check tests/e2e_test.ts
+Check tests/lighthouse_build_test.ts
+Check tests/profiles_test.ts
+Check tests/release_test.ts
+Check tests/time_test.ts
+Check tests/verification_test.ts
+Check tests/warp_api_test.ts
+Check tests/warp_assertions_test.ts
+Check tests/warp_rewards_test.ts
+running 3 tests from ./tests/automine_test.ts
+automine eligibility excludes nonce gaps, insufficient funds, fee caps and oversized gas ... ok (1ms)
+disabling automine waits for an in-flight pool check and prevents another slot ... ok (746µs)
+a notification during an empty pool check rechecks newly arrived work ... ok (254µs)
+running 5 tests from ./tests/bake_layout_test.ts
+profile inputs and executable suites are owned by the hardfork or shared bake directory ... ok (7ms)
+bake tag namespace is separate from recipe and shared module names ... ok (563µs)
+tag listing reads new and legacy manifests without treating recipes as artifacts ... ok (84ms)
+legacy and relocated copies may agree but conflicting immutable tags fail closed ... ok (103ms)
+legacy native input paths recover relocated bytes only on an exact hash match ... ok (382ms)
+running 2 tests from ./tests/baker_test.ts
+baker pins imports, reuses artifacts across tags and preserves a tag on failed replacement ... ignored (0ms)
+local bake archive restores the identical image after removal from Docker ... ignored (0ms)
+running 5 tests from ./tests/client_release_test.ts
+two Panda Git releases reuse the same published Lighthouse and original bake ... ok (15ms)
+published locks reject mutable clients, wrong forks, architecture and imported provenance ... ok (2ms)
+missing clients never compile, failed pulls never install a bake, conflicting tags survive ... ok (4ms)
+registry restoration checks actual image identity and architecture using an in-memory Docker transport ... ok (2ms)
+client publishing refuses a foreign image before tagging or pushing (in-memory transport) ... ok (208µs)
+running 4 tests from ./tests/config_test.ts
+Panda environment selects the hardfork and bake; explicit options take precedence ... ok (461µs)
+clock launch and restart select the environment compiled into each bake ... ok (642µs)
+Panda Docker socket overrides DOCKER_HOST without allowing a remote daemon ... ok (368µs)
+Panda state and Docker ownership use the project namespace ... ok (196µs)
+running 5 tests from ./tests/consensus_test.ts
+native completion barrier replaces mark polling ... ok (7ms)
+legacy bakes keep their existing mark protocol ... ok (1ms)
+native barrier must confirm every requested completion at the exact slot ... ok (1ms)
+native barrier timeout is a failure, not a polling fallback ... ok (774µs)
+direct sync requires BN coverage for the current root, independently of VC success ... ok (5ms)
+running 2 tests from ./tests/controller_validators_test.ts
+control imports a validator using the private authenticated keymanager ... ok (8ms)
+control forwards a signed exit to Beacon without forwarding the keymanager token ... ok (3ms)
+running 2 tests from ./tests/docker_progress_test.ts
+Docker reports an operation failure inside an HTTP-success progress stream ... ok (2ms)
+publishing rejects a registry error even when an older RepoDigest is present ... ok (273µs)
+running 2 tests from ./tests/docker_test.ts
+partial startup rollback preserves another stand and is repeatable ... ignored (0ms)
+Panda resources are named and labeled consistently; cleanup preserves another owner ... ignored (0ms)
+running 9 tests from ./tests/e2e_test.ts
+real pectra: ordinary unmodified clients produce an agreed execution payload ... ignored (0ms)
+real pectra: CLI up/down/reset, ownership and profile mismatch rejection ... ignored (0ms)
+real pectra: time travel, pause, automine, finality and external indexer ... ignored (0ms)
+real pectra: honest large jumps preserve every duty, economics and signing history ... ignored (0ms)
+real pectra: fast skips preserve signing history, support the next transaction and resume finality ... ignored (0ms)
+real pectra: full participation, no attestation penalties and finality at warp return ... ignored (0ms)
+real pectra: deposit, activation and consolidation ... ignored (0ms)
+real pectra: signed voluntary exit and complete withdrawal ... ignored (0ms)
+real pectra: sequential RPC and ethers contract deployments ... ignored (0ms)
+running 5 tests from ./tests/lighthouse_build_test.ts
+Lighthouse identity changes with either upstream or baker, independently of Panda and Geth ... ok (37ms)
+upstream version is read from direct and workspace Cargo package versions ... ok (425µs)
+published native clients must match both versions and architecture before reuse ... ok (1ms)
+registry lookup reuses existing immutable images and builds only on confirmed absence ... ok (296µs)
+Lighthouse workflow derives upstream/baker tags without a manual revision ... ok (121ms)
+running 6 tests from ./tests/profiles_test.ts
+hardfork profiles reject unknown names and unsafe bake paths ... ok (561µs)
+build identity is independent of JSON key ordering and changes with patch/source/platform ... ok (435µs)
+each hardfork's timeline executes its declared phases and completes a full slot ... ok (462µs)
+bake lock protects a running build and atomic publication preserves prior records ... ok (3ms)
+CLI parses hardfork/tag without consuming control arguments and rejects typos ... ok (294µs)
+native tests keep their baked source snapshot after edits and reject archive corruption ... ok (1ms)
+running 5 tests from ./tests/release_test.ts
+each registered fork has its own immutable revision namespace ... ok (613µs)
+release metadata binds source, bake, all client identities and actual architecture ... ok (1ms)
+publishing refuses existing revisions, authorization errors and registry outages ... ok (233µs)
+Panda release selection takes its version from a Git tag, never manual revision input ... ok (40ms)
+Lighthouse tags identify upstream version/commit and baker version/content ... ok (281µs)
+running 12 tests from ./tests/time_test.ts
+forward time executes phase barriers, exact dates and partial slots ... ok (925µs)
+concurrent advances serialize and accumulate, rather than lose time ... ok (196µs)
+a partially failed clock update faults subsequent mutations ... ok (131µs)
+advanceUntil is bounded, detects existing success and processes epochs ... ok (214µs)
+skip has separate semantics and does not execute intervening duties ... ok (85µs)
+shutdown interrupts a long advance at the next phase boundary ... ok (64µs)
+large advanceTime/advanceTo execute every slot and preserve partial-slot targets ... ok (64ms)
+failed explicit skip faults the timeline and continuous advancement never skips ... ok (408µs)
+fast warp finishes current duties, skips the gap and produces the exact destination ... ok (287µs)
+fast warp preserves small jumps and mixed modes share one serialized timeline ... ok (232µs)
+invalid warp modes and unavailable fast backend fail before mutation ... ok (2ms)
+a failed fast warp faults both modes and cannot be retried over partial progress ... ok (315µs)
+running 1 test from ./tests/verification_test.ts
+immutable bake verification ignores other profiles, new build recipes and unrelated tests ... ok (99ms)
+running 1 test from ./tests/warp_api_test.ts
+public API forwards warp modes through HTTP and defaults to honest advancement ... ok (8ms)
+running 2 tests from ./tests/warp_assertions_test.ts
+warp economics rejects missing duty flags, inactivity, negative rewards and lost participants ... ok (4ms)
+warp history checks reject double proposals, double votes, surround votes and lost keys ... ok (775µs)
+running 2 tests from ./tests/warp_rewards_test.ts
+long honest warp captures each closed epoch before historical states are pruned ... ok (411ms)
+reward collection propagates missing evidence instead of claiming no penalties ... ok (1ms)
+
+ok | 60 passed | 0 failed | 13 ignored (3s)
+

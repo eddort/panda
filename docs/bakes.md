@@ -124,16 +124,17 @@ runs only the selected profile and tag's integration scenarios. `test` runs shar
 `test:baker` separately checks Docker rollback/ownership and the builder. Changing one bake does not
 build or test the others.
 
-| Scenario                                                                                   | Pectra | Gloas |
-| ------------------------------------------------------------------------------------------ | ------ | ----- |
-| Ordinary upstream clients: first block and EL/CL agreement                                 | Yes    | Yes   |
-| CLI up/down/reset, stable genesis, rejection of a different profile                        | Yes    | Yes   |
-| Pause, advanceTime/advanceTo, future timestamps, automine, nonce gaps, finality, indexer   | Yes    | Yes   |
-| Two 8192-slot jumps: next transaction within 25 seconds, resumed finality, signing history | Yes    | Yes   |
-| Deposit, key activation and consolidation                                                  | Yes    | Yes   |
-| Signed voluntary exit, actual withdrawal and final zero balance                            | Yes    | Yes   |
-| Twenty sequential deployments through raw RPC and ethers                                   | Yes    | Yes   |
-| Separate envelope, matching bid/hash, PTC votes and phase barriers                         | —      | Yes   |
+| Scenario                                                                                     | Pectra | Gloas |
+| -------------------------------------------------------------------------------------------- | ------ | ----- |
+| Ordinary upstream clients: first block and EL/CL agreement                                   | Yes    | Yes   |
+| CLI up/down/reset, stable genesis, rejection of a different profile                          | Yes    | Yes   |
+| Pause, advanceTime/advanceTo, future timestamps, automine, nonce gaps, finality, indexer     | Yes    | Yes   |
+| Two 8192-slot jumps: measured next-transaction latency, finality, duties and signing history | Yes    | Yes   |
+| Honest warp: participation, attestation rewards, sync/PTC coverage, finality and next deploy | Yes    | Yes   |
+| Deposit, key activation and consolidation                                                    | Yes    | Yes   |
+| Signed voluntary exit, actual withdrawal and final zero balance                              | Yes    | Yes   |
+| Twenty sequential deployments through raw RPC and ethers                                     | Yes    | Yes   |
+| Separate envelope, matching bid/hash, PTC votes and phase barriers                           | —      | Yes   |
 
 The consolidation scenario explicitly uses `churnLimitQuotient: 4` to give the small network
 consolidation capacity. Gloas also sets the independent `consolidationChurnLimitQuotient: 4`:
@@ -161,11 +162,17 @@ Lighthouse for checks without controlled clocks. To run a particular bake's nati
 prevent testing an older artifact. For manifests without a source archive, recovery requires an
 exact hash match from the working tree or Git; otherwise native verification is rejected.
 
-`advanceTime`/`advanceTo` jumps longer than an epoch skip intermediate slots and produce a real
-block at the destination. `advanceSlots`/`advanceEpochs` retain continuous block production. The
-protocol accounts for missed votes, including possible inactivity penalties. `skipSlots` explicitly
-skips without producing a destination block. The timing bound includes the next successful
-transaction, so deferred work cannot be hidden behind a quick API response.
+Both warp modes use the same immutable client bake. Default `advanceTime`/`advanceTo` preserve
+continuous duties; `{ mode: "fast" }` explicitly skips gaps and accepts their ordinary penalties.
+The selected Gloas honest implementation remains `direct-sync`, key `e41c863b…`; isolated group
+signer research is not installed. Mode selection changes only the controller/API. Pectra is checked
+independently with its selected artifact; Gloas timings do not describe Pectra.
+
+Each profile routes `warp` to the long honest scenario, `warp-fast` to the fast scenario, and
+`warp-economics` to short continuous-participation checks. Fast has a 25-second budget including the
+next transaction; honest has a separate long watchdog and economic gates. Scenario coverage is not a
+passing profile verification. See [mode validation](warp-modes.md) and
+[historical TDD evidence](warp-tdd-results.md).
 
 The Gloas patch reuses candidate balances and sixteen random values per SHA-256 digest; small
 validator sets use upstream batch shuffling. Native tests compare PTC and proposer selection with
@@ -188,13 +195,18 @@ keep the client change smaller. Controlled mode uses Lighthouse's standard
 
 That full suite passed 8/8 scenarios with `verified: true`. Its two 8192-slot jumps including the
 following transaction took 10.8 / 11.6 seconds. Both resumed finality; all 64 validators continued
-signing without slashing or conflicts. The current regression threshold is 25 seconds to account for
-VC startup variation; the earlier 10-second target is no longer an acceptance criterion. The report
-is `reports/profiles/gloas/stable/verification.json`.
+signing without slashing or conflicts. At that stage the regression threshold was 25 seconds to
+account for VC startup variation; the earlier 10-second target is no longer an acceptance criterion.
+The report is `reports/profiles/gloas/stable/verification.json`.
 
 On September 30, 2026, the user approved raising the shared threshold from 20 to 25 seconds. This
 changed the test criterion while retaining the advancement algorithm and finality/signing-history
 checks.
+
+During direct-sync work, the assistant incorrectly treated 25 seconds as a nonblocking target and
+introduced a 30-minute watchdog. The user rejected the resulting run and requires at most one
+minute. That watchdog must be corrected before another large test; it is not an accepted performance
+budget.
 
 ```sh
 deno task up --profile gloas --bake stable

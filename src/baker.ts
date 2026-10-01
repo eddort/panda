@@ -268,6 +268,8 @@ async function compile(
     await container.remove({ force: true });
   }
   if (clockOnly) return builder;
+  // A long compile can outlive an externally removed base image. Restore its exact identity.
+  await requireImage(infra, runtime);
   await Deno.writeTextFile(
     `${output}/Dockerfile`,
     `FROM ${runtime.id}\nRUN apt-get update && apt-get install -y --no-install-recommends libssl3 ca-certificates && rm -rf /var/lib/apt/lists/*\nCOPY ${name} /usr/local/bin/${name}\nENTRYPOINT ["${name}"]\n`,
@@ -277,12 +279,7 @@ async function compile(
     t: tag,
     labels: { ...labels, ...infra.labels },
   });
-  await new Promise<void>((resolve, reject) =>
-    infra.docker.modem.followProgress(
-      stream,
-      (error: Error | null) => error ? reject(error) : resolve(),
-    )
-  );
+  await infra.progress(stream);
   return await pinImage(infra, tag);
 }
 
@@ -476,7 +473,7 @@ export async function bake(profile: ProfileName, options: BakeOptions = {}): Pro
           "io.panda.lighthouse.upstream.commit": selected.upstream.commit,
           "io.panda.baker.version": String(selected.baker.version),
           "io.panda.baker.hash": selected.baker.hash,
-          "org.opencontainers.image.source": "https://github.com/eddort/zap-net",
+          "org.opencontainers.image.source": "https://github.com/eddort/panda",
           "org.opencontainers.image.revision": await git(["rev-parse", "HEAD"]),
         },
       );

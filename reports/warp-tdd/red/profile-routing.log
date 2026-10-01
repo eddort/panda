@@ -1,0 +1,29 @@
+Check tests/profiles_test.ts
+running 6 tests from ./tests/profiles_test.ts
+hardfork profiles reject unknown names and unsafe bake paths ... ok (2ms)
+build identity is independent of JSON key ordering and changes with patch/source/platform ... ok (15ms)
+each hardfork's timeline executes its declared phases and completes a full slot ... FAILED (3ms)
+bake lock protects a running build and atomic publication preserves prior records ... ok (5ms)
+CLI parses hardfork/tag without consuming control arguments and rejects typos ... ok (182µs)
+native tests keep their baked source snapshot after edits and reject archive corruption ... ok (1ms)
+
+ ERRORS 
+
+each hardfork's timeline executes its declared phases and completes a full slot => ./tests/profiles_test.ts:26:6
+error: AssertionError: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- 'bakes/shared/tests/warp_economics.ts'
+
+    assert.equal(Reflect.get(profile.tests, "warp-economics"), "bakes/shared/tests/warp_economics.ts");
+           ^
+    at file:///Users/lexdort/.codex/worktrees/2b62/zap-net/tests/profiles_test.ts:42:12
+
+ FAILURES 
+
+each hardfork's timeline executes its declared phases and completes a full slot => ./tests/profiles_test.ts:26:6
+
+FAILED | 5 passed | 1 failed (32ms)
+
+error: Test failed

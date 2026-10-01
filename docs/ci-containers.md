@@ -128,6 +128,10 @@ continues to start a local controller. The remote client reads no Panda files an
 externally owned service. Start a new service for every suite. For a private Panda package the
 consumer can use `PANDA_REGISTRY_TOKEN`.
 
+The exit-eligibility and historical-summary transitions explicitly use
+`advanceTo(timestamp, { mode: "fast" })`. Voting, activation and finality recovery still execute
+complete slots. The Node client preserves Panda's honest default when the mode is omitted.
+
 Ethereum RPC, Beacon API and `/control` share one endpoint. Importing validator keys uses the real
 Lighthouse keymanager; Lighthouse signs voluntary exits before submission to the Beacon API.
 Keymanager credentials stay on the controller host. The consumer patch is described in
@@ -147,9 +151,10 @@ Docker socket. Host/Origin checks still apply. All resources use exact `io.panda
 SIGTERM closes the controller and its resources before stopping the private daemon.
 
 Initial readiness requires block zero, slot zero and automine off. Health probes remain read-only
-while the suite controls time. Restarts start a fresh chain; daemon failure stops the service.
-Existing large time jumps retain their documented skipped-slot semantics. These checks do not
-establish honest fast-forward or validator-economics certification.
+while the suite controls time. Restarts start a fresh chain; daemon failure stops the service. Time
+control defaults to honest execution; skipped-slot jumps require explicit `mode: "fast"`. Both modes
+use the same client image. Fast verifier scenarios do not certify economics across the skipped
+interval. Full profile verification retains separate honest, fast and economics scenarios.
 
 Deno 2.9.7 is inside the service. Base images use digests, direct npm dependencies use exact
 versions, and dependency caching uses `deno.lock` with `--frozen-lockfile`. Runtime uses

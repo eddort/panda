@@ -1,0 +1,2 @@
+Task smoke:docker ./scripts/deno run -A scripts/smoke_docker.ts
+{"test":"docker-smoke","deno":"2.9.7","docker":"29.2.0","architecture":"aarch64","elapsedMs":4248.876625,"logs":"smoke-started","exec":"smoke-exec","events":true}

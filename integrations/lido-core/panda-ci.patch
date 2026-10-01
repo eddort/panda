@@ -52,7 +52,7 @@ index 078bc9b0c..a7357dd4c 100644
        accounts: ["0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"],
        timeout: 120_000,
 diff --git a/lib/panda/index.ts b/lib/panda/index.ts
-index 6ebb763f3..208198784 100644
+index 6ebb763f3..89352aa90 100644
 --- a/lib/panda/index.ts
 +++ b/lib/panda/index.ts
 @@ -2,7 +2,7 @@ import assert from "node:assert/strict";
@@ -64,7 +64,7 @@ index 6ebb763f3..208198784 100644
  import path from "node:path";
  import { createInterface } from "node:readline";
  
-@@ -12,6 +12,7 @@ export interface PandaStatus {
+@@ -12,9 +12,14 @@ export interface PandaStatus {
    bake: string;
    bakeKey: string;
    slot: number;
@@ -72,7 +72,14 @@ index 6ebb763f3..208198784 100644
    el: { number: string; hash: string; timestamp: string };
  }
  
-@@ -31,13 +32,33 @@ export class Panda {
++export interface WarpOptions {
++  mode: "honest" | "fast";
++}
++
+ /** Thin Node client: the Panda process owns Docker, EL/CL and protocol time. */
+ export class Panda {
+   private child?: ChildProcess;
+@@ -31,13 +36,33 @@ export class Panda {
  
    static async start({
      root = process.env.PANDA_ROOT,
@@ -108,7 +115,18 @@ index 6ebb763f3..208198784 100644
      const panda = new Panda(path.resolve(root), id, path.resolve(output, id), profile, bake);
      await mkdir(panda.directory, { recursive: true });
      const log = createWriteStream(path.join(panda.directory, "network.log"));
-@@ -131,32 +152,12 @@ export class Panda {
+@@ -122,8 +147,8 @@ export class Panda {
+   advanceSlots(count: number): Promise<void> {
+     return this.rpc("advanceSlots", [count], true);
+   }
+-  advanceTo(timestamp: number): Promise<void> {
+-    return this.rpc("advanceTo", [timestamp], true);
++  advanceTo(timestamp: number, options?: WarpOptions): Promise<void> {
++    return this.rpc("advanceTo", options ? [timestamp, options] : [timestamp], true);
+   }
+   setAutomine(enabled: boolean): Promise<void> {
+     return this.rpc("setAutomine", [enabled], true);
+@@ -131,32 +156,12 @@ export class Panda {
  
    /** Import an EIP-2335 key so newly deposited validators can perform their duties. */
    async importValidator(keystore: string, password: string): Promise<void> {
@@ -144,7 +162,7 @@ index 6ebb763f3..208198784 100644
  
    async close(): Promise<void> {
 diff --git a/test/integration/panda/README.md b/test/integration/panda/README.md
-index a9f77249e..5aa1d747a 100644
+index a9f77249e..c4f675c3c 100644
 --- a/test/integration/panda/README.md
 +++ b/test/integration/panda/README.md
 @@ -8,11 +8,16 @@ when a test fails.
@@ -165,6 +183,39 @@ index a9f77249e..5aa1d747a 100644
  Read [verifiers.integration.ts](verifiers.integration.ts) for the scenarios. Network lifecycle and
  HTTP calls live in `lib/panda/index.ts`; protocol fixture setup, the existing scratch command, and
  SSZ proof construction live in `helpers/`. Tests use Hardhat's real-network provider, TypeChain,
+@@ -54,8 +59,8 @@ receipts under `.local/panda/core-<id>/`. The SDK asserts fresh genesis before d
+ witness is anchored only after its complete reconstructed state root matches Lighthouse and its
+ beacon root matches both the EL child header and EIP-4788.
+ 
+-The current bake implements large `advanceTo` jumps using skipped slots and real state transitions.
+-The exit/history scenarios explicitly exercise that path. They do **not** certify complete validator
++The exit/history scenarios explicitly call `advanceTo(..., { mode: "fast" })`, using skipped slots
++and real state transitions. The client's omitted mode preserves Panda's honest default. These fast scenarios do **not** certify complete validator
+ duty coverage or absence of missed-duty penalties. Voting and validator activation advance full
+ slots. Protocol delays and fork constants are unchanged.
+ 
+diff --git a/test/integration/panda/helpers/protocol.ts b/test/integration/panda/helpers/protocol.ts
+index 34b1185ff..e54161010 100644
+--- a/test/integration/panda/helpers/protocol.ts
++++ b/test/integration/panda/helpers/protocol.ts
+@@ -383,7 +383,7 @@ export class Protocol {
+       boundary = (Math.floor(oldSlot / 8192) + 1) * 8192;
+     // Explicit time-jump scenario: the current bake skips empty slots. This tests
+     // real historical transitions, not complete validator duty/economics coverage.
+-    await this.panda.advanceTo(Number(this.genesis.genesis_time) + boundary * 12 + 11.5);
++    await this.panda.advanceTo(Number(this.genesis.genesis_time) + boundary * 12 + 11.5, { mode: "fast" });
+     const recent = await this.capture("historical-anchor");
+     const index = Math.floor(oldSlot / 8192);
+     const roots = State.fields.block_roots.node(recent.state.block_roots);
+@@ -426,7 +426,7 @@ export class Protocol {
+     const earliest = BigInt(this.genesis.genesis_time) + (await this.exitVerifier.SHARD_COMMITTEE_PERIOD_IN_SECONDS());
+     const eligible = delivered > earliest ? delivered : earliest;
+     const deadline = eligible + (await this.nor.exitDeadlineThreshold(0)) + 24n;
+-    await this.panda.advanceTo(Number(deadline) + 11.5);
++    await this.panda.advanceTo(Number(deadline) + 11.5, { mode: "fast" });
+   }
+   expectExitDelayEvent(receipt: TransactionReceipt, pubkey: string): void {
+     const events = receipt.logs
 diff --git a/.github/workflows/tests-integration-panda.yml b/.github/workflows/tests-integration-panda.yml
 new file mode 100644
 index 000000000..01c52ff71
@@ -245,10 +296,10 @@ index 000000000..01c52ff71
 +          path: .local/panda/
 diff --git a/scripts/tests/panda-client.test.cjs b/scripts/tests/panda-client.test.cjs
 new file mode 100644
-index 000000000..49cfc2a0d
+index 000000000..12d0fb0db
 --- /dev/null
 +++ b/scripts/tests/panda-client.test.cjs
-@@ -0,0 +1,54 @@
+@@ -0,0 +1,59 @@
 +const assert = require("node:assert/strict");
 +const { test } = require("node:test");
 +const http = require("node:http");
@@ -261,12 +312,14 @@ index 000000000..49cfc2a0d
 +test("external Panda needs no checkout, preserves fresh genesis and does not own shutdown", async () => {
 +  const output = await fs.mkdtemp(path.join(os.tmpdir(), "panda-client-"));
 +  const methods = [];
++  const advances = [];
 +  let block = "0x0";
 +  const server = http.createServer(async (req, res) => {
 +    let text = "";
 +    for await (const chunk of req) text += chunk;
 +    const request = JSON.parse(text);
 +    methods.push(request.method);
++    if (request.method === "advanceTo") advances.push(request.params);
 +    res.setHeader("content-type", "application/json");
 +    res.end(
 +      JSON.stringify({
@@ -293,8 +346,11 @@ index 000000000..49cfc2a0d
 +    assert.equal(panda.id, "service-unit");
 +    await panda.importValidator("{}", "password");
 +    await panda.exitValidator(`0x${"ab".repeat(48)}`);
++    await panda.advanceTo(2000000000);
++    await panda.advanceTo(2000098304, { mode: "fast" });
++    assert.deepEqual(advances, [[2000000000], [2000098304, { mode: "fast" }]]);
 +    await panda.close();
-+    assert.deepEqual(methods, ["status", "importValidator", "exitValidator"]);
++    assert.deepEqual(methods, ["status", "importValidator", "exitValidator", "advanceTo", "advanceTo"]);
 +    block = "0x1";
 +    await assert.rejects(Panda.start({ url, root: "/nonexistent-panda", output, bake: "r1" }), /fresh chain/);
 +    assert.equal(methods.includes("shutdown"), false);

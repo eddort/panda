@@ -1,0 +1,2 @@
+revision=v0.0.0-merge.1
+matrix={"include":[{"profile":"pectra","image":"ghcr.io/eddort/panda-pectra:v0.0.0-merge.1"},{"profile":"gloas","image":"ghcr.io/eddort/panda-gloas:v0.0.0-merge.1"}]}

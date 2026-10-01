@@ -91,7 +91,7 @@ Deno.test("shutdown interrupts a long advance at the next phase boundary", async
   assert.equal(moves, 1);
 });
 
-Deno.test("large advanceTime/advanceTo finish current duties, skip and produce the destination slot", async () => {
+Deno.test("large advanceTime/advanceTo execute every slot and preserve partial-slot targets", async () => {
   const moves: [number, number | undefined][] = [];
   const skips: number[] = [];
   const time = new Timeline(0, 4_000, {
@@ -106,14 +106,16 @@ Deno.test("large advanceTime/advanceTo finish current duties, skip and produce t
   });
   await time.advanceTime(8192 * 12);
   assert.equal(time.nowMs, 8192 * 12000 + 4000);
-  assert.deepEqual(skips, [8191 * 12000 + 11500]);
-  assert.deepEqual(moves, [[6000, 6000], [8000, 8000], [9000, 9000], [11500, 11500], [
-    8192 * 12000,
-    0,
-  ], [8192 * 12000 + 4000, 4000]]);
+  assert.deepEqual(skips, [], "advanceTime must not model validator downtime");
+  assert.deepEqual(
+    moves.filter(([, phase]) => phase === 0).map(([at]) => at),
+    Array.from({ length: 8192 }, (_, i) => (i + 1) * 12000),
+  );
+  assert.deepEqual(moves.slice(0, 4), [[6000, 6000], [8000, 8000], [9000, 9000], [11500, 11500]]);
   await time.advanceTo(16384 * 12 + 0.25);
   assert.equal(time.nowMs, 16384 * 12000 + 250);
-  assert.equal(skips.length, 2);
+  assert.equal(skips.length, 0);
+  assert.equal(moves.filter(([, phase]) => phase === 0).length, 16384);
   assert.deepEqual(moves.at(-1), [16384 * 12000 + 250, undefined]);
   await assert.rejects(time.advanceTo(1), /forward/);
   await time.advanceTo(16384 * 12 + 11.999);
@@ -121,7 +123,7 @@ Deno.test("large advanceTime/advanceTo finish current duties, skip and produce t
   assert.equal(time.nowMs, 24576 * 12000 + 11999);
 });
 
-Deno.test("failed fast skip faults the timeline and continuous advancement never skips", async () => {
+Deno.test("failed explicit skip faults the timeline and continuous advancement never skips", async () => {
   let skips = 0;
   const time = new Timeline(0, 11500, {
     move: () => Promise.resolve(),
@@ -132,6 +134,102 @@ Deno.test("failed fast skip faults the timeline and continuous advancement never
   });
   await time.advanceEpochs(2);
   assert.equal(skips, 0);
-  await assert.rejects(time.advanceTime(100000), /skip interrupted/);
+  await assert.rejects(time.skipSlots(8192), /skip interrupted/);
   await assert.rejects(time.stepSlot(), /reset required/);
+});
+
+Deno.test("fast warp finishes current duties, skips the gap and produces the exact destination", async () => {
+  const moves: [number, number | undefined][] = [];
+  const skips: number[] = [];
+  const time = new Timeline(0, 4000, {
+    move: (at, phase) => {
+      moves.push([at, phase]);
+      return Promise.resolve();
+    },
+    skip: (at) => {
+      skips.push(at);
+      return Promise.resolve();
+    },
+  });
+  const advance = time.advanceTime.bind(time);
+  const to = time.advanceTo.bind(time);
+  await advance(8192 * 12, { mode: "fast" });
+  assert.deepEqual(skips, [8191 * 12000 + 11500]);
+  assert.deepEqual(moves.filter(([, phase]) => phase === 0), [[8192 * 12000, 0]]);
+  assert.deepEqual(moves.slice(0, 4), [[6000, 6000], [8000, 8000], [9000, 9000], [11500, 11500]]);
+  assert.equal(time.nowMs, 8192 * 12000 + 4000);
+  await to(16384 * 12 + 0.25, { mode: "fast" });
+  assert.equal(time.nowMs, 16384 * 12000 + 250);
+  assert.equal(skips.length, 2);
+  assert.deepEqual(moves.at(-1), [16384 * 12000 + 250, undefined]);
+  await assert.rejects(to(1, { mode: "fast" }), /forward/);
+  assert.equal(skips.length, 2);
+});
+
+Deno.test("fast warp preserves small jumps and mixed modes share one serialized timeline", async () => {
+  const slots: number[] = [];
+  const skips: number[] = [];
+  const time = new Timeline(0, 11500, {
+    move: (at, phase) => {
+      if (phase === 0) slots.push(at / 12000);
+      return Promise.resolve();
+    },
+    skip: (at) => {
+      skips.push(at);
+      return Promise.resolve();
+    },
+  });
+  const advance = time.advanceTime.bind(time);
+  await advance(32 * 12, { mode: "fast" });
+  assert.equal(skips.length, 0);
+  assert.equal(slots.length, 32);
+  await Promise.all([
+    advance(33 * 12, { mode: "honest" }),
+    advance(8192 * 12, { mode: "fast" }),
+    time.advanceSlots(2),
+  ]);
+  assert.equal(time.slot, 32 + 33 + 8192 + 2);
+  assert.equal(skips.length, 1);
+  assert.equal(slots.length, 32 + 33 + 1 + 2);
+});
+
+Deno.test("invalid warp modes and unavailable fast backend fail before mutation", async () => {
+  let moves = 0;
+  const time = new Timeline(0, 11500, {
+    move: () => {
+      moves++;
+      return Promise.resolve();
+    },
+  });
+  const advance = time.advanceTime.bind(time) as (
+    seconds: number,
+    options: unknown,
+  ) => Promise<void>;
+  for (const options of [{ mode: "quick" }, null, "fast", { mode: null }]) {
+    await assert.rejects(async () => await advance(1000, options), /mode|options/i);
+  }
+  await assert.rejects(
+    async () => await advance(8192 * 12, { mode: "fast" }),
+    /support.*fast|support.*skip/i,
+  );
+  assert.equal(moves, 0);
+  assert.equal(time.nowMs, 11500);
+  await time.stepSlot();
+  assert.equal(time.slot, 1, "bad requests must not poison a healthy timeline");
+});
+
+Deno.test("a failed fast warp faults both modes and cannot be retried over partial progress", async () => {
+  let skips = 0;
+  const time = new Timeline(0, 11500, {
+    move: () => Promise.resolve(),
+    skip: () => {
+      skips++;
+      throw new Error("VC restart interrupted");
+    },
+  });
+  const advance = time.advanceTime.bind(time);
+  await assert.rejects(advance(8192 * 12, { mode: "fast" }), /restart interrupted/);
+  await assert.rejects(advance(12, { mode: "honest" }), /reset required/);
+  await assert.rejects(advance(8192 * 12, { mode: "fast" }), /reset required/);
+  assert.equal(skips, 1);
 });

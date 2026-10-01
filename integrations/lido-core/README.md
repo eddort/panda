@@ -18,3 +18,7 @@ The patch adds `PANDA_URL` support to the existing client and Hardhat network, d
 import/exit to Panda's API, and adds **Integration Tests Panda**. The workflow accepts the published
 Gloas image digest and runs `yarn test:integration:panda --bail` against a fresh service on port
 18547. See [the image guide](../../docs/ci-containers.md) for publication and runtime details.
+
+Exit eligibility and historical-summary tests explicitly use `advanceTo(..., { mode: "fast" })`.
+Voting, activation and finality recovery still advance complete slots. Omitting a mode keeps Panda's
+honest default; fast scenarios do not certify validator economics across the skipped interval.

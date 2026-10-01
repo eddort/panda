@@ -1,6 +1,8 @@
 import { type Config } from "./config.ts";
 import { Controller } from "./controller.ts";
 import { json, rpc, waitFor } from "./http.ts";
+import type { WarpOptions } from "./time.ts";
+export type { WarpMode, WarpOptions } from "./time.ts";
 
 export class Devnet {
   private controller?: Controller;
@@ -48,13 +50,12 @@ export class Devnet {
   advanceEpochs(count: number): Promise<void> {
     return this.call("advanceEpochs", [count]);
   }
-  advanceTime(seconds: number): Promise<void> {
-    return this.call("advanceTime", [seconds]);
+  advanceTime(seconds: number, options?: WarpOptions): Promise<void> {
+    return this.call("advanceTime", options === undefined ? [seconds] : [seconds, options]);
   }
-  advanceTo(timestamp: number | Date): Promise<void> {
-    return this.call("advanceTo", [
-      timestamp instanceof Date ? timestamp.getTime() / 1000 : timestamp,
-    ]);
+  advanceTo(timestamp: number | Date, options?: WarpOptions): Promise<void> {
+    const seconds = timestamp instanceof Date ? timestamp.getTime() / 1000 : timestamp;
+    return this.call("advanceTo", options === undefined ? [seconds] : [seconds, options]);
   }
   skipSlots(count: number): Promise<void> {
     return this.call("skipSlots", [count]);

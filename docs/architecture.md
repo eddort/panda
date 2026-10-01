@@ -1,5 +1,9 @@
 # Architecture and verification boundaries
 
+For a first pass through the implementation, read
+[How protocol time and warp work](warp-algorithm.md). It follows one request through the honest/fast
+algorithms and links each step to its source.
+
 Hardfork recipes live in `bakes/pectra/recipe.json` and `bakes/gloas/recipe.json`. Pectra targets
 Prague/Electra with unmodified Geth v1.15.11 and Lighthouse v7.1.0. Gloas targets the pinned
 experimental Amsterdam/Gloas implementations. A bake records the actual source commits, clock patch
@@ -32,6 +36,15 @@ attestation committee (PTC) work at 9 seconds. Advancing the BN first prevents t
 into a future slot of the BN. A control clock acknowledgement only establishes the clock value;
 completion watermarks and EL/CL head agreement establish completion of the protocol work.
 
+Bakes declaring `directSync` deliver full sync contributions from the existing pool of verified
+individual messages into the ordinary block operation pool. The VC still signs each validator's
+message; controlled mode omits sync aggregator selection proofs and gossip wrappers. Completion is
+bound to the exact slot and root and requires all 512 committee positions. The controller also
+requires that root to match its execution-confirmed head. Candidate-pool admission may precede a
+Gloas envelope; it is never treated as proof of execution validity. Missing keys cause a bounded
+failure rather than successful advancement with missing votes. Ordinary mode keeps upstream
+delivery.
+
 `ManualSlotClock` only supplies time calculations and does not drive async tasks.
 `BeaconChainHarness` explicitly drives block/attestation processing in tests, including optional
 mocked execution. It is a useful reference, but is not used as the runtime client. The fork keeps
@@ -42,7 +55,7 @@ notifications wake protocol sleeps without polling while paused. Only the review
 the new sleep functions. Ordinary Tokio timers, network request deadlines, JWT generation,
 networking and watchdogs keep real time.
 
-The maintained patch changes:
+The protocol-clock part of the maintained patch changes:
 
 - `common/slot_clock`: clock source and watch-based protocol sleeps.
 - `beacon_node/timer`: per-slot work.
@@ -55,6 +68,12 @@ The maintained patch changes:
 The Gloas patch additionally covers payload attestations, proposer/builder preferences and the
 attestation deadline raced against a head event. That last deadline must use protocol time: a large
 skipped-slot state transition can otherwise let the real timer fire before duties finish loading.
+
+The selected `direct-sync` bake also retains controlled BLS verification reuse/batching and direct
+sync contribution delivery; Gloas includes prepared empty-slot state caching. These are native
+changes beyond a clock replacement. Their roles and limits are described in the
+[algorithm walkthrough](warp-algorithm.md). Choosing honest versus fast adds no further client
+patch.
 
 Network gossip subscriptions, real-time metrics/notifiers, and optional services are not converted
 globally. P2P is disabled in this single-node topology. Extending to multi-node/fork-transition
@@ -103,18 +122,21 @@ site, regenerate the appropriate maintained patch against a clean pinned checkou
 that hardfork/tag. The profile suite includes ordinary baseline and all real e2e checks. Preserve
 original signature/state checks. Build cost is independent of ordinary devnet startup.
 
-`advanceSlots`/`advanceEpochs` execute every intervening proposal, vote and state transition.
-`advanceTime`/`advanceTo` use skipped slots for jumps larger than one epoch and produce a real
-destination block. `skipSlots` finishes the current slot, stops the VC, advances BN time and
-restarts the VC with the same keys and slashing protection at the new time. Real empty-slot
-transitions, penalties and committee changes are preserved. Gloas bakes with `preparedSkip` run
-these transitions once before restarting the VC and persist every intermediate state summary and
-configured HDiff base through the ordinary store methods required by import and finalization.
-Replay-only summaries use bounded write batches; only useful epoch/destination states are cloned
-into RAM. Controlled prepared bakes use a 512-slot first diff layer to reduce disk work for the
-small registry. Duties, withdrawal calculation and block verification reuse compatible states for
-the same head root. Older bakes perform catchup during block processing. Private VC port numbers may
-change; the manifest is updated. No fake votes fill the gap.
+`advanceSlots`/`advanceEpochs` and default `advanceTime`/`advanceTo` share the phase executor for
+every intervening proposal, vote and state transition. Per-call `{ mode: "fast" }` restores the
+previous skip path for gaps over 32 slots, followed by the destination's real block. Honest mode
+remains the default; both modes share the same serialized timeline and fault until reset after
+ambiguous partial progress. Mode selection adds no EL/CL patch. `skipSlots` finishes the current
+slot, stops the VC, advances BN time and restarts the VC with the same keys and slashing protection
+at the new time. Real empty-slot transitions, penalties and committee changes are preserved. Gloas
+bakes with `preparedSkip` run these transitions once before restarting the VC and persist every
+intermediate state summary and configured HDiff base through the ordinary store methods required by
+import and finalization. Replay-only summaries use bounded write batches; only useful
+epoch/destination states are cloned into RAM. Controlled prepared bakes use a 512-slot first diff
+layer to reduce disk work for the small registry. Duties, withdrawal calculation and block
+verification reuse compatible states for the same head root. Older bakes perform catchup during
+block processing. Private VC port numbers may change; the manifest is updated. No fake votes fill
+the gap.
 
 The default mainnet churn quotient is 65536 for Pectra and 32768 for Gloas. With 64 validators,
 Electra has no consolidation churn capacity: its activation/exit allocation consumes the available

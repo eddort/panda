@@ -1,0 +1,26 @@
+Task test:baker PANDA_DOCKER_TEST=1 ./scripts/deno test -A tests/baker_test.ts tests/docker_test.ts
+running 2 tests from ./tests/baker_test.ts
+baker pins imports, reuses artifacts across tags and preserves a tag on failed replacement ...'baker pins imports, reuses artifacts across tags and preserves a tag on failed replacement' has been running for over (1m0s)
+ FAILED (1m6s)
+local bake archive restores the identical image after removal from Docker ... ok (204ms)
+running 2 tests from ./tests/docker_test.ts
+partial startup rollback preserves another stand and is repeatable ... ok (2s)
+Panda resources are named and labeled consistently; cleanup preserves another owner ... ok (2s)
+
+ ERRORS 
+
+baker pins imports, reuses artifacts across tags and preserves a tag on failed replacement => ./tests/baker_test.ts:7:6
+error: Error: (HTTP code 500) server error - Get "https://registry-1.docker.io/v2/ethereum/client-go/manifests/sha256:798b7eb1bcef6d4be7576232beea63bf291450f48b025dc8fb5c6e37840e4364": proxyconnect tcp: dial tcp 192.168.65.1:3128: i/o timeout 
+      var msg = new Error(
+                ^
+    at file:///Users/lexdort/development/zap-net/node_modules/.deno/docker-modem@5.0.7/node_modules/docker-modem/lib/modem.js:389:17
+    at handler (file:///Users/lexdort/development/zap-net/node_modules/.deno/docker-modem@5.0.7/node_modules/docker-modem/lib/modem.js:432:11)
+    at IncomingMessage.<anonymous> (file:///Users/lexdort/development/zap-net/node_modules/.deno/docker-modem@5.0.7/node_modules/docker-modem/lib/modem.js:421:9)
+
+ FAILURES 
+
+baker pins imports, reuses artifacts across tags and preserves a tag on failed replacement => ./tests/baker_test.ts:7:6
+
+FAILED | 3 passed | 1 failed (1m12s)
+
+error: Test failed
