@@ -59,7 +59,9 @@ sh scripts/bootstrap.sh
 ```
 
 HTTP JSON-RPC and Beacon API share `http://127.0.0.1:8545`: use `/` for JSON-RPC and the standard
-`/eth/v1/...` and `/eth/v2/...` paths for Beacon API.
+`/eth/v1/...` and `/eth/v2/...` paths for Beacon API. Container images also expose native CL and VC
+APIs on ports 5052 and 5062. See [client APIs and logs](docs/ci-containers.md#client-apis-and-logs)
+for port mappings, the VC token and `panda logs el|cl|vc`.
 
 Press Ctrl-C to stop and clean up, or run `./scripts/deno task down` in another terminal.
 `./scripts/deno task reset --profile pectra --bake local` starts again with fresh state. Use

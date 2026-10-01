@@ -17,7 +17,10 @@ yarn typecheck
 The patch adds `PANDA_URL` support to the existing client and Hardhat network, delegates validator
 import/exit to Panda's API, and adds **Integration Tests Panda**. The workflow accepts the published
 Gloas image digest and runs `yarn test:integration:panda --bail` against a fresh service on port
-18547. See [the image guide](../../docs/ci-containers.md) for publication and runtime details.
+18547. Native Beacon and validator APIs are published on loopback ports 5052 and 5062. The workflow
+saves controller, EL, CL and VC logs as separate artifacts. See
+[the image guide](../../docs/ci-containers.md) for API authentication, client log commands and
+publication details.
 
 Exit eligibility and historical-summary tests explicitly use `advanceTo(..., { mode: "fast" })`.
 Voting, activation and finality recovery still advance complete slots. Omitting a mode keeps Panda's

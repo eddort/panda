@@ -109,13 +109,13 @@ another machine. Use a separate build tag for another architecture; image identi
 mismatches are rejected.
 
 The separate **Publish Lighthouse images** workflow publishes tested amd64 clients and emits a
-`clients.lock.json` containing the original bake plus registry transport identity. Select it with
-`deno task clients:pin <downloaded-file>` and commit the generated
-`bakes/<hardfork>/release/clients.lock.json`. `deno task clients:restore <hardfork>` restores that
-exact bake by registry digest and verifies image IDs; it never compiles or substitutes clients.
-Panda Git releases (`vX.Y.Z`) use independently versioned Lighthouse images
-(`v<upstream>-<commit>-b<bakerVersion>-<hash>`). See the [CI publication guide](ci-containers.md)
-for the full sequence.
+`clients.lock.json` containing the original bake plus registry transport identity. It opens a
+release PR containing `bakes/<hardfork>/release/clients.lock.json` and the planned Panda Git tag.
+Merging that PR creates the tag and triggers Panda publication. `clients:pin` remains available for
+manual recovery. `deno task clients:restore <hardfork>` restores that exact bake by registry digest
+and verifies image IDs; it never compiles or substitutes clients. Panda Git releases (`vX.Y.Z`) use
+independently versioned Lighthouse images (`v<upstream>-<commit>-b<bakerVersion>-<hash>`). See the
+[CI publication guide](ci-containers.md) for the full sequence.
 
 ## Test suites
 

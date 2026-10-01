@@ -3,6 +3,7 @@ import { Infrastructure } from "../src/docker.ts";
 import { waitFor } from "../src/http.ts";
 import { profileName, readBake } from "../src/profiles.ts";
 import { releaseMetadata } from "../src/release.ts";
+import { type Relay, tcpRelay } from "./relay.ts";
 
 const release = JSON.parse(await Deno.readTextFile("release.json"));
 const bake = await readBake(profileName(release.profile), release.bake);
@@ -34,14 +35,7 @@ const daemonExit = daemon.status.then((status) => {
   return status;
 });
 let controller: Controller | undefined;
-let listener: Deno.TcpListener | undefined;
-const connections = new Set<Deno.TcpConn>();
-function closeConnection(connection: Deno.TcpConn) {
-  connections.delete(connection);
-  try {
-    connection.close();
-  } catch { /* already closed */ }
-}
+const relays: Relay[] = [];
 try {
   await waitFor("private Docker daemon", async () => {
     if (daemonExited || abort.signal.aborted) throw new Error("Docker startup interrupted");
@@ -51,8 +45,10 @@ try {
     if (abort.signal.aborted) throw new Error("Image loading interrupted");
     if (!await infra.restoreImage(bake.images[role].id)) throw new Error(`Missing ${role} archive`);
   }
+  await Deno.mkdir("/run/panda", { recursive: true });
+  await Deno.writeTextFile("/run/panda/id", id, { mode: 0o600 });
   controller = await Controller.start({ id, profile: bake.profile, bake: bake.tag });
-  const upstream = new URL(controller.serve(0));
+  const upstream = controller.serve(0);
   const initial = await controller.status();
   if (
     initial.slot !== 0 || initial.automine ||
@@ -60,32 +56,17 @@ try {
   ) {
     throw new Error("Service must expose fresh genesis");
   }
-  // TCP relay preserves Host/Origin and all controller protections, including long control calls.
-  listener = Deno.listen({ hostname: "0.0.0.0", port: 8545 });
-  const relay = (async () => {
-    for await (const incoming of listener!) {
-      connections.add(incoming);
-      void (async () => {
-        let outgoing: Deno.TcpConn | undefined;
-        try {
-          outgoing = await Deno.connect({ hostname: "127.0.0.1", port: Number(upstream.port) });
-          connections.add(outgoing);
-          await Promise.allSettled([
-            incoming.readable.pipeTo(outgoing.writable),
-            outgoing.readable.pipeTo(incoming.writable),
-          ]);
-        } finally {
-          closeConnection(incoming);
-          if (outgoing) closeConnection(outgoing);
-        }
-      })().catch((error) => {
-        if (!abort.signal.aborted) console.error(error);
-      });
-    }
-  })().catch((error) => {
-    if (!abort.signal.aborted) throw error;
-  });
-  console.log(JSON.stringify({ event: "ready", id, url: "http://127.0.0.1:8545", ...release }));
+  relays.push(tcpRelay(() => upstream, 8545));
+  relays.push(tcpRelay(() => controller!.manifest.beacon, 5052));
+  relays.push(tcpRelay(() => controller!.manifest.vc, 5062));
+  console.log(JSON.stringify({
+    event: "ready",
+    id,
+    url: "http://127.0.0.1:8545",
+    beacon: "http://127.0.0.1:5052",
+    validator: "http://127.0.0.1:5062",
+    ...release,
+  }));
   if (!abort.signal.aborted) {
     await Promise.race([
       new Promise<void>((resolve) =>
@@ -95,13 +76,12 @@ try {
         throw new Error(`Private Docker exited: ${status.code}`);
       }),
       controller.server!.finished,
-      relay,
+      ...relays.map((relay) => relay.finished),
     ]);
   }
 } finally {
   stop();
-  listener?.close();
-  for (const connection of connections) closeConnection(connection);
+  await Promise.allSettled(relays.map((relay) => relay.close()));
   try {
     await controller?.close();
   } finally {

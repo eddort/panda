@@ -1,0 +1,9 @@
+Check tests/container_access_test.ts
+running 5 tests from ./tests/container_access_test.ts
+native relay preserves VC authentication, request bodies and CL event streams ... ok (20ms)
+relay resolves the current VC after restart and closes active connections ... ok (2ms)
+relay preserves controller Host and Origin restrictions ... ok (9ms)
+client logs select exact owner and role, demux stdout/stderr, and support follow ... ok (1ms)
+container CLI selects client logs and requires explicit token access ... ok (632µs)
+
+ok | 5 passed | 0 failed (40ms)

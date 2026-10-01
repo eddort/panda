@@ -12,7 +12,9 @@ COPY deno.runtime.json deno.lock ./
 COPY src/ src/
 COPY bakes/ bakes/
 COPY container/ container/
-RUN deno cache --config=deno.runtime.json --frozen-lockfile container/main.ts container/health.ts
+RUN deno cache --config=deno.runtime.json --frozen-lockfile container/main.ts container/health.ts container/clients.ts \
+    && chmod 755 /opt/panda/container/panda \
+    && ln -s /opt/panda/container/panda /usr/local/bin/panda
 COPY release.json ./
 COPY .cache/baker/images/ .cache/baker/images/
 ARG SOURCE_COMMIT
@@ -23,7 +25,7 @@ LABEL org.opencontainers.image.source="https://github.com/eddort/panda" \
     org.opencontainers.image.revision=$SOURCE_COMMIT \
     org.opencontainers.image.version=$REVISION \
     io.panda.profile=$PROFILE io.panda.bake.key=$BAKE_KEY
-EXPOSE 8545
+EXPOSE 8545 5052 5062
 STOPSIGNAL SIGTERM
 HEALTHCHECK --interval=5s --timeout=10s --start-period=180s --retries=12 \
     CMD ["deno", "run", "--config=deno.runtime.json", "--cached-only", "-A", "container/health.ts"]

@@ -1,8 +1,8 @@
 // @deno-types="@types/dockerode"
 import Docker from "dockerode";
-import { Writable } from "node:stream";
+import { Readable, Writable } from "node:stream";
 import { createReadStream, createWriteStream } from "node:fs";
-import { pipeline } from "node:stream/promises";
+import { finished, pipeline } from "node:stream/promises";
 import { createGzip } from "node:zlib";
 import type { BakedImage } from "./profiles.ts";
 
@@ -179,6 +179,31 @@ export class Infrastructure {
     this.docker.modem.demuxStream(stream, writer, writer);
     stream.end(data);
     return output.map((x) => new TextDecoder().decode(x)).join("");
+  }
+  async clientLogs(
+    role: "el" | "bn" | "vc",
+    options: { follow?: boolean; tail?: number | "all" },
+    stdout: Writable,
+    stderr: Writable,
+  ): Promise<void> {
+    const containers = await this.docker.listContainers({
+      all: true,
+      filters: { label: [`${LABEL}=${this.id}`, `${ROLE}=${role}`] },
+    });
+    if (containers.length !== 1) throw new Error(`Expected exactly one owned ${role} client`);
+    const container = this.docker.getContainer(containers[0].Id);
+    const logOptions = {
+      stdout: true,
+      stderr: true,
+      ...(options.tail === "all" ? {} : { tail: options.tail ?? 300 }),
+    };
+    const data = options.follow
+      ? await container.logs({ ...logOptions, follow: true })
+      : await container.logs({ ...logOptions, follow: false });
+    const stream = data instanceof Uint8Array ? Readable.from([data]) : data as Readable;
+    const done = finished(stream, { cleanup: true });
+    this.docker.modem.demuxStream(stream, stdout, stderr);
+    await done;
   }
   async exec(container: Docker.Container, cmd: string[]): Promise<string> {
     const instance = await container.exec({ Cmd: cmd, AttachStdout: true, AttachStderr: true });
