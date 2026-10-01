@@ -1,0 +1,14 @@
+{
+  "event": "lifecycle-passed",
+  "elapsedMs": 31999.832958000003,
+  "repeatedUp": true,
+  "repeatedDown": true,
+  "resetGenesis": "0x3fdcb0a7bf00d151bd1dc945be5a3215c17c15e73c6a3eb1fbbe245154758b68",
+  "duplicateOwnerRejected": true,
+  "differentProfileRejected": true,
+  "profile": "pectra",
+  "bake": "ci-main-merge",
+  "bakeKey": "5ef3ac09acd8852fb5eecd18b081a13400f69d6c6dff3bbb8ef7100d44fbeed9",
+  "runId": "8181d072-d8c3-4fd6-947f-f834e977f262",
+  "recordedAt": "2026-10-01T10:48:46.778Z"
+}

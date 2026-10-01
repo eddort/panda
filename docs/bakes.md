@@ -135,7 +135,7 @@ build or test the others.
 | Ordinary upstream clients: first block and EL/CL agreement                                   | Yes    | Yes   |
 | CLI up/down/reset, stable genesis, rejection of a different profile                          | Yes    | Yes   |
 | Pause, advanceTime/advanceTo, future timestamps, automine, nonce gaps, finality, indexer     | Yes    | Yes   |
-| Two 8192-slot jumps: measured next-transaction latency, finality, duties and signing history | Yes    | Yes   |
+| Two honest 1000-slot / fast 8192-slot jumps: next transaction, finality and signing history  | Yes    | Yes   |
 | Honest warp: participation, attestation rewards, sync/PTC coverage, finality and next deploy | Yes    | Yes   |
 | Deposit, key activation and consolidation                                                    | Yes    | Yes   |
 | Signed voluntary exit, actual withdrawal and final zero balance                              | Yes    | Yes   |

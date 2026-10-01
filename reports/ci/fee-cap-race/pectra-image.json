@@ -1,0 +1,137 @@
+{
+  "image": "panda-ci-pectra:fee-cap-race",
+  "profile": "pectra",
+  "id": "image-fe16b44d",
+  "passed": true,
+  "imageId": "sha256:65a1c33d8c9f83375e8f4abce98189696f0fbcf74ce4d8e2b05a1f704114c6f0",
+  "initial": {
+    "id": "ci-0cfe08cb",
+    "profile": "pectra",
+    "bake": "ci-main-merge",
+    "bakeKey": "5ef3ac09acd8852fb5eecd18b081a13400f69d6c6dff3bbb8ef7100d44fbeed9",
+    "now": 2000000011.5,
+    "slot": 0,
+    "automine": false,
+    "el": {
+      "baseFeePerGas": "0x3b9aca00",
+      "blobGasUsed": "0x0",
+      "difficulty": "0x1",
+      "excessBlobGas": "0x0",
+      "extraData": "0x",
+      "gasLimit": "0x17d7840",
+      "gasUsed": "0x0",
+      "hash": "0x3fdcb0a7bf00d151bd1dc945be5a3215c17c15e73c6a3eb1fbbe245154758b68",
+      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "miner": "0x0000000000000000000000000000000000000000",
+      "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "nonce": "0x0000000000001234",
+      "number": "0x0",
+      "parentBeaconBlockRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+      "size": "0x268",
+      "stateRoot": "0xcad6ecea53334bfc1f5fbf7ed3b3ccb379bb0b6dfcb83c09afb9c7a5b8bdbdb1",
+      "timestamp": "0x77359400",
+      "transactions": [],
+      "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      "uncles": [],
+      "withdrawals": [],
+      "withdrawalsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"
+    },
+    "finality": {
+      "execution_optimistic": false,
+      "finalized": false,
+      "data": {
+        "previous_justified": {
+          "epoch": "0",
+          "root": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "current_justified": {
+          "epoch": "0",
+          "root": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "finalized": {
+          "epoch": "0",
+          "root": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      }
+    }
+  },
+  "transaction": "0x7df9038e359beab7ae16eef2ea67c888edcb519d7c2b6c32e4896e0b853d7bd9",
+  "final": {
+    "id": "ci-0cfe08cb",
+    "profile": "pectra",
+    "bake": "ci-main-merge",
+    "bakeKey": "5ef3ac09acd8852fb5eecd18b081a13400f69d6c6dff3bbb8ef7100d44fbeed9",
+    "now": 2000000803.5,
+    "slot": 66,
+    "automine": false,
+    "el": {
+      "baseFeePerGas": "0x27f0feb3",
+      "blobGasUsed": "0x0",
+      "difficulty": "0x0",
+      "excessBlobGas": "0x0",
+      "extraData": "0xd883010f0b846765746888676f312e32342e32856c696e7578",
+      "gasLimit": "0x17e969d",
+      "gasUsed": "0x0",
+      "hash": "0x58f6b0e7e52b4356ea8e005ba066983d242e7b4e1f85e7fb34e3a3779331f7eb",
+      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "miner": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "mixHash": "0xcd7ee4362281568769b8e6256b3c1634a43dffa17e6125d24421b855ab4b343f",
+      "nonce": "0x0000000000000000",
+      "number": "0x3",
+      "parentBeaconBlockRoot": "0x009091a9e694d344298955a5bd2732d731e82a23997f7ece71b81999cadd433d",
+      "parentHash": "0xaafbac62be2702813e3d508fb78de842ecdf3f90618989ba4d28c67f423c66c6",
+      "receiptsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      "requestsHash": "0xe3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+      "size": "0x2b7",
+      "stateRoot": "0x83a95c3af10ffda5b0a990c2a1105cecfdb0eabe69d73643bd3b2ec1a18e922b",
+      "timestamp": "0x77359718",
+      "transactions": [],
+      "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
+      "uncles": [],
+      "withdrawals": [
+        {
+          "index": "0x0",
+          "validatorIndex": "0x28",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x9363"
+        },
+        {
+          "index": "0x1",
+          "validatorIndex": "0x37",
+          "address": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+          "amount": "0x9363"
+        }
+      ],
+      "withdrawalsRoot": "0x56ad63517ff5954e473e5983ef3c2c87fbb904332a9ef496cea567bba19492a8"
+    },
+    "finality": {
+      "execution_optimistic": false,
+      "finalized": false,
+      "data": {
+        "previous_justified": {
+          "epoch": "0",
+          "root": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "current_justified": {
+          "epoch": "0",
+          "root": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        "finalized": {
+          "epoch": "0",
+          "root": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      }
+    }
+  },
+  "clientAccess": {
+    "beacon": true,
+    "validator": true,
+    "validatorAfterFastWarp": true
+  },
+  "elapsedMs": 22817.837125000002
+}
