@@ -188,9 +188,8 @@ not snapshotted, so this is not a claim of bit-for-bit reproducible client binar
 See [review findings and fixed regressions](review.md). Raw reports contain only local development
 keys/addresses, public fixture data and timings; JWT secrets and private key files are not included.
 
-Final launcher regression: `ZAP_DOCKER_TEST=1 ZAP_E2E=1 deno task test` passed all **14 tests**
-through the installed system Deno 1.36.4; workload execution uses the pinned local Deno 2.9.7.
-`deno.json` is the backwards-compatible task launcher (no runtime lockfile parsing);
-`deno.runtime.json` owns the pinned runtime configuration and `deno.lock`. A separate post-fix
+Historical launcher regression: `ZAP_DOCKER_TEST=1 ZAP_E2E=1 deno task test` passed all **14 tests**
+through the then-installed system Deno 1.36.4 and a local Deno 2.9.7 compatibility launcher. That
+launcher has since been removed; current commands require Deno 2.9.7 directly. A separate post-fix
 `deno task test:lifecycle` passed as well. The historical cleanup check left only the two
 intentional build cache volumes. The workstation inventory is kept privately.

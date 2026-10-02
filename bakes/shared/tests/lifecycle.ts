@@ -48,7 +48,7 @@ try {
   const incompatible = await new Deno.Command(Deno.execPath(), {
     args: [
       "run",
-      "--config=deno.runtime.json",
+      "--config=deno.json",
       "-A",
       "src/cli.ts",
       "up",

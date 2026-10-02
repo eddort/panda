@@ -20,11 +20,9 @@ long-lived Beacon SSE are not supported by the proxy. Restarting the controller 
 state is not implemented: use `down`/`reset` after an interrupted run. Detailed executed checks and
 measurements are in `measurements.md` and `reports/`.
 
-Additional P2 finding, fixed: `deno.json:1` and `scripts/deno:1`. Running the documented `deno task`
-with this host's Deno 1.36 failed while parsing the new nodeModulesDir value and lockfile, before
-the local runtime could start. The task-only launcher now disables its own lockfile parsing and the
-wrapper explicitly selects `deno.runtime.json` for execution. Independent verification: system
-`deno task check`, all 11 opt-in tests, and the real CLI lifecycle pass.
+Historical P2 finding: Deno 1.36 could not parse the runtime configuration and lockfile. A
+compatibility launcher previously addressed this; it has since been removed. Panda now requires Deno
+2.9.7 and uses one standard `deno.json` for tasks, dependencies and runtime settings.
 
 ## Bake isolation and large jumps
 

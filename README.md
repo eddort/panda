@@ -45,17 +45,20 @@ Hardfork profiles cover **Pectra (Prague/Electra)** and the pinned experimental 
 slots, 32-slot epochs and an explicitly reduced default of 64 genesis validators. Network deadlines,
 JWT timestamps and watchdogs continue to use real time, including while protocol time is paused.
 
+## Requirements
+
+- **Deno 2.9.7** installed and available as `deno` on `PATH`.
+- **Docker** with a running local daemon.
+
 ## Quick start
 
-Requires a running local Docker daemon. Bootstrap installs the pinned Deno runtime in `.tools/`. The
-first Lighthouse build takes time; client compilation is separate from ordinary network startup.
+The first Lighthouse build takes time; client compilation is separate from ordinary network startup.
 
 ```sh
-sh scripts/bootstrap.sh
-./scripts/deno task smoke:docker
-./scripts/deno task bake pectra --tag local
-./scripts/deno task test:profile pectra --bake local
-./scripts/deno task up --profile pectra --bake local
+deno task smoke:docker
+deno task bake pectra --tag local
+deno task test:profile pectra --bake local
+deno task up --profile pectra --bake local
 ```
 
 HTTP JSON-RPC and Beacon API share `http://127.0.0.1:8545`: use `/` for JSON-RPC and the standard
@@ -63,10 +66,9 @@ HTTP JSON-RPC and Beacon API share `http://127.0.0.1:8545`: use `/` for JSON-RPC
 APIs on ports 5052 and 5062. See [client APIs and logs](docs/ci-containers.md#client-apis-and-logs)
 for port mappings, the VC token and `panda logs el|cl|vc`.
 
-Press Ctrl-C to stop and clean up, or run `./scripts/deno task down` in another terminal.
-`./scripts/deno task reset --profile pectra --bake local` starts again with fresh state. Use
-`PANDA_ID` and `PANDA_PORT` for separate instances. Once Deno is available on your path, the same
-commands can be written as `deno task …`.
+Press Ctrl-C to stop and clean up, or run `deno task down` in another terminal.
+`deno task reset --profile pectra --bake local` starts again with fresh state. Use `PANDA_ID` and
+`PANDA_PORT` for separate instances.
 
 ## TypeScript API
 
@@ -147,9 +149,9 @@ or build a client version under a new tag.
 ## Validation
 
 ```sh
-./scripts/deno task check
-./scripts/deno task test
-./scripts/deno task e2e # Requires the locally built client image.
+deno task check
+deno task test
+deno task e2e # Requires the locally built client image.
 ```
 
 The default test suite runs unit checks and skips Docker and end-to-end scenarios. Separate
@@ -162,7 +164,7 @@ consolidation, signed exit and complete withdrawal as named steps. Run both suit
 supported hardfork using an existing bake tag:
 
 ```sh
-PANDA_BAKE=ci-main-merge ./scripts/deno task test:protocol
+PANDA_BAKE=ci-main-merge deno task test:protocol
 ```
 
 [Measurements and validation](docs/measurements.md) records executed checks, host conditions and raw

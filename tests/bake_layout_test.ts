@@ -36,7 +36,7 @@ Deno.test("tag listing reads new and legacy manifests without treating recipes a
     await atomicJson(`${root}/bakes/gloas/tags/recipe.json`, { ...base, tag: "recipe" });
     await atomicJson(`${root}/bakes/gloas/tags/shared.json`, { ...base, tag: "shared" });
     const result = await new Deno.Command(Deno.execPath(), {
-      args: ["run", `--config=${resolve("deno.runtime.json")}`, "-A", resolve("scripts/bakes.ts")],
+      args: ["run", `--config=${resolve("deno.json")}`, "-A", resolve("scripts/bakes.ts")],
       cwd: root,
       stdout: "piped",
       stderr: "piped",
@@ -62,7 +62,7 @@ Deno.test("legacy and relocated copies may agree but conflicting immutable tags 
       new Deno.Command(Deno.execPath(), {
         args: [
           "eval",
-          `--config=${resolve("deno.runtime.json")}`,
+          `--config=${resolve("deno.json")}`,
           `import { readBake } from ${
             JSON.stringify(new URL("../src/profiles.ts", import.meta.url).href)
           }; console.log(JSON.stringify(await readBake("gloas", "candidate")));`,
@@ -99,7 +99,7 @@ Deno.test("legacy native input paths recover relocated bytes only on an exact ha
       new Deno.Command(Deno.execPath(), {
         args: [
           "eval",
-          `--config=${resolve("deno.runtime.json")}`,
+          `--config=${resolve("deno.json")}`,
           `import { snapshotSources } from ${
             JSON.stringify(new URL("../src/baker.ts", import.meta.url).href)
           }; console.log(JSON.stringify(await snapshotSources({"clients/controlled_clock.rs": ${

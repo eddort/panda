@@ -7,11 +7,12 @@ profiles are named by hardfork: Pectra (Prague/Electra) and Gloas (Amsterdam/Glo
 12-second slots. Protocol time is explicit; sockets, RPC deadlines, watchdogs and profiling use real
 time. Never substitute a mock EL, signature bypass or a fabricated finalized checkpoint.
 
-Commands: `sh scripts/bootstrap.sh`; `deno task smoke:docker`; `deno task check`; `deno task test`;
-`deno task baseline`; `deno task up`; `deno task down`; `deno task reset`; `deno task diagnose`;
-`deno task profile`. Tasks use the repository-local pinned Deno. Client builds are separate from
-`up`: use `deno task bake <hardfork> --tag <tag>`, then
-`deno task test:profile <hardfork> --bake <tag>` and
+Requires Deno 2.9.7 on `PATH` and a running local Docker daemon.
+
+Commands: `deno task smoke:docker`; `deno task check`; `deno task test`; `deno task baseline`;
+`deno task up`; `deno task down`; `deno task reset`; `deno task diagnose`; `deno task profile`.
+Tasks use the installed `deno` command. Client builds are separate from `up`: use
+`deno task bake <hardfork> --tag <tag>`, then `deno task test:profile <hardfork> --bake <tag>` and
 `deno task up --profile <hardfork> --bake <tag>`.
 
 Use `.agents/skills/maintain-bakes/SKILL.md` for hardfork profiles, client versions, patches, tags

@@ -35,7 +35,7 @@ async function copy(source: string, destination: string): Promise<void> {
     await Deno.copyFile(source, destination);
   }
 }
-for (const path of ["src", "container", "deno.runtime.json", "deno.lock"]) {
+for (const path of ["src", "container", "deno.json", "deno.lock"]) {
   await copy(path, join(directory, path));
 }
 // profiles.ts imports every registered recipe, but only this bake's artifacts are shipped.

@@ -13,7 +13,7 @@ import { registryDigest } from "../src/registry.ts";
 Deno.test("Lighthouse identity changes with either upstream or baker, independently of Panda and Geth", async () => {
   const root = await Deno.makeTempDir();
   try {
-    for (const path of ["src", "scripts", "bakes", "deno.lock", "deno.runtime.json"]) {
+    for (const path of ["src", "scripts", "bakes", "deno.lock", "deno.json"]) {
       await cp(path, `${root}/${path}`, { recursive: true });
     }
     const recipe: Recipe = structuredClone(profiles.pectra);
@@ -126,7 +126,7 @@ Deno.test("Lighthouse workflow derives upstream/baker tags without a manual revi
     const result = await new Deno.Command(Deno.execPath(), {
       args: [
         "run",
-        "--config=deno.runtime.json",
+        "--config=deno.json",
         "-A",
         "scripts/lighthouse_ci.ts",
         "matrix",

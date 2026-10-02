@@ -28,7 +28,7 @@ await atomicJson(path, { ...evidence, passed: false, status: "running" });
 let error: string | undefined;
 try {
   const result = await new Deno.Command(Deno.execPath(), {
-    args: ["test", "--config=deno.runtime.json", "-A", "tests/e2e_test.ts"],
+    args: ["test", "--config=deno.json", "-A", "tests/e2e_test.ts"],
     env: {
       PANDA_E2E: "1",
       PANDA_PROFILE: profile,

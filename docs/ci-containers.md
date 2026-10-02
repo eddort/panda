@@ -271,11 +271,11 @@ versions, and dependency caching uses `deno.lock` with `--frozen-lockfile`. Runt
 For local packaging of an existing bake (no registry publication):
 
 ```sh
-./scripts/deno task package:image gloas panda v0.0.0-local.1 eddort "$(git rev-parse HEAD)"
+deno task package:image gloas panda v0.0.0-local.1 eddort "$(git rev-parse HEAD)"
 docker build -t panda-ci-gloas:local \
   -f .cache/containers/gloas/v0.0.0-local.1/container/Dockerfile \
   .cache/containers/gloas/v0.0.0-local.1
-./scripts/deno task test:image panda-ci-gloas:local gloas
+deno task test:image panda-ci-gloas:local gloas
 ```
 
 Package directories refuse reuse. Choose a new local version after changing packaged sources. Local

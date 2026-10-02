@@ -47,7 +47,7 @@ Create the worker through `Infrastructure.container("worker", ...)` with the exa
 without a Docker socket or a bind mount of the entire `/shared` directory. It needs pinned Linux
 Deno, a readonly source bundle, minimal configuration, and a separate internal-command token. The
 public port remains localhost-only. The host manifest retains endpoints usable from the host; the
-worker gets a separate set of internal URLs. Simply mounting macOS `.tools/deno` into a Linux
+worker gets a separate set of internal URLs. Simply mounting a macOS Deno binary into a Linux
 container is not valid.
 
 VC recreation in `network.ts:353` does not preserve `NetworkingConfig`: a stable container name

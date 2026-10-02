@@ -32,11 +32,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - run: sh scripts/bootstrap.sh
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: 2.9.7
       - name: Validate the release version and branch
-        run: ./scripts/deno run -A scripts/release_pr.ts check
+        run: deno run -A scripts/release_pr.ts check
       - name: Find the latest published client lock for every profile
-        run: ./scripts/deno run -A scripts/release_artifacts.ts
+        run: deno run -A scripts/release_artifacts.ts
       - name: Download the selected immutable lock artifacts
         run: |
           set -euo pipefail
@@ -48,4 +50,4 @@ jobs:
             unzip -p "$archive" clients.lock.json > "$directory/clients.lock.json"
           done < <(jq -r '.[] | [.profile, .artifactId] | @tsv' .cache/release-locks/sources.json)
       - name: Open the release PR with the published image digests
-        run: ./scripts/deno run -A scripts/release_pr.ts open
+        run: deno run -A scripts/release_pr.ts open

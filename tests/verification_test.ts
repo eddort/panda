@@ -11,7 +11,7 @@ Deno.test("immutable bake verification ignores other profiles, new build recipes
         "scripts",
         "bakes",
         "tests",
-        "deno.runtime.json",
+        "deno.json",
         "deno.lock",
       ]
     ) {

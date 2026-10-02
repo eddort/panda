@@ -9,9 +9,7 @@ const buildFiles = [
   "src/docker.ts",
   "src/artifacts.ts",
   "scripts/bake.ts",
-  "scripts/deno",
-  "scripts/bootstrap.sh",
-  "deno.runtime.json",
+  "deno.json",
   "deno.lock",
 ];
 const upstreamVersion = /^[0-9]+\.[0-9]+\.[0-9]+(?:-[a-z0-9][a-z0-9.-]*)?$/;

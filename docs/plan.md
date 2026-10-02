@@ -90,10 +90,11 @@ These are correctness checks; their duration while compilation is running is not
 2. **Protect EngineGate compatibility.** Automate checks for missing or changed payload-readiness
    events, expired JWTs and incompatible Geth images. The proxy currently depends on a particular
    Geth version's JSON log; upgrades require another source review.
-3. **Verify installation from scratch and other platforms.** Run bootstrap, build and e2e checks in
-   a clean environment, then on Linux arm64/amd64. Add CI with fast checks and separate Docker/Rust
-   jobs. Complete the cold-start measurement and verify that built images match their sources and
-   patches. Only macOS arm64 with Docker Desktop has been confirmed so far.
+3. **Verify installation from scratch and other platforms.** Install the required Deno version, then
+   run build and e2e checks in a clean environment, then on Linux arm64/amd64. Add CI with fast
+   checks and separate Docker/Rust jobs. Complete the cold-start measurement and verify that built
+   images match their sources and patches. Only macOS arm64 with Docker Desktop has been confirmed
+   so far.
 
 ## Possible later extensions
 

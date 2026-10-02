@@ -67,7 +67,7 @@ Deno.test("Panda release selection takes its version from a Git tag, never manua
   try {
     const run = (ref: string) =>
       new Deno.Command(Deno.execPath(), {
-        args: ["run", "--config=deno.runtime.json", "-A", "scripts/release_ci.ts", "matrix", "all"],
+        args: ["run", "--config=deno.json", "-A", "scripts/release_ci.ts", "matrix", "all"],
         env: { GITHUB_REF: ref, GITHUB_REPOSITORY_OWNER: "eddort", GITHUB_OUTPUT: output },
         stdout: "piped",
         stderr: "piped",

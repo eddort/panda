@@ -22,14 +22,14 @@ Use an existing compatible bake; these commands never compile Lighthouse:
 
 ```sh
 # Both lifecycle suites, sequentially, for all supported hardforks.
-PANDA_BAKE=ci-main-merge ./scripts/deno task test:protocol
+PANDA_BAKE=ci-main-merge deno task test:protocol
 
 # Only one hardfork, using its selected local bake.
-PANDA_PROFILE=gloas PANDA_BAKE=ci-main-merge ./scripts/deno task test:protocol
+PANDA_PROFILE=gloas PANDA_BAKE=ci-main-merge deno task test:protocol
 
 # Only deposit/consolidation or exit/withdrawal, across supported hardforks.
-PANDA_BAKE=ci-main-merge ./scripts/deno task e2e:protocol
-PANDA_BAKE=ci-main-merge ./scripts/deno task e2e:withdrawal
+PANDA_BAKE=ci-main-merge deno task e2e:protocol
+PANDA_BAKE=ci-main-merge deno task e2e:withdrawal
 ```
 
 Without `PANDA_BAKE`, each profile uses its `default` tag. "All hardforks" means the registered

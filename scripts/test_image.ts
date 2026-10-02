@@ -73,7 +73,7 @@ try {
     await infra.exec(container, [
       "deno",
       "run",
-      "--config=deno.runtime.json",
+      "--config=deno.json",
       "--cached-only",
       "-A",
       "container/health.ts",

@@ -8,11 +8,11 @@ COPY --from=deno /lib64/ /lib64/
 ENV DENO_DIR=/opt/deno-cache DENO_USE_CGROUPS=1 DOCKER_TLS_CERTDIR="" \
     DOCKER_HOST=unix:///var/run/docker.sock PANDA_DOCKER_SOCKET=/var/run/docker.sock
 WORKDIR /opt/panda
-COPY deno.runtime.json deno.lock ./
+COPY deno.json deno.lock ./
 COPY src/ src/
 COPY bakes/ bakes/
 COPY container/ container/
-RUN deno cache --config=deno.runtime.json --frozen-lockfile container/main.ts container/health.ts container/clients.ts \
+RUN deno cache --config=deno.json --frozen-lockfile container/main.ts container/health.ts container/clients.ts \
     && chmod 755 /opt/panda/container/panda \
     && ln -s /opt/panda/container/panda /usr/local/bin/panda
 COPY release.json ./
@@ -28,6 +28,6 @@ LABEL org.opencontainers.image.source="https://github.com/eddort/panda" \
 EXPOSE 8545 5052 5062
 STOPSIGNAL SIGTERM
 HEALTHCHECK --interval=5s --timeout=10s --start-period=180s --retries=12 \
-    CMD ["deno", "run", "--config=deno.runtime.json", "--cached-only", "-A", "container/health.ts"]
-ENTRYPOINT ["docker-init", "--", "deno", "run", "--config=deno.runtime.json", "--cached-only", "-A", "container/main.ts"]
+    CMD ["deno", "run", "--config=deno.json", "--cached-only", "-A", "container/health.ts"]
+ENTRYPOINT ["docker-init", "--", "deno", "run", "--config=deno.json", "--cached-only", "-A", "container/main.ts"]
 CMD []

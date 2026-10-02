@@ -5,9 +5,9 @@ description: Maintain Panda hardfork bake profiles, pinned EL/CL versions, patch
 
 # Maintain hardfork bakes
 
-Work from the Panda root with `./scripts/deno`. Read `AGENTS.md`, the selected
-`bakes/<hardfork>/recipe.json`, and the relevant `tags/<tag>.json` before changing anything. Inspect
-the current diff so existing work and staging remain intact.
+Work from the Panda root with `deno`. Read `AGENTS.md`, the selected `bakes/<hardfork>/recipe.json`,
+and the relevant `tags/<tag>.json` before changing anything. Inspect the current diff so existing
+work and staging remain intact.
 
 Use the [layout guide](../../../bakes/README.md) for file ownership and adding profiles; use the
 [version guide](../../../docs/bakes.md) for CLI overrides, caches and legacy manifests. These links
@@ -71,15 +71,15 @@ Choose checks using [test-change](../test-change/SKILL.md):
 
 | Change                                | Verification                                                                               |
 | ------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Code or recipe changes                | `./scripts/deno task check` and `./scripts/deno task test`                                 |
+| Code or recipe changes                | `deno task check` and `deno task test`                                                     |
 | New client artifact or fork support   | `bake <hardfork> --tag <tag>`, then `test:profile <hardfork> --bake <tag>`                 |
 | Existing artifact's native regression | `test:clock <hardfork> --bake <tag>`; use its archived inputs                              |
 | Shared Docker/baker behavior          | `test:baker`, separately from profile suites                                               |
 | Targeted scenario/assertion change    | Relevant scenario on affected profiles; a targeted pass is not a full profile verification |
 | Documentation/skill only              | Validate the changed files and references; client builds/devnets are unnecessary           |
 
-Task names in the table run through `./scripts/deno task`. A normal client bake already runs its
-native tests; do not repeat a costly build or `test:clock` without a new change/failure to check.
+Task names in the table run through `deno task`. A normal client bake already runs its native tests;
+do not repeat a costly build or `test:clock` without a new change/failure to check.
 `up --profile <hardfork> --bake <tag>` consumes an existing artifact and does not compile clients.
 
 Keep each recipe's scenario-name-to-file map explicit. Preserve baseline, lifecycle, controlled
@@ -102,10 +102,10 @@ Inspect `src/verification.ts` and `tests/verification_test.ts` when changing ver
 scenario routing/dependencies matter; another fork's tests and future native recipe edits must not
 invalidate an unchanged baked binary.
 
-Use `./scripts/deno task bakes` to check current verification. A changed fingerprint makes prior
-success historical. Standalone scenarios write their own reports/run IDs and cannot turn a failed or
-stale full verification green. Record actual commands, tag/key, results, timings and unrun checks;
-do not combine unrelated runs into a claimed full pass.
+Use `deno task bakes` to check current verification. A changed fingerprint makes prior success
+historical. Standalone scenarios write their own reports/run IDs and cannot turn a failed or stale
+full verification green. Record actual commands, tag/key, results, timings and unrun checks; do not
+combine unrelated runs into a claimed full pass.
 
 On a failure, retain logs and failed evidence, fix the identified cause, and rerun the original
 scenario separately. Use [debug-devnet](../debug-devnet/SKILL.md) for a stalled network. Avoid

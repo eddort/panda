@@ -8,23 +8,21 @@ dockerode. A one-shot ethereum-genesis-generator creates genesis. See
 
 ## Setup and startup
 
+Install **Deno 2.9.7** and start a local Docker daemon; see
+[requirements](../README.md#requirements).
+
 ```sh
-sh scripts/bootstrap.sh
 deno task smoke:docker
 deno task bake pectra --tag local # Build local artifacts from the pinned recipe on this machine.
 deno task test:profile pectra --bake local
 deno task up --profile pectra --bake local # Foreground; Ctrl-C cleans up this instance's resources.
 ```
 
-Tasks use the local Deno 2.9.7 runtime in `.tools`; a system Deno is only needed to invoke
-`deno task`. `deno.json` contains the compatible task list, while `deno.runtime.json` contains
-dependencies and runtime settings.
+Tasks use the installed `deno` command. `deno.json` contains tasks, dependencies and runtime
+settings; `deno.lock` pins resolved dependency versions.
 
 For VS Code, open the repository root and install the recommended **Deno** extension
-(`denoland.vscode-deno`). The checked-in `.vscode/settings.json` enables Deno and points the editor
-at `.tools/deno` and `deno.runtime.json`, matching the CLI's runtime and dependency configuration.
-Run bootstrap first so the local binary exists. If `Deno` is still reported as unknown after
-installing the extension, run **Developer: Reload Window** from the Command Palette.
+(`denoland.vscode-deno`). The extension can discover the installed Deno and the root `deno.json`.
 
 See [bake profiles](bakes.md) for EL/CL version selection, tags and validation suites. For example,
 run `deno task up --profile gloas --bake trial` after building and verifying `gloas:trial`.

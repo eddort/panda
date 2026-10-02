@@ -1,5 +1,3 @@
 {
-  "deno.enable": true,
-  "deno.path": "./.tools/deno",
-  "deno.config": "./deno.runtime.json"
+  "deno.enable": true
 }
