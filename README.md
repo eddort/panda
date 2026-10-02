@@ -179,3 +179,15 @@ reports. Keep resource measurements separate from other devnet tests.
 - [Architecture](docs/architecture.md) — clock boundaries, client patches and Engine API
   coordination.
 - [Project plan](docs/plan.md) — completed work and next steps.
+
+## Author
+
+Created and maintained by [@eddort](https://github.com/eddort).
+
+## License
+
+Panda's original code is licensed under the [Apache License 2.0](LICENSE). Copyright 2026 eddort.
+
+Third-party components retain their own licenses. [Lighthouse](https://github.com/sigp/lighthouse)
+uses Apache-2.0; the [Geth executable](https://github.com/ethereum/go-ethereum#license) uses
+GPL-3.0-or-later, and the go-ethereum libraries use LGPL-3.0-or-later.

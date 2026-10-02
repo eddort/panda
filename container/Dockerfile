@@ -9,6 +9,7 @@ ENV DENO_DIR=/opt/deno-cache DENO_USE_CGROUPS=1 DOCKER_TLS_CERTDIR="" \
     DOCKER_HOST=unix:///var/run/docker.sock PANDA_DOCKER_SOCKET=/var/run/docker.sock
 WORKDIR /opt/panda
 COPY deno.json deno.lock ./
+COPY LICENSE ./
 COPY src/ src/
 COPY bakes/ bakes/
 COPY container/ container/
