@@ -157,6 +157,14 @@ scenarios cover time advancement, automine, finality, validator lifecycle, deplo
 ownership. Finality checks compare the Beacon finalized block's execution hash with Geth's finalized
 hash.
 
+The [validator lifecycle tests](bakes/shared/tests/README.md) show deposit, activation,
+consolidation, signed exit and complete withdrawal as named steps. Run both suites on every
+supported hardfork using an existing bake tag:
+
+```sh
+PANDA_BAKE=ci-main-merge ./scripts/deno task test:protocol
+```
+
 [Measurements and validation](docs/measurements.md) records executed checks, host conditions and raw
 reports. Keep resource measurements separate from other devnet tests.
 

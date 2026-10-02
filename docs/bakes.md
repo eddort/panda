@@ -59,7 +59,10 @@ await net.setAutomine(true);
 
 `PANDA_PROFILE` and `PANDA_BAKE` select the same settings through the environment, including for
 individual `e2e:*` tasks. Explicit API/CLI options take precedence. The default is `pectra:default`.
-`build:clients` is an alias for `bake`.
+The validator lifecycle commands `test:protocol`, `e2e:protocol` and `e2e:withdrawal` instead cover
+all registered hardfork profiles when `PANDA_PROFILE` is unset, using the selected bake tag for
+each. See the [readable protocol suites](../bakes/shared/tests/README.md) for their steps and
+selection. `build:clients` is an alias for `bake`.
 
 ## Other EL and CL versions
 

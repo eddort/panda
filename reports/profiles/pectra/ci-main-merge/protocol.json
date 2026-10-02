@@ -1,6 +1,7 @@
 {
   "event": "protocol-passed",
-  "elapsedMs": 78597.225958,
+  "passed": true,
+  "elapsedMs": 97256.73325,
   "activated": {
     "index": "64",
     "balance": "32000000000",
@@ -47,7 +48,7 @@
     }
   },
   "status": {
-    "id": "protocol-a806040a",
+    "id": "protocol-a3c9ee7b",
     "profile": "pectra",
     "bake": "ci-main-merge",
     "bakeKey": "5ef3ac09acd8852fb5eecd18b081a13400f69d6c6dff3bbb8ef7100d44fbeed9",
@@ -112,6 +113,6 @@
   "profile": "pectra",
   "bake": "ci-main-merge",
   "bakeKey": "5ef3ac09acd8852fb5eecd18b081a13400f69d6c6dff3bbb8ef7100d44fbeed9",
-  "runId": "8181d072-d8c3-4fd6-947f-f834e977f262",
-  "recordedAt": "2026-10-01T10:57:26.452Z"
+  "runId": "readable-protocol-7ec80482-cd3e-4aef-9a26-45db007cb90f",
+  "recordedAt": "2026-10-01T14:38:58.820Z"
 }

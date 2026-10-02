@@ -1,0 +1,18 @@
+import { profileName, profiles } from "../../../src/profiles.ts";
+
+/** Direct lifecycle runs cover every supported hardfork; profile CI selects exactly one. */
+export function testProfiles(selected: string | undefined) {
+  return selected === undefined ? Object.keys(profiles).map(profileName) : [profileName(selected)];
+}
+
+/** Deno steps return false on failure; stop dependent stages before mutating a broken fixture. */
+export async function step(t: Deno.TestContext, name: string, run: () => Promise<void>) {
+  const passed = await t.step({
+    name,
+    fn: run,
+    // The same real clients remain alive across the stages of one lifecycle.
+    sanitizeOps: false,
+    sanitizeResources: false,
+  });
+  if (!passed) throw new Error(`Stopped after failed step: ${name}`);
+}

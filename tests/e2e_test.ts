@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { profileName, profiles } from "../src/profiles.ts";
+import { scenarioArguments } from "../scripts/scenario_runner.ts";
 const profile = profileName(Deno.env.get("PANDA_PROFILE") ?? "pectra");
 const descriptions: Record<string, string> = {
   e2e: "time travel, pause, automine, finality and external indexer",
@@ -22,12 +23,8 @@ for (const [scenario, file] of Object.entries(profiles[profile].tests)) {
     sanitizeOps: false,
     fn: async () => {
       const result = await new Deno.Command(Deno.execPath(), {
-        args: [
-          "run",
-          "--config=deno.runtime.json",
-          "-A",
-          file,
-        ],
+        args: scenarioArguments(file),
+        env: { PANDA_PROFILE: profile },
         stdout: "inherit",
         stderr: "inherit",
       }).output();

@@ -145,7 +145,7 @@ the gap.
 
 The default mainnet churn quotient is 65536 for Pectra and 32768 for Gloas. With 64 validators,
 Electra has no consolidation churn capacity: its activation/exit allocation consumes the available
-churn. `bakes/shared/tests/protocol.ts` explicitly sets `churnLimitQuotient: 4` (512 ETH total
+churn. `bakes/shared/tests/protocol_test.ts` explicitly sets `churnLimitQuotient: 4` (512 ETH total
 balance churn, 256 ETH consolidation capacity before balance changes) to test consolidation without
 thousands of keys. All ordinary timing delays, including 256-epoch exit eligibility and withdrawal
 delay, remain intact. See

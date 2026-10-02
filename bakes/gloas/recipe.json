@@ -39,8 +39,8 @@
     "warp": "bakes/shared/tests/warp.ts",
     "warp-fast": "bakes/shared/tests/warp_fast.ts",
     "warp-economics": "bakes/shared/tests/warp_economics.ts",
-    "protocol": "bakes/shared/tests/protocol.ts",
-    "withdrawal": "bakes/shared/tests/withdrawal.ts",
+    "protocol": "bakes/shared/tests/protocol_test.ts",
+    "withdrawal": "bakes/shared/tests/withdrawal_test.ts",
     "deploy": "bakes/shared/tests/deploy.ts",
     "gloas": "bakes/gloas/tests/gloas.ts"
   },

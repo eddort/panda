@@ -20,6 +20,12 @@ Tasks use the local Deno 2.9.7 runtime in `.tools`; a system Deno is only needed
 `deno task`. `deno.json` contains the compatible task list, while `deno.runtime.json` contains
 dependencies and runtime settings.
 
+For VS Code, open the repository root and install the recommended **Deno** extension
+(`denoland.vscode-deno`). The checked-in `.vscode/settings.json` enables Deno and points the editor
+at `.tools/deno` and `deno.runtime.json`, matching the CLI's runtime and dependency configuration.
+Run bootstrap first so the local binary exists. If `Deno` is still reported as unknown after
+installing the extension, run **Developer: Reload Window** from the Command Palette.
+
 See [bake profiles](bakes.md) for EL/CL version selection, tags and validation suites. For example,
 run `deno task up --profile gloas --bake trial` after building and verifying `gloas:trial`.
 
@@ -136,8 +142,9 @@ deno task e2e                          # Time, automine, finality and a separate
 deno task e2e:warp-fast                # Two fast 8192-slot jumps, next tx, signing and resumed finality.
 deno task e2e:warp                     # Two honest 1000-slot jumps with economic checks.
 deno task e2e:warp-economics           # Short honest economics/deployment regression.
-deno task e2e:withdrawal               # Real exit to withdrawal across hundreds of epochs.
-deno task e2e:protocol                 # Deposit, activation and consolidation with an explicit churn override.
+deno task test:protocol                # Named deposit/consolidation and exit/withdrawal tests on every hardfork.
+deno task e2e:withdrawal               # Named exit/withdrawal stages on every hardfork.
+deno task e2e:protocol                 # Named deposit/activation/consolidation stages on every hardfork.
 deno task e2e:deploy                   # 20 sequential deployments through RPC and ethers.
 deno task test:lifecycle               # Repeated up/down/reset and reproducible genesis.
 deno task test:clock                   # Rust clock regression; uses the build cache.
@@ -146,6 +153,9 @@ deno task diagnose
 deno task profile                      # A running instance; advances 32 slots.
 deno task check
 ```
+
+For lifecycle test files, stage descriptions, bake selection and single-profile commands, see the
+[protocol test guide](../bakes/shared/tests/README.md).
 
 ## Automine and sequential deployments
 

@@ -20,10 +20,10 @@ state availability, and signing history. Balances are only recorded in the repor
 measured jump, the test separately allows up to 160 slots for finality recovery. These checks are
 useful, but do not prove full participation within the jump or absence of economic consequences.
 
-`bakes/shared/tests/withdrawal.ts` and `bakes/shared/tests/protocol.ts` use explicit `skipSlots` for
-long intervals. Their success does not prove correctness of future warp with full duties. Separate
-scenarios through `advanceTime`/`advanceTo` are needed, with operations before, within, and after
-the range.
+`bakes/shared/tests/withdrawal_test.ts` and `bakes/shared/tests/protocol_test.ts` use explicit
+`skipSlots` for long intervals. Their success does not prove correctness of future warp with full
+duties. Separate scenarios through `advanceTime`/`advanceTo` are needed, with operations before,
+within, and after the range.
 
 The old `verified` status applies to the old requirements. It does not confirm this document's
 requirements. Adding executable checks must change the suite fingerprint.
@@ -150,7 +150,7 @@ not establish EL/CL compatibility. Absence of log errors does not replace assert
 | Existing location                                                                   | Partial coverage                                                                           | Additions needed to accept the new warp                                                                                                 |
 | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `bakes/shared/tests/warp.ts`, `warp_assertions.ts`, `tests/warp_assertions_test.ts` | Time, unslashed/status, post-jump signatures, head agreement, subsequent finality recovery | Participation/economics/signatures throughout the range, finality at return, independent replay, sequential operations after each warp. |
-| `bakes/shared/tests/protocol.ts`, `withdrawal.ts`                                   | Real deposit/activation, consolidation, exit, and withdrawal                               | The same lifecycles through the new warp and comparison of exact transitions; distinguish mainnet from explicitly modified churn.       |
+| `bakes/shared/tests/protocol_test.ts`, `withdrawal_test.ts`                         | Real deposit/activation, consolidation, exit, and withdrawal                               | The same lifecycles through the new warp and comparison of exact transitions; distinguish mainnet from explicitly modified churn.       |
 | `bakes/shared/tests/deploy.ts`, `e2e.ts`, `indexer.ts`, `tests/automine_test.ts`    | Transactions, automine, deployment, basic consumer                                         | Execution before/during/after warp and at time-ownership handoffs.                                                                      |
 | `tests/time_test.ts`, `bakes/shared/controlled_clock_test.rs`                       | Time queue and scheduler                                                                   | New range executor, phase failures, partial progress, and preservation of pending work.                                                 |
 | `bakes/gloas/tests/gloas.ts`                                                        | Gloas API and phase marks over a small slot count                                          | Full envelope/PTC contents over the range, signatures/repeated indices, forkchoice/finality, and replay.                                |
